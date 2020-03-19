@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-18-2020
+Last update : 03-19-2020
 
 This file contains the classes :
 - Character and its son Player
