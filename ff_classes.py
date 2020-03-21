@@ -12,6 +12,8 @@ This file contains the classes :
 
 """
 
+import random
+
 # Constants used to initialize characters
 
 MALE_NAMES = ['Albert', 'Kronos', 'Alec', 'Bran', 'Urtuk', 'Shun']
@@ -28,6 +30,13 @@ PROTECTION_PTS = {'Githzerai': 5, 'Rakshasa': 10, 'Illithid': 3, 'Tieflin': 12, 
 LIFE_PTS = {'Githzerai': 30, 'Rakshasa': 38, 'Illithid': 25, 'Tieflin': 35, 'Banshee': 28}
 INTELLIGENCE_PTS = {'Githzerai': 15, 'Rakshasa': 10, 'Illithid': 25, 'Tieflin': 8, 'Banshee': 20}
 STRENGTH_PTS = {'Githzerai': 12, 'Rakshasa': 20, 'Illithid': 10, 'Tieflin': 18, 'Banshee': 8}
+
+# Constants used to set up player's experience gains and level
+# XP_GAINS defines the experience (value) the player gets per enemy defeated, depending on the player's level (key)
+# XP_LEVELS defines the experience (value) needed to obtain a new level(key)
+
+XP_GAINS = {'1': 125, '2': 175, '3': 200, '4': 275, '5': 375, '6': 400, '7': 475, '8': 500, '9': 750}
+XP_LEVELS = {'2': 500, '3': 1000, '4': 2000, '5': 3500, '6': 5000, '7': 7000, '8': 10000, '9' : 15000, '10': 22000}
 
 class Character:
     """
@@ -79,4 +88,32 @@ class Character:
     def __repr__(self):
         return f"{self._name}, {self._gender}, {self._race}, ability : {self._ability['name']}, level : {self.level}" \
                f", armour : {self.armour}, life : {self.life}, strength : {self.strength}, intelligence : " \
-               f"{self.intelligence}, protection : {self.protection}"
+               f"{self.intelligence}, protection : {self.protection}, weapon : {self.weapon}, spell : " \
+               f"{self.spell}"
+
+    def __str__(self):
+        return f"Name : {self._name}\nGender : {self._gender}\nRace : {self._race}\nLevel : {self.level}\n" \
+               f"Strength : {self.strength}\nIntelligence : {self.intelligence}\nLife : {self.life}\n" \
+               f"Protection : {self.protection}\nSpecial Ability : {self._ability['name']}\n>>>>Equipment<<<<\n" \
+               f"Armour : {self.armour}\nWeapon : {self.weapon}\nSpell : {self.spell}\n"
+
+
+class Player(Character):
+    """Player has the same caracteristics as Character, with 3 more features.
+    Inventory, containing armours, spells and protections, an amount of gold, and experience points.
+    """
+
+    def __init__(self, name, gender, race, level=1, armour='underwear', weapon='fists', spell='None'):
+        Character.__init__(self, name, gender, race, level=1, armour='underwear', weapon='fists', spell='None')
+        self.inventory = {}
+        self.gold = random.randint(10, 200)
+        self.experience = 0
+
+    def __repr__(self):
+        return Character.__repr__(self) + f", inventory : {self.inventory}, gold : {self.gold}"
+
+    def __str__(self):
+        return Character.__str__(self) + f">>>>Bag<<<<\nGold : {self.gold}\nInventory : {self.inventory}\n" \
+                                         f">>>>Experience<<<<\n{self.experience} points. Next level in : " \
+                                         f"{XP_LEVELS[str(self.level + 1)] - self.experience} points."
+
