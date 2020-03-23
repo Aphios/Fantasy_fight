@@ -4,24 +4,11 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-19-2020
+Last update : 03-23-2020
 
-This file contains the functions used in the main program.
+This file contains some specific short functions used in the main program.
+These functions must not need to import any other ff module.
 """
 
 import random
-import ff_classes as ffc
 
-def autogen():
-    """Generates random settings for a character.
-    The function returns a name, a gender and a race randomly selected from constants in ff_classes.
-    """
-    gender = random.choice(ffc.GENDERS)
-    race = random.choice(ffc.RACES)
-    if gender == 'Male':
-        name = random.choice(ffc.MALE_NAMES)
-    elif gender == 'Female':
-        name = random.choice(ffc.FEMALE_NAMES)
-    else:
-        name = random.choice(ffc.OTHER_NAMES)
-    return {'name' : name, 'gender' : gender, 'race' : race}
