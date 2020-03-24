@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-23-2020
+Last update : 03-24-2020
 
 This file contains the main program and general functions.
 """
@@ -46,6 +46,7 @@ if __name__ == '__main__':
     venom_gaze = ffc.Spell('Venom gaze', 150, 15, 25)
     wasp_stings = ffc.Spell('Wasp stings', 50, -5, 6)
     lightning = ffc.Spell('Lightning', 400, 25, 35)
+    no_spell = ffc.Spell('No spell', 0, 0, 0)
     scythe = ffc.Weapon('Scythe', 400, 25, 35)
     scissors = ffc.Weapon('Scissors', 50, -5, 6)
     halbert = ffc.Weapon('Halbert', 200, 8, 16)
@@ -54,7 +55,7 @@ if __name__ == '__main__':
     fists = ffc.Weapon('Fists', 0, -8, 4)
 
     # Inventories creation
-    armours = {corset, leathersuit, rags, underwear, platemail, mithril_jacket}
+    armours = {corset, leathersuit, rags, platemail, mithril_jacket}
     spells = {blizzard, scorch, venom_gaze, wasp_stings, lightning}
     weapons = {scythe, scissors, halbert, club, dagger}
 
@@ -62,10 +63,11 @@ if __name__ == '__main__':
     shop = ffc.Shop(armours, weapons, spells)
 
     # Player creation
+    # Player must have by default : armour : underwear, weapon : fists, spell : None
     #TODO
 
     # Enemy creation
     # The enemy must start with low level equipment, so the choice of weapons, spells and armours is limited.
     settings = autogen(ffc.GENDERS, ffc.RACES, ffc.MALE_NAMES, ffc.FEMALE_NAMES, ffc.OTHER_NAMES,
-                       {corset, rags, leathersuit}, {scissors, fists, dagger}, {scorch, wasp_stings, None})
+                       [corset, rags, leathersuit], [scissors, fists, dagger], [scorch, wasp_stings, no_spell])
     enemy = Character(**settings)

@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-23-2020
+Last update : 03-24-2020
 
 This file contains the classes :
 - Character and its subclass Player
@@ -92,7 +92,10 @@ class Character:
         return f"Name : {self._name}\nGender : {self._gender}\nRace : {self._race}\nLevel : {self.level}\n" \
                f"Strength : {self.strength}\nIntelligence : {self.intelligence}\nLife : {self.life}\n" \
                f"Special Ability : {self._ability['name']}\n>>>>Equipment<<<<\n" \
-               f"Armour : {self.armour}\nWeapon : {self.weapon}\nSpell : {self.spell}\n"
+               f"Armour : {self.armour.name} (protection : {self.armour.protection})\nWeapon : " \
+               f"{self.weapon.name} (min.damage : {self.weapon.damage_min}, max. damage : {self.weapon.damage_max})\n" \
+               f"Spell : {self.spell.name} (min.damage : {self.spell.damage_min}, max. damage : " \
+               f"{self.spell.damage_max}\n"
 
 
 class Player(Character):
@@ -154,7 +157,7 @@ class Spell(Weapon):
     spells that require mana points to be cast, etc
     """
 
-    def __init__(self, price, name, damage_min, damage_max):
+    def __init__(self, name, price, damage_min, damage_max):
         Weapon.__init__(self, name, price, damage_min, damage_max)
 
     def __str__(self):
