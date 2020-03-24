@@ -64,7 +64,8 @@ if __name__ == '__main__':
 
     # Player creation
     # Player must have by default : armour : underwear, weapon : fists, spell : None
-    #TODO
+    # User must input name, gender, race (select and verify)
+    # TODO
 
     # Enemy creation
     # The enemy must start with low level equipment, so the choice of weapons, spells and armours is limited.
