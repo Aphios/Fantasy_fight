@@ -105,7 +105,7 @@ class Player(Character):
 
     def __init__(self, name, gender, race, armour, weapon, spell, level=1):
         Character.__init__(self, name, gender, race, armour, weapon, spell, level=1)
-        self.inventory = set()
+        self.inventory = []
         self.gold = random.randint(10, 200)
         self.experience = 0
 
@@ -189,5 +189,18 @@ class Shop:
         for elt in stock:
             print(elt)
 
+    def buy(self, item, player):
+        """Checks if the player has enough gold to buy item and adds it to inventory while removing corresponding gold
+        price or aborts operation."""
+        if item.price > player.gold:
+            print("You don't have enough gold to buy this piece of equipment.")
+        else:
+            player.inventory.append(item)
+            player.gold -= item.price
+            print(f"{item.name} added to inventory.")
 
-
+    def sell(self, item, player):
+        """Removes an item from player's inventory and adds to player's gold half of the item's price."""
+        player.gold += item.price // 2
+        player.inventory.remove(item)
+        print(f"{item.name} sold for {item.price // 2} gold pieces.")

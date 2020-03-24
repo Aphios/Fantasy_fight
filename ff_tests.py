@@ -58,11 +58,10 @@ weapons = {scythe, scissors, halbert, club, dagger}
 # Shop creation
 shop = ffc.Shop(armours, weapons, spells)
 
-# Test autogen
-settings = autogen(ffc.GENDERS, ffc.RACES, ffc.MALE_NAMES, ffc.FEMALE_NAMES, ffc.OTHER_NAMES,
-                   [corset, rags, leathersuit], [scissors, fists, dagger], [no_spell])
-sophie = ffc.Character(**settings)
-sophie.inventory.add(scythe)
-sophie.inventory.add(corset)
-sophie.inventory.add(scissors)
-sophie.display_inventory()
+# Player initialization, buy and sell
+aphios = ffc.Player('Aphios', 'other', 'Banshee', underwear, fists, no_spell)
+aphios.gold = 500
+shop.buy(club, aphios)
+aphios.display_inventory()
+shop.sell(club, aphios)
+aphios.display_inventory()
