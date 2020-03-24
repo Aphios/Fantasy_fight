@@ -61,5 +61,8 @@ shop = ffc.Shop(armours, weapons, spells)
 # Test autogen
 settings = autogen(ffc.GENDERS, ffc.RACES, ffc.MALE_NAMES, ffc.FEMALE_NAMES, ffc.OTHER_NAMES,
                    [corset, rags, leathersuit], [scissors, fists, dagger], [no_spell])
-guy = ffc.Player(**settings)
-print(guy)
+sophie = ffc.Character(**settings)
+sophie.inventory.add(scythe)
+sophie.inventory.add(corset)
+sophie.inventory.add(scissors)
+sophie.display_inventory()

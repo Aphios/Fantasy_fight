@@ -105,7 +105,7 @@ class Player(Character):
 
     def __init__(self, name, gender, race, armour, weapon, spell, level=1):
         Character.__init__(self, name, gender, race, armour, weapon, spell, level=1)
-        self.inventory = {}
+        self.inventory = set()
         self.gold = random.randint(10, 200)
         self.experience = 0
 
@@ -113,9 +113,17 @@ class Player(Character):
         return Character.__repr__(self) + f", inventory : {self.inventory}, gold : {self.gold}"
 
     def __str__(self):
-        return Character.__str__(self) + f">>>>Bag<<<<\nGold : {self.gold}\nInventory : {self.inventory}\n" \
-                                         f">>>>Experience<<<<\n{self.experience} points. Next level in : " \
+        return Character.__str__(self) + f">>>>Experience<<<<\n{self.experience} points. Next level in : " \
                                          f"{XP_LEVELS[str(self.level + 1)] - self.experience} points."
+
+    def display_inventory(self):
+        print(f">>>>{self._name}'s inventory<<<<")
+        print(f"Gold : {self.gold}")
+        for elt in self.inventory:
+            if isinstance(elt, Weapon) or isinstance(elt, Spell):
+                print(f"{elt.name} : min.damage : {elt.damage_min}, max. damage : {elt.damage_max}")
+            elif isinstance(elt, Armour):
+                print(f"{elt.name} : protection : {elt.protection}")
 
 
 class Armour:
