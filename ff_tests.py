@@ -60,8 +60,4 @@ shop = ffc.Shop(armours, weapons, spells)
 
 # Player initialization, buy and sell
 aphios = ffc.Player('Aphios', 'other', 'Banshee', underwear, fists, no_spell)
-aphios.gold = 500
-shop.buy(club, aphios)
-aphios.display_inventory()
-shop.sell(club, aphios)
-aphios.display_inventory()
+print(aphios.wins)
