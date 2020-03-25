@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-24-2020
+Last update : 03-25-2020
 
 This file contains the main program and general functions.
 """
@@ -31,8 +31,11 @@ def autogen(genders, races, male_names, female_names, other_names, armours, weap
 # Main program
 if __name__ == '__main__':
     import random
+    import time
     import ff_classes as ffc
     import ff_func as fff
+
+    # <<<<------ GAME INITIALIZATION ------>>>>
 
     # Individual equipment creation
     corset = ffc.Armour('Corset', 100, 5)
@@ -63,12 +66,66 @@ if __name__ == '__main__':
     shop = ffc.Shop(armours, weapons, spells)
 
     # Player creation
-    # Player must have by default : armour : underwear, weapon : fists, spell : None
-    # User must input name, gender, race (select and verify)
+    # Ask player to input name (anything will be accepted)
+    # Ask player to input the race he chooses (Tieflin, Githzerai, Banshee, Illithid or Rakshasa)
+    # Verify input and restart asking while input is incorrect
+    # Ask player to input the gender he chooses (female, male, other)
+    # Verify input and restart asking while input is incorrect
+    # Create Player with the three inputs and default armour : underwear, weapon : fists, spell : None
     # TODO
 
     # Enemy creation
-    # The enemy must start with low level equipment, so the choice of weapons, spells and armours is limited.
+    # The enemy must start with low level equipment
     settings = autogen(ffc.GENDERS, ffc.RACES, ffc.MALE_NAMES, ffc.FEMALE_NAMES, ffc.OTHER_NAMES,
                        [corset, rags, leathersuit], [scissors, fists, dagger], [scorch, wasp_stings, no_spell])
     enemy = Character(**settings)
+
+    # <<<<------ MAIN GAME LOOP ------>>>>
+
+    # Propose the player to go shop
+    # Verify input and restart asking if incorrect
+    #TODO
+
+    # SHOPPING LOOP
+    # Ask the player if they want to buy or sell equipment
+    # If not, end loop
+    # Verify player's input and restart asking if incorrect
+    # If player chooses to sell but has nothing of price higher than 0, abort and restart loop
+    # Ask the player if they want to see armour, weapons or spells
+    # Verify player's input and restart asking if incorrect
+    # Display shop stock (shop.display(shop.stock_weapon) for example)
+    # Ask for the player's choice in displayed stock or 'Nothing'
+    # Verify player's input and restart asking if incorrect
+    # If nothing, abort and restart loop
+    # buy() or sell() accordingly to player's choice
+    #TODO
+
+    # EQUIP LOOP
+    # Propose the player to equip themself
+    # Display player's inventory and ask the player which item they want to equip
+    # Verify input and restart if incorrect
+    # If player don't want to equip, end loop
+    # equip() and restart loop
+    #TODO
+
+    # FIGHT LOOP
+    # ! Fight algorithm needed there !
+    #TODO
+
+    # If player wins : reset life to full, gain xp, add 1 to player.wins and loot
+    #TODO
+
+    # If player has enough xp to level up, do so and enhance player stats
+    #TODO
+
+    # Propose player to start another fight
+    # Verify input and restart asking if incorrect
+    # If no, print achievement message then GAME OVER
+    #TODO
+
+    # If yes, generate new enemy or enemies based on the current player's level
+    # If player is level 3 or more, he may have up  to 2 opponents of 1 level lesser
+    # If player is level 6 or more, he may have up to 3 opponents of 2 levels lesser (see if this needs to be balanced)
+    # TODO
+
+    # Start another loop (restart at the beginning of : <<<--- MAIN GAME LOOP --->>>)

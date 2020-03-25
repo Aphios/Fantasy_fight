@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-24-2020
+Last update : 03-25-2020
 
 This file contains the classes :
 - Character and its subclass Player
@@ -108,6 +108,7 @@ class Player(Character):
         self.inventory = []
         self.gold = random.randint(10, 200)
         self.experience = 0
+        self.wins = 0
 
     def __repr__(self):
         return Character.__repr__(self) + f", inventory : {self.inventory}, gold : {self.gold}"
