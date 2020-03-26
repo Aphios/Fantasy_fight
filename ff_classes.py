@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-25-2020
+Last update : 03-26-2020
 
 This file contains the classes :
 - Character and its subclass Player
@@ -35,11 +35,12 @@ INTELLIGENCE_PTS = {'Githzerai': 15, 'Rakshasa': 10, 'Illithid': 25, 'Tieflin': 
 STRENGTH_PTS = {'Githzerai': 12, 'Rakshasa': 20, 'Illithid': 10, 'Tieflin': 18, 'Banshee': 8}
 
 # Constants used to set up player's experience gains and level
-# XP_GAINS defines the experience (value) the player gets per enemy defeated, depending on the player's level (key)
-# XP_LEVELS defines the experience (value) needed to obtain a new level(key)
+# XP_GAINS defines the experience (value) the player gets per enemy defeated, depending on the enemy's level (key)
+# XP_LEVELS defines the max experience (value) before reaching a new level(key), i.e. you are level 1 until 500,
+# then level 2 from 501 to 1000, etc
 
 XP_GAINS = {'1': 125, '2': 175, '3': 200, '4': 275, '5': 375, '6': 400, '7': 475, '8': 500, '9': 750}
-XP_LEVELS = {'2': 500, '3': 1000, '4': 2000, '5': 3500, '6': 5000, '7': 7000, '8': 10000, '9': 15000, '10': 22000}
+XP_LEVELS = {'1': 500, '2': 1000, '3': 2000, '4': 3500, '5': 5000, '6': 7000, '7': 10000, '8': 15000, '9': 22000}
 
 class Character:
     """
@@ -58,40 +59,40 @@ class Character:
         self.weapon = weapon
         self.spell = spell
         if self._race == 'Githzerai':
-            self._ability = ABILITIES['Githzerai']
+            self.ability = ABILITIES['Githzerai']
             self.strength = STRENGTH_PTS['Githzerai']
             self.life = LIFE_PTS['Githzerai']
             self.intelligence = INTELLIGENCE_PTS['Githzerai']
         elif self._race == 'Rakshasa':
-            self._ability = ABILITIES['Rakshasa']
+            self.ability = ABILITIES['Rakshasa']
             self.strength = STRENGTH_PTS['Rakshasa']
             self.life = LIFE_PTS['Rakshasa']
             self.intelligence = INTELLIGENCE_PTS['Rakshasa']
         elif self._race == 'Illithid':
-            self._ability = ABILITIES['Illithid']
+            self.ability = ABILITIES['Illithid']
             self.strength = STRENGTH_PTS['Illithid']
             self.life = LIFE_PTS['Illithid']
             self.intelligence = INTELLIGENCE_PTS['Illithid']
         elif self._race == 'Tieflin':
-            self._ability = ABILITIES['Tieflin']
+            self.ability = ABILITIES['Tieflin']
             self.strength = STRENGTH_PTS['Tieflin']
             self.life = LIFE_PTS['Tieflin']
             self.intelligence = INTELLIGENCE_PTS['Tieflin']
         elif self._race == 'Banshee':
-            self._ability = ABILITIES['Banshee']
+            self.ability = ABILITIES['Banshee']
             self.strength = STRENGTH_PTS['Banshee']
             self.life = LIFE_PTS['Banshee']
             self.intelligence = INTELLIGENCE_PTS['Banshee']
 
     def __repr__(self):
-        return f"{self._name}, {self._gender}, {self._race}, ability : {self._ability['name']}, level : {self.level}" \
+        return f"{self._name}, {self._gender}, {self._race}, ability : {self.ability['name']}, level : {self.level}" \
                f", armour : {self.armour}, life : {self.life}, strength : {self.strength}, intelligence : " \
                f"{self.intelligence}, weapon : {self.weapon}, spell : {self.spell}"
 
     def __str__(self):
         return f"Name : {self._name}\nGender : {self._gender}\nRace : {self._race}\nLevel : {self.level}\n" \
                f"Strength : {self.strength}\nIntelligence : {self.intelligence}\nLife : {self.life}\n" \
-               f"Special Ability : {self._ability['name']}\n>>>>Equipment<<<<\n" \
+               f"Special Ability : {self.ability['name']}\n>>>>Equipment<<<<\n" \
                f"Armour : {self.armour.name} (protection : {self.armour.protection})\nWeapon : " \
                f"{self.weapon.name} (min.damage : {self.weapon.damage_min}, max. damage : {self.weapon.damage_max})\n" \
                f"Spell : {self.spell.name} (min.damage : {self.spell.damage_min}, max. damage : " \
@@ -125,6 +126,44 @@ class Player(Character):
                 print(f"{elt.name} : min.damage : {elt.damage_min}, max. damage : {elt.damage_max}")
             elif isinstance(elt, Armour):
                 print(f"{elt.name} : protection : {elt.protection}")
+
+    def loot(self):
+        g = random.randint(0, 100)
+        self.gold += g
+        print(f"You looted {g} gold pieces.")
+
+    def gain_xp(self, enemy):
+        """Increases player's experience depending on enemy's level and levels player up if need be."""
+        el = str(enemy.level)
+        self.experience += XP_GAINS[el]
+        print(f"You gain {XP_GAINS[el]} experience points.")
+        for elt in XP_LEVELS:
+            if self.experience < XP_LEVELS[elt] and self.level < int(elt):
+                self.level_up()
+                break
+
+    def level_up(self):
+        """Increases player's level, life, strength, intelligence and special ability.
+         + 1 for levels up to 5 ; +2 for levels from 5 to 10.
+        """
+        if self.level < 6:
+            self.life += 1
+            self.strength += 1
+            self.intelligence += 1
+            self.ability['damage_min'] += 1
+            self.ability['damage_max'] += 1
+        else:
+            self.life += 2
+            self.strength += 2
+            self.intelligence += 2
+            self.ability['damage_min'] += 2
+            self.ability['damage_max'] += 2
+        self.level += 1
+        print(f"New level reached ! Congratulations, you are now level {self.level}.")
+
+    def achievements(self):
+        print(f">>>>> {self._name}'s achievements <<<<<\n{self.wins} enemies defeated. Last level reached : "
+              f"{self.level}")
 
 
 class Armour:

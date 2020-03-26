@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-25-2020
+Last update : 03-26-2020
 
 This file contains the main program and general functions.
 """
@@ -119,6 +119,7 @@ if __name__ == '__main__':
     #TODO
 
     # Propose player to start another fight
+    # Game should stop if player has reached level 10
     # Verify input and restart asking if incorrect
     # If no, print achievement message then GAME OVER
     #TODO
