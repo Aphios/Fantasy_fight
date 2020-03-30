@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-26-2020
+Last update : 03-30-2020
 
 This file contains the classes :
 - Character and its subclass Player
@@ -133,6 +133,7 @@ class Player(Character):
         print(f"You looted {g} gold pieces.")
 
     def gain_xp(self, enemy):
+        assert isinstance(enemy, Character)
         """Increases player's experience depending on enemy's level and levels player up if need be."""
         el = str(enemy.level)
         self.experience += XP_GAINS[el]
@@ -225,6 +226,8 @@ class Shop:
         self.stock_spell = stock_spell
 
     def display(self, stock):
+        """Displays the equipment's stock passed as argument."""
+        assert stock == self.stock_weapon or stock == self.stock_armour or stock == self.stock_spell
         """Displays the selected inventory : weapons or spells or armours' names, prices and damages."""
         for elt in stock:
             print(elt)
@@ -232,6 +235,8 @@ class Shop:
     def buy(self, item, player):
         """Checks if the player has enough gold to buy item and adds it to inventory while removing corresponding gold
         price or aborts operation."""
+        assert isinstance(player, Player)
+        assert isinstance(item, Weapon) or isinstance(item, Spell) or instance(item, Armour)
         if item.price > player.gold:
             print("You don't have enough gold to buy this piece of equipment.")
         else:
@@ -241,6 +246,8 @@ class Shop:
 
     def sell(self, item, player):
         """Removes an item from player's inventory and adds to player's gold half of the item's price."""
+        assert isinstance(player, Player)
+        assert isinstance(item, Weapon) or isinstance(item, Spell) or instance(item, Armour)
         player.gold += item.price // 2
         player.inventory.remove(item)
         print(f"{item.name} sold for {item.price // 2} gold pieces.")

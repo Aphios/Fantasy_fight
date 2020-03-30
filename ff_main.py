@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-26-2020
+Last update : 03-29-2020
 
 This file contains the main program and general functions.
 """
@@ -32,6 +32,7 @@ def autogen(genders, races, male_names, female_names, other_names, armours, weap
 if __name__ == '__main__':
     import random
     import time
+    import pyinputplus as pyip
     import ff_classes as ffc
     import ff_func as fff
 
