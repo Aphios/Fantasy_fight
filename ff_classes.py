@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-30-2020
+Last update : 03-31-2020
 
 This file contains the classes :
 - Character and its subclass Player
@@ -41,6 +41,7 @@ STRENGTH_PTS = {'Githzerai': 12, 'Rakshasa': 20, 'Illithid': 10, 'Tieflin': 18, 
 
 XP_GAINS = {'1': 125, '2': 175, '3': 200, '4': 275, '5': 375, '6': 400, '7': 475, '8': 500, '9': 750}
 XP_LEVELS = {'1': 500, '2': 1000, '3': 2000, '4': 3500, '5': 5000, '6': 7000, '7': 10000, '8': 15000, '9': 22000}
+
 
 class Character:
     """
@@ -116,7 +117,7 @@ class Player(Character):
 
     def __str__(self):
         return Character.__str__(self) + f">>>>Experience<<<<\n{self.experience} points. Next level in : " \
-                                         f"{XP_LEVELS[str(self.level + 1)] - self.experience} points."
+                                         f"{XP_LEVELS[str(self.level)] - self.experience} points."
 
     def display_inventory(self):
         print(f">>>>{self._name}'s inventory<<<<")
@@ -138,10 +139,9 @@ class Player(Character):
         el = str(enemy.level)
         self.experience += XP_GAINS[el]
         print(f"You gain {XP_GAINS[el]} experience points.")
-        for elt in XP_LEVELS:
-            if self.experience < XP_LEVELS[elt] and self.level < int(elt):
-                self.level_up()
-                break
+        while self.experience > XP_LEVELS[str(self.level)]:
+            self.level_up()
+
 
     def level_up(self):
         """Increases player's level, life, strength, intelligence and special ability.
@@ -236,7 +236,7 @@ class Shop:
         """Checks if the player has enough gold to buy item and adds it to inventory while removing corresponding gold
         price or aborts operation."""
         assert isinstance(player, Player)
-        assert isinstance(item, Weapon) or isinstance(item, Spell) or instance(item, Armour)
+        assert isinstance(item, Weapon) or isinstance(item, Spell) or isinstance(item, Armour)
         if item.price > player.gold:
             print("You don't have enough gold to buy this piece of equipment.")
         else:
@@ -247,7 +247,7 @@ class Shop:
     def sell(self, item, player):
         """Removes an item from player's inventory and adds to player's gold half of the item's price."""
         assert isinstance(player, Player)
-        assert isinstance(item, Weapon) or isinstance(item, Spell) or instance(item, Armour)
+        assert isinstance(item, Weapon) or isinstance(item, Spell) or isinstance(item, Armour)
         player.gold += item.price // 2
         player.inventory.remove(item)
         print(f"{item.name} sold for {item.price // 2} gold pieces.")

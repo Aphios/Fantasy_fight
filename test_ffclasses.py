@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-30-2020
+Last update : 03-31-2020
 
 This file is used to test the classes and their instances.
 Tests to be runned with Pytest.
@@ -13,79 +13,105 @@ import pytest
 import ff_classes as ffc
 
 # Test values
-corset = ffc.Armour('Corset', 100, 5)
-underwear = ffc.Armour('Underwear', 0, 0)
-blizzard = ffc.Spell('Blizzard', 200, 8, 16)
-no_spell = ffc.Spell('No spell', 0, 0, 0)
-dagger = ffc.Weapon('Dagger', 150, 15, 25)
-fists = ffc.Weapon('Fists', 0, -8, 4)
+
+@pytest.fixture
+def corset():
+    """returns an armour object : corset"""
+    return ffc.Armour('Corset', 100, 5)
 
 
 @pytest.fixture
-def hero():
+def underwear():
+    """returns an armour object : underwear"""
+    return ffc.Armour('Underwear', 0, 0)
+
+
+@pytest.fixture
+def blizzard():
+    """returns a spell object : blizzard"""
+    return ffc.Spell('Blizzard', 200, 8, 16)
+
+
+@pytest.fixture
+def no_spell():
+    """returns a spell object : no spell"""
+    return ffc.Spell('No spell', 0, 0, 0)
+
+
+@pytest.fixture
+def dagger():
+    """returns a weapon object : dagger"""
+    return ffc.Weapon('Dagger', 150, 15, 25)
+
+
+@pytest.fixture
+def fists():
+    """returns a weapon object : fists"""
+    return ffc.Weapon('Fists', 0, -8, 4)
+
+
+@pytest.fixture
+def hero(underwear, fists, no_spell):
     """Returns a hero, aka Player."""
-    return ffc.Player('Aphios', 'other', 'Banshee', underwear, fists, no_spell)
+    return ffc.Player('Aphios', 'Other', 'Banshee', underwear, fists, no_spell)
 
 
 @pytest.fixture
-def monster():
+def monster(corset, dagger, no_spell):
     """Returns a monster, aka a Character, enemy for Player"""
-    return ffc.Character('Boss', 'Other', 'Tieflin', corset, dagger, no_spell, 5)
+    return ffc.Character('Boss', 'Other', 'Tieflin', corset, dagger, no_spell, 9)
 
 
 @pytest.fixture
-def small_shop():
+def small_shop(corset, dagger, blizzard):
     """Returns a shop containing one armour object, one weapon object, one spell object"""
     return ffc.Shop({corset}, {dagger}, {blizzard})
 
 
 # WEAPON
-def test_weapon_get_price():
+def test_weapon_get_price(dagger):
     assert dagger.price == 150
 
 
-def test_weapon_get_damage_min():
+def test_weapon_get_damage_min(dagger):
     assert dagger.damage_min == 15
 
 
-def test_weapon_set_price():
+def test_weapon_set_price(dagger):
     dagger.price = 2
     assert dagger.price == 2
 
 
 # ARMOUR
-def test_armour_get_prot():
+def test_armour_get_prot(corset):
     assert corset.protection == 5
 
 
-def test_armour_set_prot():
+def test_armour_set_prot(corset):
     corset.protection -= 1
     assert corset.protection == 4
 
 
 # SPELL
-def test_spell_get_damage_max():
+def test_spell_get_damage_max(blizzard):
     assert blizzard.damage_max == 16
 
 
-def test_spell_set_damage_max():
+def test_spell_set_damage_max(blizzard):
     blizzard.damage_max += 4
     assert blizzard.damage_max == 20
 
 
 # SHOP
-def test_get_stock_armour(small_shop):
+def test_get_stock_armour(small_shop, corset):
     assert small_shop.stock_armour == {corset}
 
 
-def test_set_stock_armour(small_shop):
+def test_set_and_display_stock_armour(capsys, small_shop, underwear):
     small_shop.stock_armour.add(underwear)
-    assert underwear in small_shop.stock_armourspell and corset in small_shop.stock_armour
-
-
-def test_display_stock_armour(small_shop):
-    d = small_shop.display(small_shop.stock_armour)
-    assert d == "Corset : protection : 5, price : 100\nUnderwear : protection : 0, price : 0"
+    small_shop.display(small_shop.stock_armour)
+    d = capsys.readouterr()
+    assert d.out == "Corset : protection : 5, price : 100\nUnderwear : protection : 0, price : 0\n"
 
 
 def test_display_stock_with_wrong_arg(small_shop):
@@ -93,52 +119,110 @@ def test_display_stock_with_wrong_arg(small_shop):
         small_shop.display(stock_weapon)
 
 
-def test_buy_with_wrong_item_type(small_shop):
-    with pytest.raises(NameError):
-        small_shop.buy('Corset')
+def test_buy_with_wrong_item_type(small_shop, hero):
+    with pytest.raises(AssertionError):
+        small_shop.buy('Corset', hero)
 
 
-def test_buy_with_wrong_player_type(small_shop):
-    with pytest.raises(NameError):
-        small_shop.buy(corset, Ismael)
+def test_buy_with_wrong_player_type(small_shop, corset, monster):
+    with pytest.raises(AssertionError):
+        small_shop.buy(corset, monster)
 
 
-def test_buy_not_enough_gold(hero):
+def test_buy_not_enough_gold(hero, small_shop, blizzard):
     hero.gold = 5
     small_shop.buy(blizzard, hero)
     assert blizzard not in hero.inventory and hero.gold == 5
 
 
-def test_buy(hero):
+def test_buy(hero, small_shop, blizzard):
     hero.gold = 200
     small_shop.buy(blizzard, hero)
     assert blizzard in hero.inventory and hero.gold == 0
 
 
-# Sell raises assert exception with wrong args (item / player)
-# Sell removes from inventory and adds to gold half object's value
+def test_sell_with_wrong_item_type(small_shop, hero):
+    with pytest.raises(AssertionError):
+        small_shop.sell('Underwear', hero)
+
+
+def test_sell_with_wrong_player_type(small_shop, corset):
+    with pytest.raises(AssertionError):
+        small_shop.sell(corset, 'Aphios')
+
+
+def test_sell(small_shop, hero, corset):
+    hero.inventory.append(corset)
+    hero.gold = 0
+    small_shop.sell(corset, hero)
+    assert corset not in hero.inventory and hero.gold == 50
+
 
 # PLAYER
-# Access player race
-# Set player race => should not be possible
-# Set player name => should not be possible
-# Set player ability => should not be possible
-# Access player level
-# Set player level
-# Access to armour
-# Set armour
-# Access to inventory
-# Add to inventory
-# Display inventory
-# Remove from inventory
-# Loot
-# Gain xp with enough xp will launch level up
-# Gain xp without enough xp will set experience
-# Level up will set level
-# Print achievements
-# Print player (must be different from character)
-# Repr player (must be different from character)
+def test_get_player_race(hero):
+    assert hero._race == 'Banshee'
 
-# CHARACTER
-# Print character (must be different from player)
-# Repr character (must be different from player)
+
+def test_get_player_life(hero):
+    assert hero.life == 28
+
+
+def test_set_player_life(hero):
+    hero.life -= 10
+    assert hero.life == 18
+
+
+def test_set_player_level(hero):
+    hero.level += 1
+    assert hero.level == 2
+
+
+def test_get_player_armour(hero):
+    assert hero.armour.name == 'Underwear'
+
+
+def test_set_player_armour(hero, corset):
+    hero.armour = corset
+    assert hero.armour.name == 'Corset'
+
+
+def test_set_player_armour_wrong_operand(hero, corset):
+    with pytest.raises(TypeError):
+        hero.armour += corset
+
+
+def test_display_inventory(capsys, hero, dagger):
+    hero.gold = 5
+    hero.inventory.append(dagger)
+    hero.display_inventory()
+    i = capsys.readouterr()
+    assert i.out == ">>>>Aphios's inventory<<<<\nGold : 5\nDagger : min.damage : 15, max. damage : 25\n"
+
+
+def test_loot(hero):
+    g = hero.gold
+    hero.loot()
+    assert hero.gold >= g
+
+
+def test_gain_xp_and_2_levelup(hero, monster):
+    print(hero)
+    hero.gain_xp(monster)
+    hero.gain_xp(monster)
+    assert hero.level == 3 and hero.experience == 1500
+
+
+def test_achievements(capsys, hero):
+    hero.wins += 3
+    hero.level = 2
+    hero.achievements()
+    a = capsys.readouterr()
+    assert a.out == ">>>>> Aphios's achievements <<<<<\n3 enemies defeated. Last level reached : 2\n"
+
+
+def test_display_player(hero):
+    p = str(hero)
+    assert p == "Name : Aphios\nGender : Other\nRace : Banshee\nLevel : 1\nStrength : 8\nIntelligence : 20\n" \
+                "Life : 28\nSpecial Ability : Scream\n>>>>Equipment<<<<\nArmour : Underwear (protection : 0)\n" \
+                "Weapon : Fists (min.damage : -8, max. damage : 4)\nSpell : No spell (min.damage : 0, " \
+                "max. damage : 0\n>>>>Experience<<<<\n0 points. Next level in : 500 points."

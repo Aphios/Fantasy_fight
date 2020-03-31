@@ -79,7 +79,7 @@ if __name__ == '__main__':
     # The enemy must start with low level equipment
     settings = autogen(ffc.GENDERS, ffc.RACES, ffc.MALE_NAMES, ffc.FEMALE_NAMES, ffc.OTHER_NAMES,
                        [corset, rags, leathersuit], [scissors, fists, dagger], [scorch, wasp_stings, no_spell])
-    enemy = Character(**settings)
+    enemy = ffc.Character(**settings)
 
     # <<<<------ MAIN GAME LOOP ------>>>>
 
