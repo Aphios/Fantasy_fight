@@ -4,13 +4,14 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-31-2020
+Last update : 04-01-2020
 
 This file is used to test the classes and their instances.
 Tests to be runned with Pytest.
 """
 import pytest
 import ff_classes as ffc
+import io
 
 # Test values
 
@@ -52,13 +53,17 @@ def fists():
 
 @pytest.fixture
 def hero(underwear, fists, no_spell):
-    """Returns a hero, aka Player."""
+    """Returns a hero : Banshee level 1.
+    Stats : underwear, no spell, fists, life : 28, strength 8, intelligence 20, ability : Scream
+    """
     return ffc.Player('Aphios', 'Other', 'Banshee', underwear, fists, no_spell)
 
 
 @pytest.fixture
 def monster(corset, dagger, no_spell):
-    """Returns a monster, aka a Character, enemy for Player"""
+    """Returns a monster : Tieflin level 9.
+    Stats : corset, dagger, no spell, life : 55, strength : 38, intelligence : 28, ability : Sting whip
+    """
     return ffc.Character('Boss', 'Other', 'Tieflin', corset, dagger, no_spell, 9)
 
 
@@ -167,6 +172,10 @@ def test_get_player_life(hero):
     assert hero.life == 28
 
 
+def test_get_character_life_with_high_level_on_init(monster):
+    assert monster.life == 55
+
+
 def test_set_player_life(hero):
     hero.life -= 10
     assert hero.life == 18
@@ -205,19 +214,20 @@ def test_loot(hero):
     assert hero.gold >= g
 
 
-def test_gain_xp_and_2_levelup(hero, monster):
+def test_gain_xp_and_2_levels_up(hero, monster):
     print(hero)
     hero.gain_xp(monster)
     hero.gain_xp(monster)
-    assert hero.level == 3 and hero.experience == 1500
+    assert hero.level == 3
+    assert hero.experience == 1500
+    assert hero.life == 30
 
 
 def test_achievements(capsys, hero):
     hero.wins += 3
-    hero.level = 2
     hero.achievements()
     a = capsys.readouterr()
-    assert a.out == ">>>>> Aphios's achievements <<<<<\n3 enemies defeated. Last level reached : 2\n"
+    assert a.out == ">>>>> Aphios's achievements <<<<<\n3 enemies defeated. Last level reached : 1\n"
 
 
 def test_display_player(hero):
@@ -226,3 +236,47 @@ def test_display_player(hero):
                 "Life : 28\nSpecial Ability : Scream\n>>>>Equipment<<<<\nArmour : Underwear (protection : 0)\n" \
                 "Weapon : Fists (min.damage : -8, max. damage : 4)\nSpell : No spell (min.damage : 0, " \
                 "max. damage : 0\n>>>>Experience<<<<\n0 points. Next level in : 500 points."
+
+
+# FIGHT
+def test_equip_with_wrong_arg_type(hero):
+    with pytest.raises(TypeError):
+        hero.equip('Club')
+
+
+def test_equip(hero, dagger):
+    hero.equip(dagger)
+    assert hero.weapon.name == "Dagger"
+    for item in hero.inventory:
+        assert item.name == "Fists"
+
+
+def test_character_random_attack(monster):
+    assert monster.random_attack() == 'Sting whip' or monster.random_attack() == 'Dagger'
+
+
+# BEWARE monkeypatch setattr signature is : (obj, name, value, raising=True)
+def test_player_choose_attack(monkeypatch, hero):
+    monkeypatch.setattr('sys.stdin', io.StringIO('1\n'))
+    assert hero.choose_attack == 'Scream'
+
+
+def test_character_hit_diminished_by_armour(monkeypatch, monster, hero, corset):
+    hero.armour = corset # armour points -4
+    monkeypatch.setattr('random.randint', 10) # damage 10 + 4 strength bonus
+    monster.hit(hero, 'Dagger') # total result : 28 - ((10 + 4) - 4)
+    assert hero.life == 18
+
+
+def test_player_hit_missed(monkeypatch, monster, hero):
+    monkeypatch.setattr('random.randint', -3)
+    hero.hit(monster, 'Scream')
+    assert monster.life == 55
+
+
+def test_player_hit_desc(capsys, monkeypatch, monster, hero):
+    monkeypatch.setattr('random.randint', 20)
+    hero.hit(monster, 'Scream')
+    h = capsys.readouterr()
+    assert h.out == "Aphios uses scream to attack !\n20 damage points dealt !\nBoss's armour absorbs 5 damage points." \
+                    "\nBoss's life points are now 40.\n"

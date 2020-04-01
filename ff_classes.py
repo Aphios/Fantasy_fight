@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-31-2020
+Last update : 04-01-2020
 
 This file contains the classes :
 - Character and its subclass Player
@@ -17,6 +17,8 @@ It also contains the constants needed to initialize class instances.
 """
 
 import random
+import pyinputplus as pyip
+import functools
 
 # Constants used to initialize characters
 
@@ -25,11 +27,11 @@ FEMALE_NAMES = ['Lydia', 'Tulie', 'Aimee', 'Selene', 'Kira', 'Ksyncix']
 OTHER_NAMES = ['Al', 'Effen', 'Juno', 'Lerrewen', 'Gorgo', 'Jviz']
 GENDERS = ['Male', 'Female', 'Other']
 RACES = ['Githzerai', 'Rakshasa', 'Illithid', 'Tieflin', 'Banshee']
-ABILITIES = {'Githzerai': {'name': 'Vicious Swash', 'damage_min': -10, 'damage_max': 10},
-             'Rakshasa': {'name': 'Subjugate', 'damage_min': -10, 'damage_max': 10},
-             'Illithid': {'name': 'Mind pump', 'damage_min': -10, 'damage_max': 10},
-             'Tieflin': {'name': 'Sting whip', 'damage_min': -10, 'damage_max': 10},
-             'Banshee': {'name': 'Scream', 'damage_min': -10, 'damage_max': 10}}
+ABILITIES = {'Githzerai': {'name': 'Vicious Swash', 'damage_min': -30, 'damage_max': 30},
+             'Rakshasa': {'name': 'Subjugate', 'damage_min': -30, 'damage_max': 30},
+             'Illithid': {'name': 'Mind pump', 'damage_min': -30, 'damage_max': 30},
+             'Tieflin': {'name': 'Sting whip', 'damage_min': -30, 'damage_max': 30},
+             'Banshee': {'name': 'Scream', 'damage_min': -30, 'damage_max': 30}}
 LIFE_PTS = {'Githzerai': 30, 'Rakshasa': 38, 'Illithid': 25, 'Tieflin': 35, 'Banshee': 28}
 INTELLIGENCE_PTS = {'Githzerai': 15, 'Rakshasa': 10, 'Illithid': 25, 'Tieflin': 8, 'Banshee': 20}
 STRENGTH_PTS = {'Githzerai': 12, 'Rakshasa': 20, 'Illithid': 10, 'Tieflin': 18, 'Banshee': 8}
@@ -52,6 +54,9 @@ class Character:
     """
 
     def __init__(self, name, gender, race, armour, weapon, spell, level=1):
+        """Creates a character with a name, gender, race, weapon, spell and level.
+        From race and level depends life, strength and intelligence.
+        """
         self.level = level
         self._name = name
         self._gender = gender
@@ -59,31 +64,17 @@ class Character:
         self.armour = armour
         self.weapon = weapon
         self.spell = spell
-        if self._race == 'Githzerai':
-            self.ability = ABILITIES['Githzerai']
-            self.strength = STRENGTH_PTS['Githzerai']
-            self.life = LIFE_PTS['Githzerai']
-            self.intelligence = INTELLIGENCE_PTS['Githzerai']
-        elif self._race == 'Rakshasa':
-            self.ability = ABILITIES['Rakshasa']
-            self.strength = STRENGTH_PTS['Rakshasa']
-            self.life = LIFE_PTS['Rakshasa']
-            self.intelligence = INTELLIGENCE_PTS['Rakshasa']
-        elif self._race == 'Illithid':
-            self.ability = ABILITIES['Illithid']
-            self.strength = STRENGTH_PTS['Illithid']
-            self.life = LIFE_PTS['Illithid']
-            self.intelligence = INTELLIGENCE_PTS['Illithid']
-        elif self._race == 'Tieflin':
-            self.ability = ABILITIES['Tieflin']
-            self.strength = STRENGTH_PTS['Tieflin']
-            self.life = LIFE_PTS['Tieflin']
-            self.intelligence = INTELLIGENCE_PTS['Tieflin']
-        elif self._race == 'Banshee':
-            self.ability = ABILITIES['Banshee']
-            self.strength = STRENGTH_PTS['Banshee']
-            self.life = LIFE_PTS['Banshee']
-            self.intelligence = INTELLIGENCE_PTS['Banshee']
+        self.ability = ABILITIES[self._race]
+        self.strength = STRENGTH_PTS[self._race]
+        self.life = LIFE_PTS[self._race]
+        self.intelligence = INTELLIGENCE_PTS[self._race]
+        # Adjusting stats to character's level
+        level_bonus_pts = functools.reduce(lambda a, b: a + (b // 2), range(self.level))
+        self.ability.damage_min += level_bonus_pts
+        self.ability.damage_max += level_bonus_pts
+        self.life += level_bonus_pts
+        self.strength += level_bonus_pts
+        self.intelligence += level_bonus_pts
 
     def __repr__(self):
         return f"{self._name}, {self._gender}, {self._race}, ability : {self.ability['name']}, level : {self.level}" \
@@ -98,6 +89,39 @@ class Character:
                f"{self.weapon.name} (min.damage : {self.weapon.damage_min}, max. damage : {self.weapon.damage_max})\n" \
                f"Spell : {self.spell.name} (min.damage : {self.spell.damage_min}, max. damage : " \
                f"{self.spell.damage_max}\n"
+
+    def random_attack(self):
+        """Randomly returns a character's weapon, ability or spell (if existing) in order to attack."""
+        if self.spell.name != 'No spell':
+            return random.choice([self.weapon.name, self.spell.name, self.ability.name])
+        else:
+            return random.choice([self.weapon.name, self.ability.name])
+
+    def hit(self, enemy, attack):
+        """Dealts damage to enemy using attack, and prints a description of the attack."""
+        if attack == self.weapon.name:
+            damage = random.randint(self.weapon.damage_min, self.weapon.damage_max) + self.strength // 4
+        elif attack == self.spell.name:
+            damage = random.randint(self.spell.damage_min, self.spell.damage_max) + self.intelligence // 5
+        else:
+            damage = random.randint(self.ability.damage_min, self.ability.damage_max)
+
+        final_damage = damage - enemy.armour.protection
+
+        if final_damage > 0:
+            enemy.life -= final_damage
+
+        def desc_hit(damage, final_damage, enemy, attack):
+            if final_damage > 0:
+                return f"{self.name} uses {attack.lower()} to attack !\n{damage} damage points dealt !\n" \
+                       f"{enemy.name}'s armour absorbs {damage - final_damage} damage points.\n" \
+                       f"{enemy.name}'s life points are now {enemy.life}."
+            else:
+                return f"{self.name} uses {attack.lower()} to attack ! {enemy.name} dodges the attack!\n" \
+                       f"{enemy.name}'s armour absorbs {damage - final_damage} damage points." \
+                       f"{enemy.name}'s life points are still {enemy.life}."
+
+        return desc_hit(damage, final_damage, enemy, attack)
 
 
 class Player(Character):
@@ -120,6 +144,7 @@ class Player(Character):
                                          f"{XP_LEVELS[str(self.level)] - self.experience} points."
 
     def display_inventory(self):
+        """Prints the players gold and inventory's content."""
         print(f">>>>{self._name}'s inventory<<<<")
         print(f"Gold : {self.gold}")
         for elt in self.inventory:
@@ -128,43 +153,72 @@ class Player(Character):
             elif isinstance(elt, Armour):
                 print(f"{elt.name} : protection : {elt.protection}")
 
+    def equip(self, item):
+        """Updates player's armour or spell or weapon slot.
+        The operation switches previous player's armour or spell or weapon with new one. Previous one is put in
+        the player's inventory.
+        """
+        if isinstance(item, Weapon):
+            self.inventory.append(self.weapon)
+            self.weapon = item
+        elif isinstance(item, Spell):
+            self.inventory.append(self.spell)
+            self.spell = item
+        elif isinstance(item, Armour):
+            self.inventory.append(self.armour)
+            self.armour = item
+        else:
+            raise TypeError("Item's type must be Weapon, Spell or Armour")
+
     def loot(self):
+        """Adds to player's gold a random amount of gold."""
         g = random.randint(0, 100)
         self.gold += g
         print(f"You looted {g} gold pieces.")
 
     def gain_xp(self, enemy):
-        assert isinstance(enemy, Character)
         """Increases player's experience depending on enemy's level and levels player up if need be."""
+        assert isinstance(enemy, Character)
         el = str(enemy.level)
         self.experience += XP_GAINS[el]
         print(f"You gain {XP_GAINS[el]} experience points.")
         while self.experience > XP_LEVELS[str(self.level)]:
             self.level_up()
 
-
     def level_up(self):
         """Increases player's level, life, strength, intelligence and special ability.
-         + 1 for levels up to 5 ; +2 for levels from 5 to 10.
+         Adds new player level // 2.
         """
-        if self.level < 6:
-            self.life += 1
-            self.strength += 1
-            self.intelligence += 1
-            self.ability['damage_min'] += 1
-            self.ability['damage_max'] += 1
-        else:
-            self.life += 2
-            self.strength += 2
-            self.intelligence += 2
-            self.ability['damage_min'] += 2
-            self.ability['damage_max'] += 2
         self.level += 1
+        self.life += self.level // 2
+        self.strength += self.level // 2
+        self.intelligence += self.level // 2
+        self.ability['damage_min'] += self.level // 2
+        self.ability['damage_max'] += self.level // 2
+
         print(f"New level reached ! Congratulations, you are now level {self.level}.")
 
     def achievements(self):
+        """Prints player's wins and level."""
         print(f">>>>> {self._name}'s achievements <<<<<\n{self.wins} enemies defeated. Last level reached : "
               f"{self.level}")
+
+    def choose_attack(self):
+        """Prompts the player to choose their weapon, ability or spell (if existing) to attack and returns choice."""
+        if self.spell.name != 'No spell':
+            print(f"Choose what you will use to attack :\nYour weapon : {self.weapon.name}, min.damage : "
+                  f"{self.weapon.damage_min}, max.damage : {self.weapon.damage_max}\nYour special ability : "
+                  f"{self.ability.name}, min. damage : {self.ability.damage_min}, max. damage : "
+                  f"{self.ability.damage_max}\nYour spell : {self.spell.name}, min.damage : {self.spell.damage_min}, "
+                  f"max.damage : {self.spell.damage_max}")
+            choice = pyip.inputMenu([self.weapon.name, self.ability.name, self.spell.name], numbered=True)
+        else:
+            print(f"Choose what you will use to attack :\nYour weapon : {self.weapon.name}, min.damage : "
+                  f"{self.weapon.damage_min}, max.damage : {self.weapon.damage_max}\nYour special ability : "
+                  f"{self.ability.name}, min. damage : {self.ability.damage_min}, max. damage : "
+                  f"{self.ability.damage_max}")
+            choice = pyip.inputMenu([self.weapon.name, self.ability.name], numbered=True)
+        return choice
 
 
 class Armour:

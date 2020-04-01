@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-27-2020
+Last update : 04-01-2020
 
 This file is used to test the main program's functions.
 Tests to be runned with Pytest.

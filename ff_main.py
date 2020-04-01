@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 03-29-2020
+Last update : 04-01-2020
 
 This file contains the main program and general functions.
 """
@@ -39,23 +39,23 @@ if __name__ == '__main__':
     # <<<<------ GAME INITIALIZATION ------>>>>
 
     # Individual equipment creation
-    corset = ffc.Armour('Corset', 100, 5)
-    leathersuit = ffc.Armour('Leathersuit', 250, 10)
+    corset = ffc.Armour('Corset', 100, 4)
+    leathersuit = ffc.Armour('Leathersuit', 250, 8)
     rags = ffc.Armour('Rags', 10, 1)
     underwear = ffc.Armour('Underwear', 0, 0)
-    platemail = ffc.Armour('Platemail', 700, 25)
-    mithril_jacket = ffc.Armour('Mithril jacket', 1500, 40)
+    platemail = ffc.Armour('Platemail', 700, 15)
+    mithril_jacket = ffc.Armour('Mithril jacket', 1500, 25)
     blizzard = ffc.Spell('Blizzard', 200, 8, 16)
     scorch = ffc.Spell('Scorch', 100, 4, 10)
-    venom_gaze = ffc.Spell('Venom gaze', 150, 15, 25)
+    venom_gaze = ffc.Spell('Venom gaze', 150, 6, 20)
     wasp_stings = ffc.Spell('Wasp stings', 50, -5, 6)
-    lightning = ffc.Spell('Lightning', 400, 25, 35)
+    lightning = ffc.Spell('Lightning', 400, 18, 28)
     no_spell = ffc.Spell('No spell', 0, 0, 0)
-    scythe = ffc.Weapon('Scythe', 400, 25, 35)
+    scythe = ffc.Weapon('Scythe', 400, 18, 28)
     scissors = ffc.Weapon('Scissors', 50, -5, 6)
     halbert = ffc.Weapon('Halbert', 200, 8, 16)
     club = ffc.Weapon('Club', 100, 4, 10)
-    dagger = ffc.Weapon('Dagger', 150, 15, 25)
+    dagger = ffc.Weapon('Dagger', 150, 6, 20)
     fists = ffc.Weapon('Fists', 0, -8, 4)
 
     # Inventories creation
@@ -65,6 +65,10 @@ if __name__ == '__main__':
 
     # Shop creation
     shop = ffc.Shop(armours, weapons, spells)
+
+    # Introducting the game
+    # Print the game rules and explanations about how damage is dealt, how one can equip, shop, the goals of the game
+    #TODO
 
     # Player creation
     # Ask player to input name (anything will be accepted)
@@ -110,6 +114,7 @@ if __name__ == '__main__':
     #TODO
 
     # FIGHT LOOP
+    # Entering fight : display enemy
     # ! Fight algorithm needed there !
     #TODO
 
