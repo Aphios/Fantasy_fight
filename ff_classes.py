@@ -69,9 +69,9 @@ class Character:
         self.life = LIFE_PTS[self._race]
         self.intelligence = INTELLIGENCE_PTS[self._race]
         # Adjusting stats to character's level
-        level_bonus_pts = functools.reduce(lambda a, b: a + (b // 2), range(self.level))
-        self.ability.damage_min += level_bonus_pts
-        self.ability.damage_max += level_bonus_pts
+        level_bonus_pts = functools.reduce(lambda a, b: a + (b // 2), range(self.level + 1))
+        self.ability['damage_min'] += level_bonus_pts
+        self.ability['damage_max'] += level_bonus_pts
         self.life += level_bonus_pts
         self.strength += level_bonus_pts
         self.intelligence += level_bonus_pts
@@ -93,35 +93,36 @@ class Character:
     def random_attack(self):
         """Randomly returns a character's weapon, ability or spell (if existing) in order to attack."""
         if self.spell.name != 'No spell':
-            return random.choice([self.weapon.name, self.spell.name, self.ability.name])
+            return random.choice([self.weapon.name, self.spell.name, self.ability['name']])
         else:
-            return random.choice([self.weapon.name, self.ability.name])
+            return random.choice([self.weapon.name, self.ability['name']])
 
     def hit(self, enemy, attack):
         """Dealts damage to enemy using attack, and prints a description of the attack."""
         if attack == self.weapon.name:
-            damage = random.randint(self.weapon.damage_min, self.weapon.damage_max) + self.strength // 4
+            dmg = random.randint(self.weapon.damage_min, self.weapon.damage_max) + self.strength // 4
         elif attack == self.spell.name:
-            damage = random.randint(self.spell.damage_min, self.spell.damage_max) + self.intelligence // 5
+            dmg = random.randint(self.spell.damage_min, self.spell.damage_max) + self.intelligence // 5
         else:
-            damage = random.randint(self.ability.damage_min, self.ability.damage_max)
+            dmg = random.randint(self.ability['damage_min'], self.ability['damage_max'])
 
-        final_damage = damage - enemy.armour.protection
+        final_dmg = dmg - enemy.armour.protection
 
+        if final_dmg > 0:
+            enemy.life -= final_dmg
+
+        self.desc_hit(dmg, final_dmg, enemy, attack)
+
+    def desc_hit(self, damage, final_damage, enemy, attack):
+        """Prints a description of the attack against the enemy."""
         if final_damage > 0:
-            enemy.life -= final_damage
-
-        def desc_hit(damage, final_damage, enemy, attack):
-            if final_damage > 0:
-                return f"{self.name} uses {attack.lower()} to attack !\n{damage} damage points dealt !\n" \
-                       f"{enemy.name}'s armour absorbs {damage - final_damage} damage points.\n" \
-                       f"{enemy.name}'s life points are now {enemy.life}."
-            else:
-                return f"{self.name} uses {attack.lower()} to attack ! {enemy.name} dodges the attack!\n" \
-                       f"{enemy.name}'s armour absorbs {damage - final_damage} damage points." \
-                       f"{enemy.name}'s life points are still {enemy.life}."
-
-        return desc_hit(damage, final_damage, enemy, attack)
+            print(f"{self._name} uses {attack.lower()} to attack !\n{damage} damage points dealt !\n" \
+                   f"{enemy._name}'s armour absorbs {damage - final_damage} damage points.\n" \
+                   f"{enemy._name}'s life points are now {enemy.life}.")
+        else:
+            print(f"{self._name} uses {attack.lower()} to attack ! {enemy._name} dodges the attack!\n" \
+                   f"{enemy._name}'s armour absorbs {damage - final_damage} damage points." \
+                   f"{enemy._name}'s life points are still {enemy.life}.")
 
 
 class Player(Character):
@@ -208,16 +209,16 @@ class Player(Character):
         if self.spell.name != 'No spell':
             print(f"Choose what you will use to attack :\nYour weapon : {self.weapon.name}, min.damage : "
                   f"{self.weapon.damage_min}, max.damage : {self.weapon.damage_max}\nYour special ability : "
-                  f"{self.ability.name}, min. damage : {self.ability.damage_min}, max. damage : "
-                  f"{self.ability.damage_max}\nYour spell : {self.spell.name}, min.damage : {self.spell.damage_min}, "
+                  f"{self.ability['name']}, min. damage : {self.ability['damage_min']}, max. damage : "
+                  f"{self.ability['damage_max']}\nYour spell : {self.spell.name}, min.damage : {self.spell.damage_min}, "
                   f"max.damage : {self.spell.damage_max}")
-            choice = pyip.inputMenu([self.weapon.name, self.ability.name, self.spell.name], numbered=True)
+            choice = pyip.inputMenu([self.weapon.name, self.ability['name'], self.spell.name], numbered=True)
         else:
             print(f"Choose what you will use to attack :\nYour weapon : {self.weapon.name}, min.damage : "
                   f"{self.weapon.damage_min}, max.damage : {self.weapon.damage_max}\nYour special ability : "
-                  f"{self.ability.name}, min. damage : {self.ability.damage_min}, max. damage : "
-                  f"{self.ability.damage_max}")
-            choice = pyip.inputMenu([self.weapon.name, self.ability.name], numbered=True)
+                  f"{self.ability['name']}, min. damage : {self.ability['damage_min']}, max. damage : "
+                  f"{self.ability['damage_max']}")
+            choice = pyip.inputMenu([self.weapon.name, self.ability['name']], numbered=True)
         return choice
 
 

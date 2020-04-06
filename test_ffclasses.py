@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 04-01-2020
+Last update : 04-06-2020
 
 This file is used to test the classes and their instances.
 Tests to be runned with Pytest.
@@ -116,7 +116,8 @@ def test_set_and_display_stock_armour(capsys, small_shop, underwear):
     small_shop.stock_armour.add(underwear)
     small_shop.display(small_shop.stock_armour)
     d = capsys.readouterr()
-    assert d.out == "Corset : protection : 5, price : 100\nUnderwear : protection : 0, price : 0\n"
+    assert (d.out == "Corset : protection : 5, price : 100\nUnderwear : protection : 0, price : 0\n" or
+            d.out == "Underwear : protection : 0, price :0\nCorset : protection : 5, price : 100\n")
 
 
 def test_display_stock_with_wrong_arg(small_shop):
@@ -252,31 +253,32 @@ def test_equip(hero, dagger):
 
 
 def test_character_random_attack(monster):
-    assert monster.random_attack() == 'Sting whip' or monster.random_attack() == 'Dagger'
+    a = monster.random_attack()
+    assert a == 'Sting whip' or monster.random_attack() == 'Dagger'
 
 
-# BEWARE monkeypatch setattr signature is : (obj, name, value, raising=True)
 def test_player_choose_attack(monkeypatch, hero):
-    monkeypatch.setattr('sys.stdin', io.StringIO('1\n'))
-    assert hero.choose_attack == 'Scream'
+    monkeypatch.setattr('sys.stdin', io.StringIO('Scream\n'))
+    assert hero.choose_attack() == 'Scream'
 
 
 def test_character_hit_diminished_by_armour(monkeypatch, monster, hero, corset):
-    hero.armour = corset # armour points -4
-    monkeypatch.setattr('random.randint', 10) # damage 10 + 4 strength bonus
-    monster.hit(hero, 'Dagger') # total result : 28 - ((10 + 4) - 4)
-    assert hero.life == 18
+    hero.armour = corset # armour points 5
+    monkeypatch.setattr('random.randint', lambda a, b: 10) # damage 10 + 9 strength bonus
+    monster.hit(hero, 'Dagger') # total result : 28 - ((10 + 9) - 5)
+    assert hero.life == 14
 
 
 def test_player_hit_missed(monkeypatch, monster, hero):
-    monkeypatch.setattr('random.randint', -3)
+    monkeypatch.setattr('random.randint', lambda a, b: -3)
     hero.hit(monster, 'Scream')
     assert monster.life == 55
 
 
 def test_player_hit_desc(capsys, monkeypatch, monster, hero):
-    monkeypatch.setattr('random.randint', 20)
+    monkeypatch.setattr('random.randint', lambda a, b: 20)
     hero.hit(monster, 'Scream')
     h = capsys.readouterr()
     assert h.out == "Aphios uses scream to attack !\n20 damage points dealt !\nBoss's armour absorbs 5 damage points." \
                     "\nBoss's life points are now 40.\n"
+
