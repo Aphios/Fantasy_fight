@@ -116,12 +116,12 @@ class Character:
     def desc_hit(self, damage, final_damage, enemy, attack):
         """Prints a description of the attack against the enemy."""
         if final_damage > 0:
-            print(f"{self._name} uses {attack.lower()} to attack !\n{damage} damage points dealt !\n" \
-                   f"{enemy._name}'s armour absorbs {damage - final_damage} damage points.\n" \
+            print(f"{self._name} uses {attack.lower()} to attack !\n{damage} damage points dealt !\n"
+                   f"{enemy._name}'s armour absorbs {damage - final_damage} damage points.\n"
                    f"{enemy._name}'s life points are now {enemy.life}.")
         else:
-            print(f"{self._name} uses {attack.lower()} to attack ! {enemy._name} dodges the attack!\n" \
-                   f"{enemy._name}'s armour absorbs {damage - final_damage} damage points." \
+            print(f"{self._name} uses {attack.lower()} to attack ! {enemy._name} dodges the attack!\n"
+                   f"{enemy._name}'s armour absorbs {damage - final_damage} damage points."
                    f"{enemy._name}'s life points are still {enemy.life}.")
 
 

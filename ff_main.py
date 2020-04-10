@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 04-01-2020
+Last update : 04-10-2020
 
 This file contains the main program and general functions.
 """
@@ -67,20 +67,20 @@ if __name__ == '__main__':
     shop = ffc.Shop(armours, weapons, spells)
 
     # Introducting the game
-    # Print the game rules and explanations about how damage is dealt, how one can equip, shop, the goals of the game
-    #TODO
+    fff.start_game()
 
     # Player creation
-    # Ask player to input name (anything will be accepted)
-    # Ask player to input the race he chooses (Tieflin, Githzerai, Banshee, Illithid or Rakshasa)
-    # Verify input and restart asking while input is incorrect
-    # Ask player to input the gender he chooses (female, male, other)
-    # Verify input and restart asking while input is incorrect
-    # Create Player with the three inputs and default armour : underwear, weapon : fists, spell : None
-    # TODO
+    p_name = input("Enter your character's name (anything will work and you can't go back so don't write crap unless"
+                   "you really mean to) : ")
+    p_gender = pyip.inputMenu(ffc.GENDERS)
+    print("Now choose your race !\n~Githzerais are agile and stealthy, but not so clever. They are healthy but lack "
+          "strength.\nBanshees are really clever but not so full of life and they definitely lack strength.\n Tieflins"
+          "are absolutely dumb but very strong and well built.\n Illithids are madly clever but rather frail.\n"
+          "Rakshasas are very strong and resisting, but nearly as dumb as Tieflins.")
+    p_race = pyip.inputMenu(ffc.RACES)
+    player = ffc.Player(p_name, p_gender, p_race, underwear, fists, no_spell)
 
     # Enemy creation
-    # The enemy must start with low level equipment
     settings = autogen(ffc.GENDERS, ffc.RACES, ffc.MALE_NAMES, ffc.FEMALE_NAMES, ffc.OTHER_NAMES,
                        [corset, rags, leathersuit], [scissors, fists, dagger], [scorch, wasp_stings, no_spell])
     enemy = ffc.Character(**settings)
@@ -88,22 +88,22 @@ if __name__ == '__main__':
     # <<<<------ MAIN GAME LOOP ------>>>>
 
     # Propose the player to go shop
-    # Verify input and restart asking if incorrect
-    #TODO
+    to_shop = pyip.inputYesNo("Do you want to go to the Shop to buy or sell some equipment ? (Yes/No)")
 
     # SHOPPING LOOP
-    # Ask the player if they want to buy or sell equipment
-    # If not, end loop
-    # Verify player's input and restart asking if incorrect
-    # If player chooses to sell but has nothing of price higher than 0, abort and restart loop
-    # Ask the player if they want to see armour, weapons or spells
-    # Verify player's input and restart asking if incorrect
-    # Display shop stock (shop.display(shop.stock_weapon) for example)
-    # Ask for the player's choice in displayed stock or 'Nothing'
-    # Verify player's input and restart asking if incorrect
-    # If nothing, abort and restart loop
-    # buy() or sell() accordingly to player's choice
-    #TODO
+    if to_shop == 'yes':
+        # Ask the player if they want to buy or sell equipment
+        # If not, end loop
+        # Verify player's input and restart asking if incorrect
+        # If player chooses to sell but has nothing of price higher than 0, abort and restart loop
+        # Ask the player if they want to see armour, weapons or spells
+        # Verify player's input and restart asking if incorrect
+        # Display shop stock (shop.display(shop.stock_weapon) for example)
+        # Ask for the player's choice in displayed stock or 'Nothing'
+        # Verify player's input and restart asking if incorrect
+        # If nothing, abort and restart loop
+        # buy() or sell() accordingly to player's choice
+        #TODO
 
     # EQUIP LOOP
     # Propose the player to equip themself

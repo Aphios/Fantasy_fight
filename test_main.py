@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 04-01-2020
+Last update : 04-10-2020
 
 This file is used to test the main program's functions.
 Tests to be runned with Pytest.
@@ -47,3 +47,6 @@ def autogen(genders, races, male_names, female_names, other_names, armours, weap
 # Assert it returns correct values
 # Test incorrect parameter : race
 # Test incorrect parameter : gender
+
+
+
