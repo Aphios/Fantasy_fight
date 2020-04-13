@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 04-01-2020
+Last update : 04-13-2020
 
 This file contains the classes :
 - Character and its subclass Player
@@ -98,7 +98,9 @@ class Character:
             return random.choice([self.weapon.name, self.ability['name']])
 
     def hit(self, enemy, attack):
-        """Dealts damage to enemy using attack, and prints a description of the attack."""
+        """Dealts damage to enemy using attack, and prints a description of the attack.
+        attack is the name (string) of weapon, spell or special ability used to hit.
+        """
         if attack == self.weapon.name:
             dmg = random.randint(self.weapon.damage_min, self.weapon.damage_max) + self.strength // 4
         elif attack == self.spell.name:
@@ -132,7 +134,7 @@ class Player(Character):
 
     def __init__(self, name, gender, race, armour, weapon, spell, level=1):
         Character.__init__(self, name, gender, race, armour, weapon, spell, level=1)
-        self.inventory = []
+        self.inventory = {}
         self.gold = random.randint(10, 200)
         self.experience = 0
         self.wins = 0
@@ -148,7 +150,7 @@ class Player(Character):
         """Prints the players gold and inventory's content."""
         print(f">>>>{self._name}'s inventory<<<<")
         print(f"Gold : {self.gold}")
-        for elt in self.inventory:
+        for elt in self.inventory.values():
             if isinstance(elt, Weapon) or isinstance(elt, Spell):
                 print(f"{elt.name} : min.damage : {elt.damage_min}, max. damage : {elt.damage_max}")
             elif isinstance(elt, Armour):
@@ -157,19 +159,21 @@ class Player(Character):
     def equip(self, item):
         """Updates player's armour or spell or weapon slot.
         The operation switches previous player's armour or spell or weapon with new one. Previous one is put in
-        the player's inventory.
+        the player's inventory, new one is removed from inventory.
         """
-        if isinstance(item, Weapon):
-            self.inventory.append(self.weapon)
-            self.weapon = item
-        elif isinstance(item, Spell):
-            self.inventory.append(self.spell)
-            self.spell = item
-        elif isinstance(item, Armour):
-            self.inventory.append(self.armour)
-            self.armour = item
+        eq = self.inventory[item]
+        if isinstance(eq, Weapon) :
+            self.inventory[self.weapon.name] = self.weapon
+            self.weapon = eq
+        elif isinstance(eq, Spell):
+            self.inventory[self.spell.name] = self.spell
+            self.spell = eq
+        elif isinstance(eq, Armour):
+            self.inventory[self.armour.name] = self.armour
+            self.armour = eq
         else:
             raise TypeError("Item's type must be Weapon, Spell or Armour")
+        del self.inventory[item]
 
     def loot(self):
         """Adds to player's gold a random amount of gold."""
@@ -221,6 +225,15 @@ class Player(Character):
             choice = pyip.inputMenu([self.weapon.name, self.ability['name']], numbered=True)
         return choice
 
+    def may_sell(self):
+        """Returns the set of the items the player may sell."""
+        sell_list = set()
+        for elt in self.inventory.values():
+            if elt.price > 0:
+                sell_list.add(elt.name)
+        if sell_list:
+            sell_list.add('Nothing')
+        return sell_list
 
 class Armour:
     """Armours are objects equiped by the player and their opponents.
@@ -255,17 +268,14 @@ class Weapon:
 
 
 class Spell(Weapon):
-    """Spells are weapons too, but a player can equip them and desequip them during the fight, and so
-    use multiple spells in the fight.
-    In next version, there probably will be new features as such as : spells that don't deal damage but heal,
-    spells that require mana points to be cast, etc
+    """Spells are weapons too.
+    In next version,the player will be able to equip them and desequip them during the fight, and so
+    use multiple spells in the fight. There will be new features as such as : spells that don't deal damage but heal,
+    spells that require mana points to be cast, etc...
     """
 
     def __init__(self, name, price, damage_min, damage_max):
         Weapon.__init__(self, name, price, damage_min, damage_max)
-
-    def __str__(self):
-        return f"{self.name} : min. damage : {self.damage_min}, max. damage : {self.damage_max}, price : {self.price}"
 
 
 class Shop:
@@ -275,34 +285,38 @@ class Shop:
     weapons and 5 different spells.
     """
 
-    def __init__(self, stock_armour, stock_weapon, stock_spell):
-        self.stock_armour = stock_armour
-        self.stock_weapon = stock_weapon
-        self.stock_spell = stock_spell
+    def __init__(self, stock):
+        self.stock = stock
+        self.list_sales = [elt for elt in stock]
+        self.list_sales.append('Nothing')
 
-    def display(self, stock):
-        """Displays the equipment's stock passed as argument."""
-        assert stock == self.stock_weapon or stock == self.stock_armour or stock == self.stock_spell
-        """Displays the selected inventory : weapons or spells or armours' names, prices and damages."""
-        for elt in stock:
+    def display(self):
+        """Displays the stocks."""
+        for elt in self.stock.values():
             print(elt)
 
     def buy(self, item, player):
         """Checks if the player has enough gold to buy item and adds it to inventory while removing corresponding gold
-        price or aborts operation."""
+        price or aborts operation.
+        item is the string name of the object, eq is the corresponding object.
+        """
         assert isinstance(player, Player)
-        assert isinstance(item, Weapon) or isinstance(item, Spell) or isinstance(item, Armour)
-        if item.price > player.gold:
+        assert item in self.stock
+        eq = self.stock[item]
+        if eq.price > player.gold:
             print("You don't have enough gold to buy this piece of equipment.")
         else:
-            player.inventory.append(item)
-            player.gold -= item.price
-            print(f"{item.name} added to inventory.")
+            player.inventory[item] = eq
+            player.gold -= eq.price
+            print(f"{item} added to inventory.")
 
     def sell(self, item, player):
-        """Removes an item from player's inventory and adds to player's gold half of the item's price."""
+        """Removes an item from player's inventory and adds to player's gold half of the item's price.
+        item is the string name of the object, eq is the corresponding object.
+        """
         assert isinstance(player, Player)
-        assert isinstance(item, Weapon) or isinstance(item, Spell) or isinstance(item, Armour)
-        player.gold += item.price // 2
-        player.inventory.remove(item)
-        print(f"{item.name} sold for {item.price // 2} gold pieces.")
+        assert item in player.inventory
+        eq = player.inventory[item]
+        player.gold += eq.price // 2
+        del player.inventory[item]
+        print(f"{item} sold for {eq.price // 2} gold pieces.")

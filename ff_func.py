@@ -18,9 +18,11 @@ def start_game():
     print("~~~RULES~~~\nYou will create a character and be given some money (or not if you're unluncky !) to buy "
           "some equipment.\nYou can choose to be a Rakshasa, an Illithid, a Tieflin, a Banshee or a Githzerai.\n From"
           "your race depends your life force, your strength, your intelligence and your special ability.\n"
-          "You will be able to buy weapons, armours and spells. Then you will fight other characters until you die"
-          "or choose to retire.\nEach enemy defeated is rewarded by experience points and a chance to loot some gold."
-          " When you have earned enough experience, you will gain a level and your stats will increase.")
+          "You will be able to buy weapons, armours and spells. You can also sell equipment in your inventory. You"
+          "cannot sell your current weapon, spell or armour unless you equip something else.\nThen you will fight "
+          "other characters until you die or choose to retire.\nEach enemy defeated is rewarded by experience points "
+          "and a chance to loot some gold. When you have earned enough experience, you will gain a level and your "
+          "stats will increase.")
     print("~~~Fighting tips~~~\nBefore entering a fight, know that :\n-you may face one or more enemies depending "
           "on your level\n-you may cause damage to your enemy with your weapon (the more strong you are, the more "
           "damage you do),\n with your spell (the more clever you are, the more damage you do),\n or with your ability "

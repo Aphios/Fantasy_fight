@@ -4,7 +4,7 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 04-06-2020
+Last update : 04-13-2020
 
 This file is used to test the classes and their instances.
 Tests to be runned with Pytest.
@@ -70,7 +70,7 @@ def monster(corset, dagger, no_spell):
 @pytest.fixture
 def small_shop(corset, dagger, blizzard):
     """Returns a shop containing one armour object, one weapon object, one spell object"""
-    return ffc.Shop({corset}, {dagger}, {blizzard})
+    return ffc.Shop({'Corset' : corset, 'Dagger' : dagger, 'Blizzard' : blizzard})
 
 
 # WEAPON
@@ -108,60 +108,66 @@ def test_spell_set_damage_max(blizzard):
 
 
 # SHOP
-def test_get_stock_armour(small_shop, corset):
-    assert small_shop.stock_armour == {corset}
+def test_get_stock(small_shop):
+    assert 'Corset' in small_shop.stock
+    assert 'Dagger' in small_shop.stock
+    assert 'Blizzard' in small_shop.stock
 
 
-def test_set_and_display_stock_armour(capsys, small_shop, underwear):
-    small_shop.stock_armour.add(underwear)
-    small_shop.display(small_shop.stock_armour)
+def test_set_and_display_stock(capsys, small_shop, underwear):
+    small_shop.stock['Underwear'] = underwear
+    small_shop.display()
     d = capsys.readouterr()
-    assert (d.out == "Corset : protection : 5, price : 100\nUnderwear : protection : 0, price : 0\n" or
-            d.out == "Underwear : protection : 0, price :0\nCorset : protection : 5, price : 100\n")
-
-
-def test_display_stock_with_wrong_arg(small_shop):
-    with pytest.raises(NameError):
-        small_shop.display(stock_weapon)
+    assert "Corset : protection : 5, price : 100" in d.out and "Underwear : protection : 0, price : 0" in d.out
 
 
 def test_buy_with_wrong_item_type(small_shop, hero):
     with pytest.raises(AssertionError):
-        small_shop.buy('Corset', hero)
+        small_shop.buy(corset, hero)
 
 
 def test_buy_with_wrong_player_type(small_shop, corset, monster):
     with pytest.raises(AssertionError):
-        small_shop.buy(corset, monster)
+        small_shop.buy('Corset', monster)
 
 
-def test_buy_not_enough_gold(hero, small_shop, blizzard):
+def test_buy_not_enough_gold(hero, small_shop):
     hero.gold = 5
-    small_shop.buy(blizzard, hero)
-    assert blizzard not in hero.inventory and hero.gold == 5
+    small_shop.buy('Blizzard', hero)
+    assert 'Blizzard' not in hero.inventory and hero.gold == 5
 
 
 def test_buy(hero, small_shop, blizzard):
     hero.gold = 200
-    small_shop.buy(blizzard, hero)
-    assert blizzard in hero.inventory and hero.gold == 0
+    small_shop.buy('Blizzard', hero)
+    assert 'Blizzard' in hero.inventory and blizzard in hero.inventory.values()
+    assert hero.gold == 0
 
 
 def test_sell_with_wrong_item_type(small_shop, hero):
     with pytest.raises(AssertionError):
-        small_shop.sell('Underwear', hero)
+        small_shop.sell(underwear, hero)
 
 
-def test_sell_with_wrong_player_type(small_shop, corset):
+def test_sell_with_wrong_player_type(small_shop):
     with pytest.raises(AssertionError):
-        small_shop.sell(corset, 'Aphios')
+        small_shop.sell('Corset', 'Aphios')
 
 
 def test_sell(small_shop, hero, corset):
-    hero.inventory.append(corset)
+    hero.inventory['Corset'] = corset
     hero.gold = 0
-    small_shop.sell(corset, hero)
-    assert corset not in hero.inventory and hero.gold == 50
+    small_shop.sell('Corset', hero)
+    assert corset not in hero.inventory.values() and hero.gold == 50
+
+
+def test_may_sell_fails(hero):
+    assert hero.may_sell() == False
+
+
+def test_may_sell(hero, corset):
+    hero.inventory['Corset'] = corset
+    assert hero.may_sell() == True
 
 
 # PLAYER
@@ -203,7 +209,7 @@ def test_set_player_armour_wrong_operand(hero, corset):
 
 def test_display_inventory(capsys, hero, dagger):
     hero.gold = 5
-    hero.inventory.append(dagger)
+    hero.inventory['Dagger'] = dagger
     hero.display_inventory()
     i = capsys.readouterr()
     assert i.out == ">>>>Aphios's inventory<<<<\nGold : 5\nDagger : min.damage : 15, max. damage : 25\n"
@@ -240,16 +246,15 @@ def test_display_player(hero):
 
 
 # FIGHT
-def test_equip_with_wrong_arg_type(hero):
+def test_equip_with_wrong_arg_type(hero, club):
     with pytest.raises(TypeError):
-        hero.equip('Club')
+        hero.equip(club)
 
 
 def test_equip(hero, dagger):
-    hero.equip(dagger)
-    assert hero.weapon.name == "Dagger"
-    for item in hero.inventory:
-        assert item.name == "Fists"
+    hero.equip('Dagger')
+    assert hero.weapon == dagger
+    assert 'Fists' in hero.inventory
 
 
 def test_character_random_attack(monster):

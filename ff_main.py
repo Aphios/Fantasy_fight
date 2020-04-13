@@ -4,10 +4,11 @@
 Author : Sophie Blanchard
 Purpose : simple fight game with fantasy characters
 Start date : 03-17-2020
-Last update : 04-10-2020
+Last update : 04-12-2020
 
 This file contains the main program and general functions.
 """
+
 
 # Main functions
 def autogen(genders, races, male_names, female_names, other_names, armours, weapons, spells):
@@ -25,7 +26,7 @@ def autogen(genders, races, male_names, female_names, other_names, armours, weap
     armour = random.choice(armours)
     weapon = random.choice(weapons)
     spell = random.choice(spells)
-    return {'name' : name, 'gender' : gender, 'race' : race, 'armour' : armour, 'weapon' : weapon, 'spell' : spell}
+    return {'name': name, 'gender': gender, 'race': race, 'armour': armour, 'weapon': weapon, 'spell': spell}
 
 
 # Main program
@@ -37,6 +38,9 @@ if __name__ == '__main__':
     import ff_func as fff
 
     # <<<<------ GAME INITIALIZATION ------>>>>
+
+    # continue game initialization
+    continue_game = True
 
     # Individual equipment creation
     corset = ffc.Armour('Corset', 100, 4)
@@ -58,13 +62,12 @@ if __name__ == '__main__':
     dagger = ffc.Weapon('Dagger', 150, 6, 20)
     fists = ffc.Weapon('Fists', 0, -8, 4)
 
-    # Inventories creation
-    armours = {corset, leathersuit, rags, platemail, mithril_jacket}
-    spells = {blizzard, scorch, venom_gaze, wasp_stings, lightning}
-    weapons = {scythe, scissors, halbert, club, dagger}
-
-    # Shop creation
-    shop = ffc.Shop(armours, weapons, spells)
+    # Inventories and shop creation
+    stocks = {'Corset': corset, 'Leathersuit': leathersuit, 'Rags': rags, 'Platemail': platemail,
+              'Mithril jacket': mithril_jacket, 'Blizzard': blizzard, 'Scorch': scorch, 'Venom gaze': venom_gaze,
+              'Wasp stings': wasp_stings, 'Lightning': lightning, 'Scythe': scythe, 'Scissors': scissors,
+              'Halbert': halbert, 'Club': club, 'Dagger': dagger}
+    shop = ffc.Shop(stocks)
 
     # Introducting the game
     fff.start_game()
@@ -77,62 +80,99 @@ if __name__ == '__main__':
           "strength.\nBanshees are really clever but not so full of life and they definitely lack strength.\n Tieflins"
           "are absolutely dumb but very strong and well built.\n Illithids are madly clever but rather frail.\n"
           "Rakshasas are very strong and resisting, but nearly as dumb as Tieflins.")
-    p_race = pyip.inputMenu(ffc.RACES)
+    p_race = pyip.inputMenu(ffc.RACES, numbered=True)
     player = ffc.Player(p_name, p_gender, p_race, underwear, fists, no_spell)
 
-    # Enemy creation
-    settings = autogen(ffc.GENDERS, ffc.RACES, ffc.MALE_NAMES, ffc.FEMALE_NAMES, ffc.OTHER_NAMES,
-                       [corset, rags, leathersuit], [scissors, fists, dagger], [scorch, wasp_stings, no_spell])
-    enemy = ffc.Character(**settings)
+    print(f"Welcome {player._name} !")
 
     # <<<<------ MAIN GAME LOOP ------>>>>
 
-    # Propose the player to go shop
-    to_shop = pyip.inputYesNo("Do you want to go to the Shop to buy or sell some equipment ? (Yes/No)")
+    while continue_game:
+        # Enemy creation
+        # Must determine if generates multiple enemies and of which level
+        # TODO
+        # line below is only temporary !
+        settings = autogen(ffc.GENDERS, ffc.RACES, ffc.MALE_NAMES, ffc.FEMALE_NAMES, ffc.OTHER_NAMES,
+                           [corset, rags, leathersuit], [scissors, fists, dagger], [scorch, wasp_stings, no_spell])
+        enemy = ffc.Character(**settings)
 
-    # SHOPPING LOOP
-    if to_shop == 'yes':
-        # Ask the player if they want to buy or sell equipment
-        # If not, end loop
-        # Verify player's input and restart asking if incorrect
-        # If player chooses to sell but has nothing of price higher than 0, abort and restart loop
-        # Ask the player if they want to see armour, weapons or spells
-        # Verify player's input and restart asking if incorrect
-        # Display shop stock (shop.display(shop.stock_weapon) for example)
-        # Ask for the player's choice in displayed stock or 'Nothing'
-        # Verify player's input and restart asking if incorrect
-        # If nothing, abort and restart loop
-        # buy() or sell() accordingly to player's choice
-        #TODO
+        # Stats consultation
+        view_stats = pyip.inputYesNo("Do you want to view your stats and equipment ? (Yes/No)")
+        if view_stats == 'Yes':
+            print(player)
+            player.display_inventory()
 
-    # EQUIP LOOP
-    # Propose the player to equip themself
-    # Display player's inventory and ask the player which item they want to equip
-    # Verify input and restart if incorrect
-    # If player don't want to equip, end loop
-    # equip() and restart loop
-    #TODO
+        # Propose the player to go shop
+        to_shop = pyip.inputYesNo("Do you want to go to the Shop to buy or sell some equipment ? (Yes/No)")
 
-    # FIGHT LOOP
-    # Entering fight : display enemy
-    # ! Fight algorithm needed there !
-    #TODO
+        # SHOPPING LOOP
+        if to_shop == yes:
+            print("--Welcome to 'Fighters Bazaar' !--")
+            continue_shop = True
 
-    # If player wins : reset life to full, gain xp, add 1 to player.wins and loot
-    #TODO
+            while continue_shop:
+                buy_or_sell = pyip.inputMenu(['Buy', 'Sell', 'Exit shop'], numbered=True)
 
-    # If player has enough xp to level up, do so and enhance player stats
-    #TODO
+                if buy_or_sell == 'Sell' and not player.may_sell():
+                    print("You have nothing to sell.")
+                    continue
+                elif buy_or_sell == 'Sell' and player.may_sell():
+                    print("Here's your inventory. Choose what you wish to sell.")
+                    player.display_inventory()
+                    for_sale = player.may_sell()
+                    time.sleep(2)
+                    selling = pyip.inputMenu(for_sale)
+                    if selling == 'Nothing':
+                        continue
+                    else:
+                        shop.sell(selling, player)
 
-    # Propose player to start another fight
-    # Game should stop if player has reached level 10
-    # Verify input and restart asking if incorrect
-    # If no, print achievement message then GAME OVER
-    #TODO
+                elif buy_or_sell == 'Buy':
+                    print("Here are the items available for sale. Choose what you wish to buy.")
+                    shop.display()
+                    time.sleep(2)
+                    buying = pyip.inputMenu(shop.list_sales)
+                    if buying == 'Nothing':
+                        continue
+                    if (buying in player.inventory or buying == player.weapon.name or buying == player.spell.name or
+                            buying == player.armour.name):
+                        print("You already have this item in your posession")
+                        continue
+                    else:
+                        shop.buy(buying, player)
 
-    # If yes, generate new enemy or enemies based on the current player's level
-    # If player is level 3 or more, he may have up  to 2 opponents of 1 level lesser
-    # If player is level 6 or more, he may have up to 3 opponents of 2 levels lesser (see if this needs to be balanced)
-    # TODO
+                elif buy_or_sell == 'Exit shop':
+                    continue_shop = False
 
-    # Start another loop (restart at the beginning of : <<<--- MAIN GAME LOOP --->>>)
+
+# EQUIP LOOP
+# Propose the player to equip themself
+# Display player's inventory and ask the player which item they want to equip
+# Verify input and restart if incorrect
+# If player don't want to equip, end loop
+# equip() and restart loop
+# TODO
+
+# FIGHT LOOP
+# Entering fight : display enemy
+# ! Fight algorithm needed there !
+# TODO
+
+# If player wins : reset life to full, gain xp, add 1 to player.wins and loot
+# TODO
+
+# If player has enough xp to level up, do so and enhance player stats
+# TODO
+
+# Propose player to start another fight
+# Game should stop if player has reached level 10
+# Verify input and restart asking if incorrect
+# If no, print achievement message then GAME OVER
+# TODO
+
+# If yes, generate new enemy or enemies based on the current player's level
+# If player is level 3 or more, he may have up  to 2 opponents of 1 level lesser
+# If player is level 6 or more, he may have up to 3 opponents of 2 levels lesser (see if this needs to be balanced)
+# TODO
+
+# Start another loop (restart at the beginning of : <<<--- MAIN GAME LOOP --->>>)
