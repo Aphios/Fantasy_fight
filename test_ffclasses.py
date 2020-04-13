@@ -162,12 +162,12 @@ def test_sell(small_shop, hero, corset):
 
 
 def test_may_sell_fails(hero):
-    assert hero.may_sell() == False
+    assert hero.may_sell() == set()
 
 
 def test_may_sell(hero, corset):
     hero.inventory['Corset'] = corset
-    assert hero.may_sell() == True
+    assert hero.may_sell() == {'Corset', 'Nothing'}
 
 
 # PLAYER
@@ -246,12 +246,13 @@ def test_display_player(hero):
 
 
 # FIGHT
-def test_equip_with_wrong_arg_type(hero, club):
-    with pytest.raises(TypeError):
-        hero.equip(club)
+def test_equip_with_wrong_arg_type(hero, dagger):
+    with pytest.raises(KeyError):
+        hero.equip(dagger)
 
 
 def test_equip(hero, dagger):
+    hero.inventory['Dagger'] = dagger
     hero.equip('Dagger')
     assert hero.weapon == dagger
     assert 'Fists' in hero.inventory
@@ -259,7 +260,7 @@ def test_equip(hero, dagger):
 
 def test_character_random_attack(monster):
     a = monster.random_attack()
-    assert a == 'Sting whip' or monster.random_attack() == 'Dagger'
+    assert a == 'Sting whip' or a == 'Dagger'
 
 
 def test_player_choose_attack(monkeypatch, hero):

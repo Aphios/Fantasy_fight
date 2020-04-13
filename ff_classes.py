@@ -160,6 +160,7 @@ class Player(Character):
         """Updates player's armour or spell or weapon slot.
         The operation switches previous player's armour or spell or weapon with new one. Previous one is put in
         the player's inventory, new one is removed from inventory.
+        item is the equipment's name, eq the corresponding object.
         """
         eq = self.inventory[item]
         if isinstance(eq, Weapon) :
