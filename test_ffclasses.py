@@ -13,8 +13,8 @@ import pytest
 import ff_classes as ffc
 import io
 
-# Test values
 
+# Test values
 @pytest.fixture
 def corset():
     """returns an armour object : corset"""
@@ -70,7 +70,7 @@ def monster(corset, dagger, no_spell):
 @pytest.fixture
 def small_shop(corset, dagger, blizzard):
     """Returns a shop containing one armour object, one weapon object, one spell object"""
-    return ffc.Shop({'Corset' : corset, 'Dagger' : dagger, 'Blizzard' : blizzard})
+    return ffc.Shop({'Corset': corset, 'Dagger': dagger, 'Blizzard': blizzard})
 
 
 # WEAPON
@@ -121,53 +121,44 @@ def test_set_and_display_stock(capsys, small_shop, underwear):
     assert "Corset : protection : 5, price : 100" in d.out and "Underwear : protection : 0, price : 0" in d.out
 
 
-def test_buy_with_wrong_item_type(small_shop, hero):
+def test_buy_with_wrong_item_type(small_shop, hero, corset):
     with pytest.raises(AssertionError):
-        small_shop.buy(corset, hero)
+        hero.buy(corset, small_shop)
 
 
-def test_buy_with_wrong_player_type(small_shop, corset, monster):
-    with pytest.raises(AssertionError):
-        small_shop.buy('Corset', monster)
+def test_buy_with_wrong_player_type(small_shop, monster):
+    with pytest.raises(AttributeError):
+        monster.buy('Corset', small_shop)
 
 
 def test_buy_not_enough_gold(hero, small_shop):
     hero.gold = 5
-    small_shop.buy('Blizzard', hero)
+    hero.buy('Blizzard', small_shop)
     assert 'Blizzard' not in hero.inventory and hero.gold == 5
 
 
 def test_buy(hero, small_shop, blizzard):
     hero.gold = 200
-    small_shop.buy('Blizzard', hero)
+    hero.buy('Blizzard', small_shop)
     assert 'Blizzard' in hero.inventory and blizzard in hero.inventory.values()
     assert hero.gold == 0
 
 
-def test_sell_with_wrong_item_type(small_shop, hero):
+def test_sell_with_wrong_item_type(hero, underwear):
     with pytest.raises(AssertionError):
-        small_shop.sell(underwear, hero)
+        hero.sell(underwear)
 
 
-def test_sell_with_wrong_player_type(small_shop):
-    with pytest.raises(AssertionError):
-        small_shop.sell('Corset', 'Aphios')
+def test_sell_with_wrong_player_type(monster):
+    with pytest.raises(AttributeError):
+        monster.sell('Corset')
 
 
-def test_sell(small_shop, hero, corset):
+def test_sell(hero, corset):
     hero.inventory['Corset'] = corset
     hero.gold = 0
-    small_shop.sell('Corset', hero)
+    hero.sell('Corset')
     assert corset not in hero.inventory.values() and hero.gold == 50
-
-
-def test_may_sell_fails(hero):
-    assert hero.may_sell() == set()
-
-
-def test_may_sell(hero, corset):
-    hero.inventory['Corset'] = corset
-    assert hero.may_sell() == {'Corset', 'Nothing'}
 
 
 # PLAYER
@@ -245,6 +236,24 @@ def test_display_player(hero):
                 "max. damage : 0\n>>>>Experience<<<<\n0 points. Next level in : 500 points."
 
 
+def test_no_available_items(hero):
+    assert hero.available_items() == []
+
+
+def test_available_items(hero, corset):
+    hero.inventory['Corset'] = corset
+    assert hero.available_items() == ['Corset', 'Nothing']
+
+
+def test_win(hero):
+    assert hero.win_or_loose()
+
+
+def test_loose(hero):
+    hero.life = 0
+    assert not hero.win_or_loose()
+
+
 # FIGHT
 def test_equip_with_wrong_arg_type(hero, dagger):
     with pytest.raises(KeyError):
@@ -269,9 +278,9 @@ def test_player_choose_attack(monkeypatch, hero):
 
 
 def test_character_hit_diminished_by_armour(monkeypatch, monster, hero, corset):
-    hero.armour = corset # armour points 5
-    monkeypatch.setattr('random.randint', lambda a, b: 10) # damage 10 + 9 strength bonus
-    monster.hit(hero, 'Dagger') # total result : 28 - ((10 + 9) - 5)
+    hero.armour = corset  # armour points 5
+    monkeypatch.setattr('random.randint', lambda a, b: 10)  # damage 10 + 9 strength bonus
+    monster.hit(hero, 'Dagger')  # total result : 28 - ((10 + 9) - 5)
     assert hero.life == 14
 
 
@@ -287,4 +296,3 @@ def test_player_hit_desc(capsys, monkeypatch, monster, hero):
     h = capsys.readouterr()
     assert h.out == "Aphios uses scream to attack !\n20 damage points dealt !\nBoss's armour absorbs 5 damage points." \
                     "\nBoss's life points are now 40.\n"
-

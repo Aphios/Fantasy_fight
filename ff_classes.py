@@ -119,12 +119,12 @@ class Character:
         """Prints a description of the attack against the enemy."""
         if final_damage > 0:
             print(f"{self._name} uses {attack.lower()} to attack !\n{damage} damage points dealt !\n"
-                   f"{enemy._name}'s armour absorbs {damage - final_damage} damage points.\n"
-                   f"{enemy._name}'s life points are now {enemy.life}.")
+                  f"{enemy._name}'s armour absorbs {damage - final_damage} damage points.\n"
+                  f"{enemy._name}'s life points are now {enemy.life}.")
         else:
             print(f"{self._name} uses {attack.lower()} to attack ! {enemy._name} dodges the attack!\n"
-                   f"{enemy._name}'s armour absorbs {damage - final_damage} damage points."
-                   f"{enemy._name}'s life points are still {enemy.life}.")
+                  f"{enemy._name}'s armour absorbs {damage - final_damage} damage points."
+                  f"{enemy._name}'s life points are still {enemy.life}.")
 
 
 class Player(Character):
@@ -132,7 +132,7 @@ class Player(Character):
     Inventory, containing armours, spells and protections, an amount of gold, and experience points.
     """
 
-    def __init__(self, name, gender, race, armour, weapon, spell, level=1):
+    def __init__(self, name, gender, race, armour, weapon, spell):
         Character.__init__(self, name, gender, race, armour, weapon, spell, level=1)
         self.inventory = {}
         self.gold = random.randint(10, 200)
@@ -163,7 +163,7 @@ class Player(Character):
         item is the equipment's name, eq the corresponding object.
         """
         eq = self.inventory[item]
-        if isinstance(eq, Weapon) :
+        if isinstance(eq, Weapon):
             self.inventory[self.weapon.name] = self.weapon
             self.weapon = eq
         elif isinstance(eq, Spell):
@@ -180,7 +180,7 @@ class Player(Character):
         """Adds to player's gold a random amount of gold."""
         g = random.randint(0, 100)
         self.gold += g
-        print(f"You looted {g} gold pieces.")
+        print(f"You loot {g} gold pieces.")
 
     def gain_xp(self, enemy):
         """Increases player's experience depending on enemy's level and levels player up if need be."""
@@ -215,8 +215,8 @@ class Player(Character):
             print(f"Choose what you will use to attack :\nYour weapon : {self.weapon.name}, min.damage : "
                   f"{self.weapon.damage_min}, max.damage : {self.weapon.damage_max}\nYour special ability : "
                   f"{self.ability['name']}, min. damage : {self.ability['damage_min']}, max. damage : "
-                  f"{self.ability['damage_max']}\nYour spell : {self.spell.name}, min.damage : {self.spell.damage_min}, "
-                  f"max.damage : {self.spell.damage_max}")
+                  f"{self.ability['damage_max']}\nYour spell : {self.spell.name}, min.damage : "
+                  f"{self.spell.damage_min}, max.damage : {self.spell.damage_max}")
             choice = pyip.inputMenu([self.weapon.name, self.ability['name'], self.spell.name], numbered=True)
         else:
             print(f"Choose what you will use to attack :\nYour weapon : {self.weapon.name}, min.damage : "
@@ -226,15 +226,51 @@ class Player(Character):
             choice = pyip.inputMenu([self.weapon.name, self.ability['name']], numbered=True)
         return choice
 
-    def may_sell(self):
-        """Returns the set of the items the player may sell."""
-        sell_list = set()
+    def available_items(self):
+        """Returns the list of the items the player may sell or equip."""
+        sell_list = []
         for elt in self.inventory.values():
             if elt.price > 0:
-                sell_list.add(elt.name)
+                sell_list.append(elt.name)
         if sell_list:
-            sell_list.add('Nothing')
+            sell_list.append('Nothing')
         return sell_list
+
+    def win_or_loose(self, enemy):
+        """Returns true if the hero survives the fight (i.e. has at least 1 life point left), false otherwise."""
+        if self.life > enemy.life:
+            print("You win the fight !")
+            return True
+        elif self.life == enemy.life:
+            print("You and your enemy die at each other's hands ! You mutually curse yourselves with your last breath.")
+        else:
+            print("You lost the fight ! You are dead and now roam the realms of undying memories.")
+        return False
+
+    def buy(self, item, shop):
+        """Checks if the player has enough gold to buy item and adds it to inventory while removing corresponding gold
+        price or aborts operation.
+        item is the string name of the object, eq is the corresponding object.
+        """
+        assert item in shop.stock
+        eq = shop.stock[item]
+        if eq.price > self.gold:
+            print("You don't have enough gold to buy this piece of equipment.")
+        else:
+            self.inventory[item] = eq
+            self.gold -= eq.price
+            print(f"{item} added to inventory.")
+
+    def sell(self, item):
+        """Removes an item from player's inventory and adds to player's gold half of the item's price.
+        item is the string name of the object, eq is the corresponding object.
+        """
+        assert item in self.inventory
+        eq = self.inventory[item]
+        self.gold += eq.price // 2
+        del self.inventory[item]
+        print(f"{item} sold for {eq.price // 2} gold pieces.")
+
 
 class Armour:
     """Armours are objects equiped by the player and their opponents.
@@ -295,29 +331,3 @@ class Shop:
         """Displays the stocks."""
         for elt in self.stock.values():
             print(elt)
-
-    def buy(self, item, player):
-        """Checks if the player has enough gold to buy item and adds it to inventory while removing corresponding gold
-        price or aborts operation.
-        item is the string name of the object, eq is the corresponding object.
-        """
-        assert isinstance(player, Player)
-        assert item in self.stock
-        eq = self.stock[item]
-        if eq.price > player.gold:
-            print("You don't have enough gold to buy this piece of equipment.")
-        else:
-            player.inventory[item] = eq
-            player.gold -= eq.price
-            print(f"{item} added to inventory.")
-
-    def sell(self, item, player):
-        """Removes an item from player's inventory and adds to player's gold half of the item's price.
-        item is the string name of the object, eq is the corresponding object.
-        """
-        assert isinstance(player, Player)
-        assert item in player.inventory
-        eq = player.inventory[item]
-        player.gold += eq.price // 2
-        del player.inventory[item]
-        print(f"{item} sold for {eq.price // 2} gold pieces.")
