@@ -1,14 +1,14 @@
-"""Fantasy Fight Project
-
--- Version 0.1
-Author : Sophie Blanchard
-Purpose : simple fight game with fantasy characters
-Start date : 03-17-2020
-Last update : 04-13-2020
+"""Fantasy Fight Project. A  simple fight game with fantasy characters.
 
 This file is used to test the main program's functions.
 Tests to be runned with Pytest.
 """
+
+__version__ = 0.1
+__author__ = "Sophie Blanchard"
+__status__ = "Prototype"
+__start_date__ = "03-17-2020"
+__last_update__ = "04-15-2020"
 
 import ff_classes as ffc
 import random
@@ -27,9 +27,6 @@ genders = ['Male', 'Female', 'Unknown']
 races = ['Elf', 'Gobelin', 'Dwarf']
 
 def autogen(genders, races, male_names, female_names, other_names, armours, weapons, spells):
-    """Generates random settings for a character.
-    The function returns a name, a gender a race, a weapon, an armour and a spell.
-    """
     gender = random.choice(genders)
     race = random.choice(races)
     if gender == 'Male':

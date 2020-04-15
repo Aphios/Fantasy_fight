@@ -1,14 +1,15 @@
-"""Fantasy Fight Project
-
--- Version 0.1
-Author : Sophie Blanchard
-Purpose : simple fight game with fantasy characters
-Start date : 03-17-2020
-Last update : 04-13-2020
+"""Fantasy Fight Project. A simple fight game with fantasy characters.
 
 This file is used to test the classes and their instances.
-Tests to be runned with Pytest.
+Tests are runned with Pytest.
 """
+
+__version__ = 0.1
+__author__ = "Sophie Blanchard"
+__status__ = "Prototype"
+__start_date__ = "03-17-2020"
+__last_update__ = "04-15-2020"
+
 import pytest
 import ff_classes as ffc
 import io
@@ -245,13 +246,14 @@ def test_available_items(hero, corset):
     assert hero.available_items() == ['Corset', 'Nothing']
 
 
-def test_win(hero):
-    assert hero.win_or_loose()
+def test_win(hero, monster):
+    monster.life = -2
+    assert hero.win_or_loose(monster)
 
 
-def test_loose(hero):
+def test_loose(hero, monster):
     hero.life = 0
-    assert not hero.win_or_loose()
+    assert not hero.win_or_loose(monster)
 
 
 # FIGHT
