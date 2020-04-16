@@ -7,7 +7,7 @@ __version__ = 0.1
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-15-2020"
+__last_update__ = "04-16-2020"
 
 # Main functions
 def start_game():
@@ -60,7 +60,7 @@ def end_game(user):
     print("~~~Game over~~~\nThank you for playing !\n~~~CREDITS~~~\nConception & programming : Aphios")
     time.sleep(10)
     #Quit program
-    # TODO
+    raise SystemExit(0)
 
 
 # Main program
@@ -81,20 +81,20 @@ if __name__ == '__main__':
     leathersuit = ffc.Armour('Leathersuit', 250, 8)
     rags = ffc.Armour('Rags', 10, 1)
     underwear = ffc.Armour('Underwear', 0, 0)
-    platemail = ffc.Armour('Platemail', 700, 15)
-    mithril_jacket = ffc.Armour('Mithril jacket', 1500, 25)
-    blizzard = ffc.Spell('Blizzard', 200, 8, 16)
-    scorch = ffc.Spell('Scorch', 100, 4, 10)
-    venom_gaze = ffc.Spell('Venom gaze', 150, 6, 20)
-    wasp_stings = ffc.Spell('Wasp stings', 50, -5, 6)
-    lightning = ffc.Spell('Lightning', 400, 18, 28)
+    platemail = ffc.Armour('Platemail', 700, 12)
+    mithril_jacket = ffc.Armour('Mithril jacket', 1500, 22)
+    blizzard = ffc.Spell('Blizzard', 200, 11, 20)
+    scorch = ffc.Spell('Scorch', 100, 6, 13)
+    venom_gaze = ffc.Spell('Venom gaze', 150, 8, 18)
+    wasp_stings = ffc.Spell('Wasp stings', 50, 0, 8)
+    lightning = ffc.Spell('Lightning', 400, 24, 33)
     no_spell = ffc.Spell('No spell', 0, 0, 0)
-    scythe = ffc.Weapon('Scythe', 400, 18, 28)
-    scissors = ffc.Weapon('Scissors', 50, -5, 6)
-    halbert = ffc.Weapon('Halbert', 200, 8, 16)
-    club = ffc.Weapon('Club', 100, 4, 10)
-    dagger = ffc.Weapon('Dagger', 150, 6, 20)
-    fists = ffc.Weapon('Fists', 0, -8, 4)
+    scythe = ffc.Weapon('Scythe', 400, 24, 33)
+    scissors = ffc.Weapon('Scissors', 50, 0, 8)
+    halbert = ffc.Weapon('Halbert', 200, 11, 20)
+    club = ffc.Weapon('Club', 100, 6, 13)
+    dagger = ffc.Weapon('Dagger', 150, 8, 18)
+    fists = ffc.Weapon('Fists', 0, -2, 6)
 
     # Inventories and shop creation
     stocks = {'Corset': corset, 'Leathersuit': leathersuit, 'Rags': rags, 'Platemail': platemail,
@@ -126,11 +126,14 @@ if __name__ == '__main__':
         # Depending on player's level, the enemy may have some advanced equipment
         if player.level < 5:
             settings = autogen(ffc.GENDERS, ffc.RACES, ffc.MALE_NAMES, ffc.FEMALE_NAMES, ffc.OTHER_NAMES,
-                               [corset, rags, leathersuit], [scissors, fists, dagger], [scorch, wasp_stings, no_spell])
+                               [corset, rags, rags, rags, corset, underwear, leathersuit],
+                               [scissors, fists, fists, fists, scissors, club, dagger],
+                               [scorch, wasp_stings, wasp_stings, no_spell, no_spell, no_spell])
         elif player.level >= 5:
             settings = autogen(ffc.GENDERS, ffc.RACES, ffc.MALE_NAMES, ffc.FEMALE_NAMES, ffc.OTHER_NAMES,
-                               [corset, platemail, leathersuit, mithril_jacket], [halbert, club, scythe, dagger],
-                               [lightning, venom_gaze, scorch, blizzard])
+                               [corset, corset, platemail, leathersuit, leathersuit, leathersuit, platemail,
+                                mithril_jacket], [halbert, halbert, club, scythe, dagger, dagger, dagger],
+                               [lightning, venom_gaze, scorch, blizzard, blizzard, venom_gaze, no_spell])
         enemy = ffc.Character(**settings)
 
         # Propose the player to view their stats and inventory

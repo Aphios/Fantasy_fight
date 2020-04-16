@@ -14,7 +14,7 @@ __version__ = 0.1
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-15-2020"
+__last_update__ = "04-16-2020"
 
 import random
 import pyinputplus as pyip
@@ -27,11 +27,11 @@ FEMALE_NAMES = ['Lydia', 'Tulie', 'Aimee', 'Selene', 'Kira', 'Ksyncix']
 OTHER_NAMES = ['Al', 'Effen', 'Juno', 'Lerrewen', 'Gorgo', 'Jviz']
 GENDERS = ['Male', 'Female', 'Other']
 RACES = ['Githzerai', 'Rakshasa', 'Illithid', 'Tieflin', 'Banshee']
-ABILITIES = {'Githzerai': {'name': 'Vicious Swash', 'damage_min': -30, 'damage_max': 30},
-             'Rakshasa': {'name': 'Subjugate', 'damage_min': -30, 'damage_max': 30},
-             'Illithid': {'name': 'Mind pump', 'damage_min': -30, 'damage_max': 30},
-             'Tieflin': {'name': 'Sting whip', 'damage_min': -30, 'damage_max': 30},
-             'Banshee': {'name': 'Scream', 'damage_min': -30, 'damage_max': 30}}
+ABILITIES = {'Githzerai': {'name': 'Vicious Swash', 'damage_min': -30, 'damage_max': 40},
+             'Rakshasa': {'name': 'Subjugate', 'damage_min': -30, 'damage_max': 40},
+             'Illithid': {'name': 'Mind pump', 'damage_min': -30, 'damage_max': 40},
+             'Tieflin': {'name': 'Sting whip', 'damage_min': -30, 'damage_max': 40},
+             'Banshee': {'name': 'Scream', 'damage_min': -30, 'damage_max': 40}}
 LIFE_PTS = {'Githzerai': 30, 'Rakshasa': 38, 'Illithid': 25, 'Tieflin': 35, 'Banshee': 28}
 INTELLIGENCE_PTS = {'Githzerai': 15, 'Rakshasa': 10, 'Illithid': 25, 'Tieflin': 8, 'Banshee': 20}
 STRENGTH_PTS = {'Githzerai': 12, 'Rakshasa': 20, 'Illithid': 10, 'Tieflin': 18, 'Banshee': 8}
