@@ -1,0 +1,7 @@
+Version 0.1 :
+1 month to issue working game (03-17 to 04-17)
+981 code lines
+~ 100 hours of work
+
+Version 0.2 :
+started 04-17
