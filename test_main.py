@@ -4,11 +4,11 @@ This file is used to test the main program's functions.
 Tests to be runned with Pytest.
 """
 
-__version__ = 0.1
+__version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-15-2020"
+__last_update__ = "04-17-2020"
 
 import ff_classes as ffc
 import random

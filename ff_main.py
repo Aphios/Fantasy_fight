@@ -3,11 +3,11 @@
 This file contains the main game program and general functions.
 """
 
-__version__ = 0.1
+__version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-16-2020"
+__last_update__ = "04-17-2020"
 
 # Main functions
 def start_game():
@@ -59,7 +59,7 @@ def end_game(user):
     user.achievements()
     print("~~~Game over~~~\nThank you for playing !\n~~~CREDITS~~~\nConception & programming : Aphios")
     time.sleep(10)
-    #Quit program
+    # Quit program
     raise SystemExit(0)
 
 
@@ -69,7 +69,6 @@ if __name__ == '__main__':
     import time
     import pyinputplus as pyip
     import ff_classes as ffc
-    import ff_func as fff
 
     # <<<<------ GAME INITIALIZATION ------>>>>
 

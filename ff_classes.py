@@ -10,11 +10,11 @@ This file contains the classes :
 It also contains the constants needed to initialize class instances.
 """
 
-__version__ = 0.1
+__version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-16-2020"
+__last_update__ = "04-17-2020"
 
 import random
 import pyinputplus as pyip
