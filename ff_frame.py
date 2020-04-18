@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-17-2020"
+__last_update__ = "04-18-2020"
 
 import pygame
 
@@ -39,7 +39,8 @@ clock = pygame.time.Clock()
 # Musics : TODO
 
 # >>> Game loop <<<
-while True:
+launched = True
+while launched:
     window.fill(VIOLET)
 
     # Intro phases (play 'The descent')
@@ -47,6 +48,10 @@ while True:
     # Shop and equip phases (play 'The path of the goblin king')
     # Fight phase (play randomly 'Killers' or 'Crossing the chasm')
     # End game (play 'The descent')
+
+    for event in pygame.event.get():
+        if event.type is pygame.QUIT:
+            launched = False
 
     pygame.display.update()
     clock.tick(FPS)
