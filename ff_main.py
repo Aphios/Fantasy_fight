@@ -1,40 +1,16 @@
 """Fantasy Fight Project. A  simple fight game with fantasy characters.
 
-This file contains the main game program and general functions.
+This file contains the main game functions and textual elements to be passed to pygame (in module ff_frame).
 """
 
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-17-2020"
+__last_update__ = "04-20-2020"
+
 
 # Main functions
-def start_game():
-    """Prints the game pitch and rules"""
-    print("Welcome fo Fantasy Fight !\nFantasy Fight is a basic 'read and choose' game.\n")
-    time.sleep(2)
-    print("~~~STORY~~~\nYou enter the Forgotten Realms, a fantasy world where heroes fight for power and glory.\n")
-    time.sleep(2)
-    print("~~~GOAL~~~\nYour goal is to defeat as many enemies as you can and gain eternal renoun !\n")
-    time.sleep(3)
-    print("~~~RULES~~~\nYou will create a character and be given some money (or not if you're unluncky !) to buy "
-          "some equipment.\nYou can choose to be a Rakshasa, an Illithid, a Tieflin, a Banshee or a Githzerai.\nFrom"
-          " your race depends your life force, your strength, your intelligence and your special ability.\n"
-          "You will be able to buy weapons, armours and spells. You can also sell equipment in your inventory.\nYou"
-          " cannot sell your current weapon, spell or armour unless you equip something else.\nThen you will fight "
-          "other characters until you die or choose to retire.\nEach enemy defeated is rewarded by experience points "
-          "and a chance to loot some gold.\nWhen you have earned enough experience, you will gain a level and your "
-          "stats will increase.\n")
-    print("~~~Fighting tips~~~\nBefore entering a fight, know that :\n- you may cause damage to your enemy with "
-          "your weapon (the more strong you are, the more damage you do),\n with your spell (the more clever "
-          "you are, the more damage you do),\n or with your ability (this one is tricky : it can make a lot of "
-          "damage but has also a more important fail risk.)\n- there is always a chance that your blow "
-          "(or your adversary's) might fail.\n")
-    print("~~~Ending game~~~\nYou may quit the game at any time.\nCaution ! This game does NOT save your character "
-          "or your stats. It is a one-shot game !\nGood luck, and have fun !\n")
-
-
 def autogen(genders, races, male_names, female_names, other_names, armours, weapons, spells):
     """Generates random settings for a character.
 
@@ -54,14 +30,88 @@ def autogen(genders, races, male_names, female_names, other_names, armours, weap
     return {'name': name, 'gender': gender, 'race': race, 'armour': armour, 'weapon': weapon, 'spell': spell}
 
 
-def end_game(user):
-    """Prints player's achievements, game over message then waits before exiting program."""
-    user.achievements()
-    print("~~~Game over~~~\nThank you for playing !\n~~~CREDITS~~~\nConception & programming : Aphios")
-    time.sleep(10)
-    # Quit program
-    raise SystemExit(0)
+def blit_text(surface, text, position, font, color):
+    """Blits hashed text in the surface and respects newlines.
+    Args : position : a tuple / font : font object / color : color object / text : string
+    / surface : surface object.
+    Rendering is anti-aliased.
+    """
+    words = [word.split(' ') for word in text.splitlines()]
+    space = font.size(' ')[0]  # The width of a space.
+    max_width, max_height = surface.get_size()
+    x, y = position
+    for line in words:
+        for word in line:
+            word_surface = font.render(word, True, color)
+            word_width, word_height = word_surface.get_size()
+            if x + word_width >= max_width:
+                x = position[0]  # Reset the x.
+                y += word_height  # Start on new row.
+            surface.blit(word_surface, (x, y))
+            x += word_width + space
+        x = position[0]  # Reset the x.
+        y += word_height  # Start on new row.
 
+
+# Text elements
+# Intro
+title = "Welcome fo Fantasy Fight !\n"
+story = "Fantasy Fight is a basic 'read and choose' game.\n~~~STORY~~~\nYou enter the Forgotten Realms, " \
+        "a fantasy world where heroes fight for power and glory.\n~~~GOAL~~~\nYour goal is to defeat " \
+        "as many enemies as you can and gain eternal renoun !"
+rules = "~~~RULES~~~\nYou will create a character and be given some money (or not if you're unlucky !) " \
+        "to buy some equipment.\nYou can choose to be a Rakshasa, an Illithid, a Tieflin, a Banshee or " \
+        "a Githzerai.\nFrom your race depends your life force, your strength, your intelligence and " \
+        "your special ability.\nYou will be able to buy weapons, armours and spells. You can also sell" \
+        " equipment in your inventory.\nYou cannot sell your current weapon, spell or armour unless " \
+        "you equip something else.\nThen you will fight other characters until you die or choose " \
+        "to retire.\nEach enemy defeated is rewarded by experience points and a chance to loot some " \
+        "gold.\nWhen you have earned enough experience, you will gain a level and your stats will " \
+        "increase.\n"
+tips = "~~~Fighting tips~~~\nBefore entering a fight, know that :\n- you may cause damage to your enemy with " \
+       "your weapon (the more strong you are, the more damage you do),\n with your spell (the more clever " \
+       "you are, the more damage you do),\n or with your ability (this one is tricky : it can make a lot of " \
+       "damage but has also a more important fail risk.)\n- there is always a chance that your blow " \
+       "(or your adversary's) might fail.\n~~~Ending game~~~\nYou may quit the game at any time.\nCaution ! " \
+       "This game does NOT save your character or your stats. It is a one-shot game !\nGood luck, " \
+       "and have fun !"
+
+# End
+game_over_msg = "~~~Game over~~~\nThank you for playing !\n"
+credits = "~~~CREDITS~~~\nConception & programming : Aphios\nMusic:\n" \
+          "'The Descent' by Kevin MacLeod\nLink: https://incompetech.filmmusic.io/song/4490-the-descent\n" \
+          "License: http://creativecommons.org/licenses/by/4.0/\n'Crossing the Chasm' by Kevin MacLeod\n" \
+          "Link: https://incompetech.filmmusic.io/song/3562-crossing-the-chasm\n" \
+          "License: http://creativecommons.org/licenses/by/4.0/\n'Killers' by Kevin MacLeod\n" \
+          "Link: https://incompetech.filmmusic.io/song/3952-killers\n" \
+          "License: http://creativecommons.org/licenses/by/4.0/\n'The Path of the Goblin King' by Kevin MacLeod" \
+          "Link: https://incompetech.filmmusic.io/song/4503-the-path-of-the-goblin-king\n" \
+          "License: http://creativecommons.org/licenses/by/4.0/\n"
+
+# Player creation
+create_player = "Let's start !\nEnter your character's name (anything will work and you can't go back so don't write " \
+                "crap unless you really mean to) : \n"
+create_player_2 = "\nNow choose your race !\n~Githzerais are agile and stealthy, but not so clever. They are healthy " \
+                  "but lack strength.\n~Banshees are really clever but not so full of life and they definitely lack " \
+                  "strength.\n~Tieflins are absolutely dumb but very strong and well built.\n~Illithids are madly " \
+                  "clever but rather frail.\n~Rakshasas are very strong and resisting, but nearly as dumb as " \
+                  "Tieflins.\n"
+welcome_player = f"Welcome {player._name} !"
+
+# Shop
+welcome_shop = "--Welcome to 'Fighters Bazaar' !--"
+no_sell = "You have nothing to sell.\n"
+inventory_choose = "Here's your inventory. Choose what you wish to sell.\n"
+buy_shop = "Here are the items available for sale. Choose what you wish to buy.\n"
+already_yours = "You already have this item in your posession.\n"
+
+# Equip
+inventory_equip = "Here's your inventory. Choose what you wish to equip.\n"
+no_equip = "You have nothing to equip !\n"
+
+# Fight
+enter_arena = "You meet your opponent in the arena : \n"
+last_level = "You have reached the last level and defeated all your enemies !\n"
 
 # Main program
 if __name__ == '__main__':
@@ -75,48 +125,17 @@ if __name__ == '__main__':
     # Initialize on-going game
     continue_game = True
 
-    # Individual equipment creation
-    corset = ffc.Armour('Corset', 100, 4)
-    leathersuit = ffc.Armour('Leathersuit', 250, 8)
-    rags = ffc.Armour('Rags', 10, 1)
-    underwear = ffc.Armour('Underwear', 0, 0)
-    platemail = ffc.Armour('Platemail', 700, 12)
-    mithril_jacket = ffc.Armour('Mithril jacket', 1500, 22)
-    blizzard = ffc.Spell('Blizzard', 200, 11, 20)
-    scorch = ffc.Spell('Scorch', 100, 6, 13)
-    venom_gaze = ffc.Spell('Venom gaze', 150, 8, 18)
-    wasp_stings = ffc.Spell('Wasp stings', 50, 0, 8)
-    lightning = ffc.Spell('Lightning', 400, 24, 33)
-    no_spell = ffc.Spell('No spell', 0, 0, 0)
-    scythe = ffc.Weapon('Scythe', 400, 24, 33)
-    scissors = ffc.Weapon('Scissors', 50, 0, 8)
-    halbert = ffc.Weapon('Halbert', 200, 11, 20)
-    club = ffc.Weapon('Club', 100, 6, 13)
-    dagger = ffc.Weapon('Dagger', 150, 8, 18)
-    fists = ffc.Weapon('Fists', 0, -2, 6)
-
-    # Inventories and shop creation
-    stocks = {'Corset': corset, 'Leathersuit': leathersuit, 'Rags': rags, 'Platemail': platemail,
-              'Mithril jacket': mithril_jacket, 'Blizzard': blizzard, 'Scorch': scorch, 'Venom gaze': venom_gaze,
-              'Wasp stings': wasp_stings, 'Lightning': lightning, 'Scythe': scythe, 'Scissors': scissors,
-              'Halbert': halbert, 'Club': club, 'Dagger': dagger}
-    shop = ffc.Shop(stocks)
-
     # Introducing the game
     start_game()
 
     # Player creation
-    p_name = input("Let's start !\nEnter your character's name (anything will work and you can't go back so don't write crap unless"
-                   "you really mean to) : \n")
+    p_name = input(create_player)
     p_gender = pyip.inputMenu(ffc.GENDERS, numbered=True)
-    print("\nNow choose your race !\n~Githzerais are agile and stealthy, but not so clever. They are healthy but lack "
-          "strength.\n~Banshees are really clever but not so full of life and they definitely lack strength.\n~Tieflins"
-          " are absolutely dumb but very strong and well built.\n~Illithids are madly clever but rather frail.\n"
-          "~Rakshasas are very strong and resisting, but nearly as dumb as Tieflins.\n")
+    print(create_player_2)
     p_race = pyip.inputMenu(ffc.RACES, numbered=True)
     player = ffc.Player(p_name, p_gender, p_race, underwear, fists, no_spell)
 
-    print(f"Welcome {player._name} !")
+    print(welcome_player)
 
     # <<<<------ MAIN GAME LOOP ------>>>>
 
@@ -146,7 +165,7 @@ if __name__ == '__main__':
 
         # SHOPPING LOOP
         if to_shop == 'yes':
-            print("--Welcome to 'Fighters Bazaar' !--")
+            print(welcome_shop)
             continue_shop = True
 
             while continue_shop:
@@ -155,11 +174,11 @@ if __name__ == '__main__':
 
                 # If player has nothing to sell, go back to shop menu
                 if buy_or_sell == 'Sell' and not player.available_items():
-                    print("You have nothing to sell.\n")
+                    print(no_sell)
                     continue
                 # If player may sell something, make the deal
                 elif buy_or_sell == 'Sell' and player.available_items():
-                    print("Here's your inventory. Choose what you wish to sell.\n")
+                    print(inventory_choose)
                     player.display_inventory()
                     print("\n")
                     time.sleep(2)
@@ -171,7 +190,7 @@ if __name__ == '__main__':
 
                 # Or buy something if the player doesn't already have the item in their posession
                 elif buy_or_sell == 'Buy':
-                    print("Here are the items available for sale. Choose what you wish to buy.\n")
+                    print(buy_shop)
                     shop.display()
                     print("\n")
                     time.sleep(2)
@@ -180,7 +199,7 @@ if __name__ == '__main__':
                         continue
                     if (buying in player.inventory or buying == player.weapon.name or buying == player.spell.name or
                             buying == player.armour.name):
-                        print("You already have this item in your posession.\n")
+                        print(already_yours)
                         continue
                     else:
                         player.buy(buying, shop)
@@ -196,7 +215,7 @@ if __name__ == '__main__':
             while continue_equip:
                 if player.available_items():
                     # Make the player choose from their inventories one or more objects to equip
-                    print("Here's your inventory. Choose what you wish to equip.\n")
+                    print(inventory_equip)
                     player.display_inventory()
                     print("\n")
                     equiping = pyip.inputMenu(player.available_items(), numbered=True)
@@ -206,12 +225,12 @@ if __name__ == '__main__':
                     if re_equip == 'no':
                         continue_equip = False
                 else:
-                    print("You have nothing to equip !\n")
+                    print(no_equip)
                     continue_equip = False
 
         # FIGHT LOOP
         # Introduce the opponent
-        print("You meet your opponent in the arena : \n")
+        print(enter_arena)
         print(enemy)
         time.sleep(7)
         # Save starting life points for future restoration
@@ -245,8 +264,12 @@ if __name__ == '__main__':
                 continue_game = False
         # If player has reached the last level, congratulate them and stop the game.
         if player.level >= 10:
-            print("You have reached the last level and defeated all your enemies !\n")
+            print(last_level)
             continue_game = False
 
     # >>> END GAME <<<
-    end_game(player)
+    player.achievements()
+    print(game_over_msg)
+    time.sleep(3)
+    print(credits)
+    raise SystemExit(0)
