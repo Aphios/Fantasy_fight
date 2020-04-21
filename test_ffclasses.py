@@ -8,7 +8,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-17-2020"
+__last_update__ = "04-21-2020"
 
 import pytest
 import ff_classes as ffc
@@ -71,7 +71,7 @@ def monster(corset, dagger, no_spell):
 @pytest.fixture
 def small_shop(corset, dagger, blizzard):
     """Returns a shop containing one armour object, one weapon object, one spell object"""
-    return ffc.Shop({'Corset': corset, 'Dagger': dagger, 'Blizzard': blizzard})
+    return ffc.Shop({'Corset': corset}, {'Blizzard': blizzard}, {'Dagger': dagger})
 
 
 # WEAPON
@@ -110,16 +110,17 @@ def test_spell_set_damage_max(blizzard):
 
 # SHOP
 def test_get_stock(small_shop):
-    assert 'Corset' in small_shop.stock
-    assert 'Dagger' in small_shop.stock
-    assert 'Blizzard' in small_shop.stock
+    assert 'Corset' in small_shop.stock_armour
+    assert 'Dagger' in small_shop.stock_weapon
+    assert 'Blizzard' in small_shop.stock_spell
 
 
 def test_set_and_display_stock(capsys, small_shop, underwear):
-    small_shop.stock['Underwear'] = underwear
-    small_shop.display()
+    small_shop.stock_armour['Underwear'] = underwear
+    small_shop.display_armour()
     d = capsys.readouterr()
-    assert "Corset : protection : 5, price : 100" in d.out and "Underwear : protection : 0, price : 0" in d.out
+    assert "Corset (Armour) >> protection : 5, price : 100" in d.out and "Underwear (Armour) >> protection : 0, " \
+                                                                         "price : 0" in d.out
 
 
 def test_buy_with_wrong_item_type(small_shop, hero, corset):
@@ -296,5 +297,5 @@ def test_player_hit_desc(capsys, monkeypatch, monster, hero):
     monkeypatch.setattr('random.randint', lambda a, b: 20)
     hero.hit(monster, 'Scream')
     h = capsys.readouterr()
-    assert h.out == "Aphios uses scream to attack !\n20 damage points dealt !\nBoss's armour absorbs 5 damage points." \
+    assert h.out == "Aphios uses scream to attack !\n20 damage dealt !\nBoss's armour absorbs 5 damage. " \
                     "\nBoss's life points are now 40.\n"

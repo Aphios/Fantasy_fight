@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-20-2020"
+__last_update__ = "04-21-2020"
 
 
 # Main functions
@@ -55,7 +55,7 @@ def blit_text(surface, text, position, font, color):
 
 # Text elements
 # Intro
-title = "Welcome fo Fantasy Fight !\n"
+title = "Fantasy Fight\n"
 story = "Fantasy Fight is a basic 'read and choose' game.\n~~~STORY~~~\nYou enter the Forgotten Realms, " \
         "a fantasy world where heroes fight for power and glory.\n~~~GOAL~~~\nYour goal is to defeat " \
         "as many enemies as you can and gain eternal renoun !"
@@ -96,7 +96,6 @@ create_player_2 = "\nNow choose your race !\n~Githzerais are agile and stealthy,
                   "strength.\n~Tieflins are absolutely dumb but very strong and well built.\n~Illithids are madly " \
                   "clever but rather frail.\n~Rakshasas are very strong and resisting, but nearly as dumb as " \
                   "Tieflins.\n"
-welcome_player = f"Welcome {player._name} !"
 
 # Shop
 welcome_shop = "--Welcome to 'Fighters Bazaar' !--"
@@ -104,6 +103,7 @@ no_sell = "You have nothing to sell.\n"
 inventory_choose = "Here's your inventory. Choose what you wish to sell.\n"
 buy_shop = "Here are the items available for sale. Choose what you wish to buy.\n"
 already_yours = "You already have this item in your posession.\n"
+which_stock = "Which stocks do you wish to look at ?\n"
 
 # Equip
 inventory_equip = "Here's your inventory. Choose what you wish to equip.\n"
@@ -135,8 +135,6 @@ if __name__ == '__main__':
     p_race = pyip.inputMenu(ffc.RACES, numbered=True)
     player = ffc.Player(p_name, p_gender, p_race, underwear, fists, no_spell)
 
-    print(welcome_player)
-
     # <<<<------ MAIN GAME LOOP ------>>>>
 
     while continue_game:
@@ -155,6 +153,7 @@ if __name__ == '__main__':
         enemy = ffc.Character(**settings)
 
         # Propose the player to view their stats and inventory
+        print(f"Welcome {player._name} !")
         view_stats = pyip.inputYesNo("Do you want to view your stats and equipment ? (Yes/No)\n")
         if view_stats == 'yes':
             print(player)
@@ -190,11 +189,24 @@ if __name__ == '__main__':
 
                 # Or buy something if the player doesn't already have the item in their posession
                 elif buy_or_sell == 'Buy':
+                    print(which_stock)
+                    stock_type = pyip.inputMenu(['Armours', 'Weapons', 'Spells'], numbered=True)
                     print(buy_shop)
-                    shop.display()
-                    print("\n")
-                    time.sleep(2)
-                    buying = pyip.inputMenu(shop.list_sales, numbered=True)
+                    buying = 'Nothing'
+
+                    if stock_type == 'Armours':
+                        shop.display_armour()
+                        print("\n")
+                        buying = pyip.inputMenu(shop.list_armour_sales, numbered=True)
+                    elif stock_type == 'Spells':
+                        shop.display_spell()
+                        print("\n")
+                        buying = pyip.inputMenu(shop.list_spell_sales, numbered=True)
+                    elif stock_type== 'Weapons':
+                        shop.display_weapon()
+                        print("\n")
+                        buying = pyip.inputMenu(shop.list_weapon_sales_sales, numbered=True)
+
                     if buying == 'Nothing':
                         continue
                     if (buying in player.inventory or buying == player.weapon.name or buying == player.spell.name or

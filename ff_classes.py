@@ -14,7 +14,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-17-2020"
+__last_update__ = "04-21-2020"
 
 import random
 import pyinputplus as pyip
@@ -130,10 +130,10 @@ class Character:
         if final_damage > 0:
             print(f"{self._name} uses {attack.lower()} to attack !\n{damage} damage dealt !\n"
                   f"{enemy._name}'s armour absorbs {damage - final_damage} damage. \n"
-                  f"{enemy._name}'s life points are now {enemy.life}.\n")
+                  f"{enemy._name}'s life points are now {enemy.life}.")
         else:
             print(f"{self._name} uses {attack.lower()} to attack ! {enemy._name} dodges the attack!\n"
-                  f"{enemy._name}'s life points are still {enemy.life}.\n")
+                  f"{enemy._name}'s life points are still {enemy.life}.")
 
 
 class Player(Character):
@@ -217,7 +217,7 @@ class Player(Character):
     def achievements(self):
         """Prints player's wins and level."""
         print(f">>>>> {self._name}'s achievements <<<<<\n{self.wins} enemies defeated. Last level reached : "
-              f"{self.level}\n")
+              f"{self.level}")
 
     def choose_attack(self):
         """Prompts the player to choose their weapon, ability or spell (if existing) to attack and returns choice."""
@@ -266,8 +266,13 @@ class Player(Character):
         Args : item : the string name of the object to buy
         Vars : eq : the corresponding object.
         """
-        assert item in shop.stock
-        eq = shop.stock[item]
+        assert item in shop.stock_armour or item in shop.stock_weapon or item in shop.stock_spell
+        if item in shop.stock_weapon:
+            eq = shop.stock_weapon[item]
+        elif item in shop.stock_armour:
+            eq = shop.stock_armour[item]
+        elif item in shop.stock_spell:
+            eq = shop.stock_spell[item]
         if eq.price > self.gold:
             print("You don't have enough gold to buy this piece of equipment.")
         else:
@@ -353,12 +358,29 @@ class Shop:
     weapons and 5 different spells.
     """
 
-    def __init__(self, stock):
-        self.stock = stock
-        self.list_sales = [elt for elt in stock]
-        self.list_sales.append('Nothing')
+    def __init__(self, armours, spells, weapons):
+        self.stock_armour = armours
+        self.stock_spell = spells
+        self.stock_weapon = weapons
+        self.list_armour_sales = [elt for elt in armours]
+        self.list_armour_sales.append('Nothing')
+        self.list_spell_sales = [elt for elt in spells]
+        self.list_spell_sales.append('Nothing')
+        self.list_weapon_sales = [elt for elt in weapons]
+        self.list_weapon_sales.append('Nothing')
 
-    def display(self):
-        """Displays the stocks."""
-        for elt in self.stock.values():
+    def display_armour(self):
+        """Displays the armour stocks."""
+        for elt in self.stock_armour.values():
             print(elt)
+
+    def display_weapon(self):
+        """Displays the weapon stocks."""
+        for elt in self.stock_weapon.values():
+            print(elt)
+
+    def display_spell(self):
+        """Displays the spell stocks."""
+        for elt in self.stock_spell.values():
+            print(elt)
+

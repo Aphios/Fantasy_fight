@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-20-2020"
+__last_update__ = "04-21-2020"
 
 
 import pygame
@@ -31,7 +31,7 @@ NAVY = (7, 53, 179)
 BURGUNDY = (122, 15, 36)
 
 #Fonts
-immortal_big = pygame.font.Font('Fonts/immortal.ttf', 24)
+immortal_big = pygame.font.Font('Fonts/immortal.ttf', 36)
 immortal_small = pygame.font.Font('Fonts/immortal.ttf', 16)
 
 # Animation
@@ -73,16 +73,20 @@ dagger = ffc.Weapon('Dagger', 150, 8, 18)
 fists = ffc.Weapon('Fists', 0, -2, 6)
 
 # Inventories and shop creation
-stocks = {'Corset': corset, 'Leathersuit': leathersuit, 'Rags': rags, 'Platemail': platemail,
-          'Mithril jacket': mithril_jacket, 'Blizzard': blizzard, 'Scorch': scorch, 'Venom gaze': venom_gaze,
-          'Wasp stings': wasp_stings, 'Lightning': lightning, 'Scythe': scythe, 'Scissors': scissors,
-          'Halbert': halbert, 'Club': club, 'Dagger': dagger}
-shop = ffc.Shop(stocks)
+stock_armour = {'Corset': corset, 'Leathersuit': leathersuit, 'Rags': rags, 'Platemail': platemail,
+                'Mithril jacket': mithril_jacket}
+stock_weapon = {'Scythe': scythe, 'Scissors': scissors,'Halbert': halbert, 'Club': club, 'Dagger': dagger}
+stock_spell = {'Blizzard': blizzard, 'Scorch': scorch, 'Venom gaze': venom_gaze, 'Wasp stings': wasp_stings,
+               'Lightning': lightning}
+shop = ffc.Shop(stock_armour, stock_spell, stock_weapon)
 
 # >>>>>> *** GAME LOOP *** <<<<<<<<
 launched = True
 
 while launched:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            launched = False
 
     # GAME INTRO
     # Play intro music
@@ -91,7 +95,7 @@ while launched:
     pygame.mixer_music.play(-1)
     # Intro screen
     window.blit(intro_screen, (0, 0))
-    ffm.blit_text(window, ffm.title, (240, 270), immortal_big, BLACK)
+    ffm.blit_text(window, ffm.title, (280, 270), immortal_big, BLACK)
     pygame.display.flip()
     time.sleep(2)
     # Intro text
@@ -117,9 +121,6 @@ while launched:
 
     # End game (play 'The descent')
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            launched = False
 
     pygame.display.flip()
     clock.tick(FPS)
