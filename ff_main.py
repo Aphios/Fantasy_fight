@@ -1,93 +1,17 @@
 """Fantasy Fight Project. A  simple fight game with fantasy characters.
 
-This file contains the main game functions and textual elements to be passed to pygame (in module ff_frame).
+This file contains the main game functions and textual elements to be passed to pygame (in module ff_game).
 """
 
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-21-2020"
-
-
-# Main functions
-def autogen(genders, races, male_names, female_names, other_names, armours, weapons, spells):
-    """Generates random settings for a character.
-
-    Returns : a dict containing a name, a gender, a race, a weapon, an armour and a spell.
-    """
-    gender = random.choice(genders)
-    race = random.choice(races)
-    if gender == 'Male':
-        name = random.choice(male_names)
-    elif gender == 'Female':
-        name = random.choice(female_names)
-    else:
-        name = random.choice(other_names)
-    armour = random.choice(armours)
-    weapon = random.choice(weapons)
-    spell = random.choice(spells)
-    return {'name': name, 'gender': gender, 'race': race, 'armour': armour, 'weapon': weapon, 'spell': spell}
-
-
-def blit_text(surface, text, position, font, color):
-    """Blits hashed text in the surface and respects newlines.
-    Args : position : a tuple / font : font object / color : color object / text : string
-    / surface : surface object.
-    Rendering is anti-aliased.
-    """
-    words = [word.split(' ') for word in text.splitlines()]
-    space = font.size(' ')[0]  # The width of a space.
-    max_width, max_height = surface.get_size()
-    x, y = position
-    for line in words:
-        for word in line:
-            word_surface = font.render(word, True, color)
-            word_width, word_height = word_surface.get_size()
-            if x + word_width >= max_width:
-                x = position[0]  # Reset the x.
-                y += word_height  # Start on new row.
-            surface.blit(word_surface, (x, y))
-            x += word_width + space
-        x = position[0]  # Reset the x.
-        y += word_height  # Start on new row.
+__last_update__ = "04-27-2020"
 
 
 # Text elements
-# Intro
-title = "Fantasy Fight\n"
-story = "Fantasy Fight is a basic 'read and choose' game.\n~~~STORY~~~\nYou enter the Forgotten Realms, " \
-        "a fantasy world where heroes fight for power and glory.\n~~~GOAL~~~\nYour goal is to defeat " \
-        "as many enemies as you can and gain eternal renoun !"
-rules = "~~~RULES~~~\nYou will create a character and be given some money (or not if you're unlucky !) " \
-        "to buy some equipment.\nYou can choose to be a Rakshasa, an Illithid, a Tieflin, a Banshee or " \
-        "a Githzerai.\nFrom your race depends your life force, your strength, your intelligence and " \
-        "your special ability.\nYou will be able to buy weapons, armours and spells. You can also sell" \
-        " equipment in your inventory.\nYou cannot sell your current weapon, spell or armour unless " \
-        "you equip something else.\nThen you will fight other characters until you die or choose " \
-        "to retire.\nEach enemy defeated is rewarded by experience points and a chance to loot some " \
-        "gold.\nWhen you have earned enough experience, you will gain a level and your stats will " \
-        "increase.\n"
-tips = "~~~Fighting tips~~~\nBefore entering a fight, know that :\n- you may cause damage to your enemy with " \
-       "your weapon (the more strong you are, the more damage you do),\n with your spell (the more clever " \
-       "you are, the more damage you do),\n or with your ability (this one is tricky : it can make a lot of " \
-       "damage but has also a more important fail risk.)\n- there is always a chance that your blow " \
-       "(or your adversary's) might fail.\n~~~Ending game~~~\nYou may quit the game at any time.\nCaution ! " \
-       "This game does NOT save your character or your stats. It is a one-shot game !\nGood luck, " \
-       "and have fun !"
-
-# End
-game_over_msg = "~~~Game over~~~\nThank you for playing !\n"
-credits = "~~~CREDITS~~~\nConception & programming : Aphios\nMusic:\n" \
-          "'The Descent' by Kevin MacLeod\nLink: https://incompetech.filmmusic.io/song/4490-the-descent\n" \
-          "License: http://creativecommons.org/licenses/by/4.0/\n'Crossing the Chasm' by Kevin MacLeod\n" \
-          "Link: https://incompetech.filmmusic.io/song/3562-crossing-the-chasm\n" \
-          "License: http://creativecommons.org/licenses/by/4.0/\n'Killers' by Kevin MacLeod\n" \
-          "Link: https://incompetech.filmmusic.io/song/3952-killers\n" \
-          "License: http://creativecommons.org/licenses/by/4.0/\n'The Path of the Goblin King' by Kevin MacLeod" \
-          "Link: https://incompetech.filmmusic.io/song/4503-the-path-of-the-goblin-king\n" \
-          "License: http://creativecommons.org/licenses/by/4.0/\n"
-
+# TODO : transpose them into game functions
 # Player creation
 create_player = "Let's start !\nEnter your character's name (anything will work and you can't go back so don't write " \
                 "crap unless you really mean to) : \n"

@@ -6,44 +6,24 @@ This file contains the classes :
 - Weapon
 - Spell
 - Armour
-
-It also contains the constants needed to initialize class instances.
+- Button
+- GameScene and its subclasses
 """
 
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-21-2020"
+__last_update__ = "04-27-2020"
 
 import random
 import pyinputplus as pyip
 import functools
+import ff_constants as ffc
+import pygame
+import time
 
-# Constants used to initialize characters
-
-MALE_NAMES = ['Albert', 'Kronos', 'Alec', 'Bran', 'Urtuk', 'Shun']
-FEMALE_NAMES = ['Lydia', 'Tulie', 'Aimee', 'Selene', 'Kira', 'Ksyncix']
-OTHER_NAMES = ['Al', 'Effen', 'Juno', 'Lerrewen', 'Gorgo', 'Jviz']
-GENDERS = ['Male', 'Female', 'Other']
-RACES = ['Githzerai', 'Rakshasa', 'Illithid', 'Tieflin', 'Banshee']
-ABILITIES = {'Githzerai': {'name': 'Vicious Swash', 'damage_min': -30, 'damage_max': 40},
-             'Rakshasa': {'name': 'Subjugate', 'damage_min': -30, 'damage_max': 40},
-             'Illithid': {'name': 'Mind pump', 'damage_min': -30, 'damage_max': 40},
-             'Tieflin': {'name': 'Sting whip', 'damage_min': -30, 'damage_max': 40},
-             'Banshee': {'name': 'Scream', 'damage_min': -30, 'damage_max': 40}}
-LIFE_PTS = {'Githzerai': 30, 'Rakshasa': 38, 'Illithid': 25, 'Tieflin': 35, 'Banshee': 28}
-INTELLIGENCE_PTS = {'Githzerai': 15, 'Rakshasa': 10, 'Illithid': 25, 'Tieflin': 8, 'Banshee': 20}
-STRENGTH_PTS = {'Githzerai': 12, 'Rakshasa': 20, 'Illithid': 10, 'Tieflin': 18, 'Banshee': 8}
-
-# Constants used to set up player's experience gains and level
-# XP_GAINS defines the experience (value) the player gets per enemy defeated, depending on the enemy's level (key)
-# XP_LEVELS defines the max experience (value) before reaching a new level(key), i.e. you are level 1 until 500,
-# then level 2 from 501 to 1000, etc
-
-XP_GAINS = {'1': 125, '2': 175, '3': 200, '4': 275, '5': 375, '6': 400, '7': 475, '8': 500, '9': 750}
-XP_LEVELS = {'1': 500, '2': 1000, '3': 2000, '4': 3500, '5': 5000, '6': 7000, '7': 10000, '8': 15000, '9': 22000}
-
+pygame.init()
 
 class Character:
     """
@@ -65,10 +45,10 @@ class Character:
         self.armour = armour
         self.weapon = weapon
         self.spell = spell
-        self.ability = ABILITIES[self._race]
-        self.strength = STRENGTH_PTS[self._race]
-        self.life = LIFE_PTS[self._race]
-        self.intelligence = INTELLIGENCE_PTS[self._race]
+        self.ability = ffc.ABILITIES[self._race]
+        self.strength = ffc.STRENGTH_PTS[self._race]
+        self.life = ffc.LIFE_PTS[self._race]
+        self.intelligence = ffc.INTELLIGENCE_PTS[self._race]
         # Adjusting stats to character's level
         level_bonus_pts = functools.reduce(lambda a, b: a + (b // 2), range(self.level + 1))
         self.ability['damage_min'] += level_bonus_pts
@@ -154,7 +134,7 @@ class Player(Character):
 
     def __str__(self):
         return Character.__str__(self) + f">>>>Experience<<<<\n{self.experience} points. Next level in : " \
-                                         f"{XP_LEVELS[str(self.level)] - self.experience} points."
+                                         f"{ffc.XP_LEVELS[str(self.level)] - self.experience} points."
 
     def display_inventory(self):
         """Prints the player's gold and inventory's content."""
@@ -198,9 +178,9 @@ class Player(Character):
         """Increases player's experience depending on enemy's level and levels player up if need be."""
         assert isinstance(enemy, Character)
         el = str(enemy.level)
-        self.experience += XP_GAINS[el]
-        print(f"You gain {XP_GAINS[el]} experience points.")
-        while self.experience > XP_LEVELS[str(self.level)]:
+        self.experience += ffc.XP_GAINS[el]
+        print(f"You gain {ffc.XP_GAINS[el]} experience points.")
+        while self.experience > ffc.XP_LEVELS[str(self.level)]:
             self.level_up()
 
     def level_up(self):
@@ -384,3 +364,166 @@ class Shop:
         for elt in self.stock_spell.values():
             print(elt)
 
+
+# GUI classes
+class Button:
+    """A button with a text."""
+
+    def __init__(self, text, text_color, bg_color, font):
+        self.msg = font.render(text, True, text_color, bg_color)
+        self.box = self.msg.get_rect()
+
+    def blit_button(self, surf, center):
+        """Blits the button onto the Surface at coordinates x, y."""
+        self.box.center = center
+        surf.blit(self.msg, self.box)
+
+
+# Game states classes
+class Game:
+    """A master-class to contain each game scene (just as in theater scenes)."""
+
+    def __init__(self):
+        self.window = pygame.display.set_mode(ffc.RESOLUTION)
+        self.continue_button = Button('Continue', ffc.BLACK, ffc.BURGUNDY, ffc.IMMORTAL_BIG)
+        self.clock = pygame.time.Clock()
+        self.logo = pygame.image.load('Images/FF_logo.png').convert_alpha()
+        pygame.display.set_caption("Fantasy Fight")
+        pygame.display.set_icon(self.logo)
+
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+    def blit_text(self, text, position, font, color):
+        """Blits hashed text in the window, respecting newlines.
+
+        Args : position : a tuple / font : font object / color : color object / text : string
+        / surface : surface object.
+        Rendering is anti-aliased.
+        """
+        words = [word.split(' ') for word in text.splitlines()]
+        space = font.size(' ')[0]  # The width of a space.
+        max_width, max_height = self.window.get_size()
+        x, y = position
+        for line in words:
+            for word in line:
+                word_surface = font.render(word, True, color)
+                word_width, word_height = word_surface.get_size()
+                if x + word_width >= max_width:
+                    x = position[0]  # Reset the x.
+                    y += word_height  # Start on new row.
+                self.window.blit(word_surface, (x, y))
+                x += word_width + space
+            x = position[0]  # Reset the x.
+            y += word_height  # Start on new row.
+
+    def text_buttons(self, color_surf, font, color_font, text, pos_text, button_1, pos_button_1,
+                     button_2=None, pos_button_2=None):
+        """Blits texts on a colored Surface, with one or two buttons."""
+        self.window.fill(color_surf)
+        self.blit_text(text, pos_text, font, color_font)
+        button_1.blit_button(self.window, pos_button_1)
+        if button_2:
+            button_2.blit_button(self.window, pos_button_2)
+        pygame.display.flip()
+
+
+class GameTitle(Game):
+    """First game scene + music.
+
+     The introduction screen with the game's title.
+     """
+
+    def update(self):
+        """Loads intro music and Plays intro music and renders intro screen"""
+        pygame.mixer_music.set_volume(0.50)
+        pygame.mixer_music.load("Music/the-descent.mp3")
+        pygame.mixer_music.play(-1)
+        intro_screen = pygame.image.load('Images/Fantasy_fight.png').convert_alpha()
+        self.window.blit(intro_screen, (0, 0))
+        self.blit_text("Fantasy Fight\n", (280, 270), ffc.IMMORTAL_BIG, ffc.BLACK)
+        pygame.display.flip()
+        time.sleep(2)
+
+
+class GameStory(Game):
+    """Displays the story of the game."""
+
+    def update(self):
+        self.text_buttons(ffc.VIOLET, ffc.IMMORTAL_SMALL, ffc.BLACK, "Fantasy Fight is a basic "
+                          "'read and choose' game.\n~~~STORY~~~\nYou enter the Forgotten Realms, a fantasy world "
+                          "where heroes fight for power and glory.\n~~~GOAL~~~\nYour goal is to defeat as many "
+                          "enemies as you can and gain eternal renoun !", (10, 50), self.continue_button, (400, 500))
+
+
+class GameRules(Game):
+    """Displays the game rules."""
+
+    def update(self):
+        self.text_buttons(ffc.VIOLET, ffc.IMMORTAL_SMALL, ffc.BLACK, "~~~RULES~~~\nYou will create a "
+                          "character and be given some money (or not if you're unlucky !) to buy some "
+                          "equipment.\nYou can choose to be a Rakshasa, an Illithid, a Tieflin, a Banshee or a "
+                          "Githzerai.\nFrom your race depends your life force, your strength, your intelligence and "
+                          "your special ability.\nYou will be able to buy weapons, armours and spells. You can also "
+                          "sell equipment in your inventory.\nYou cannot sell your current weapon, spell or armour "
+                          "unless you equip something else.\nThen you will fight other characters "
+                          "until you die or choose to retire.\nEach enemy defeated is rewarded by experience points "
+                          "and a chance to loot some gold.\nWhen you have earned enough experience, you will gain a "
+                          "level and your stats will increase.\n", (10, 50), frame.continue_button, (400, 500))
+
+
+class GameTips(Game):
+    """Displays the game tips."""
+
+    def update(self):
+        self.text_buttons(ffc.VIOLET, ffc.IMMORTAL_SMALL, ffc.BLACK, "~~~Fighting tips~~~\nBefore "
+                          "entering a fight, know that :\n- you may cause damage to your enemy with your "
+                          "weapon (the more strong you are, the more damage you do),\n with your spell (the more clever"
+                          "you are, the more damage you do),\n or with your ability (this one is tricky : it can make "
+                          "a lot of damage but has also a more important fail risk.)\n- there is always a chance "
+                          "that your blow (or your adversary's) might fail.\n~~~Ending game~~~\nYou may quit the "
+                          "game at any time.\nCaution ! This game does NOT save your character or your stats. It is"
+                          " a one-shot game !\nGood luck, and have fun !", (10, 50), frame.continue_button, (400, 500))
+
+
+class GameOver(Game):
+    """Displays the game over message and credits."""
+
+    def update(self):
+        self.blit_text("~~~Game over~~~\nThank you for playing !\n~~~CREDITS~~~\nConception & "
+                       "programming : Aphios\nMusic:\n'The Descent' by Kevin MacLeod\nLink: "
+                       "https://incompetech.filmmusic.io/song/4490-the-descent\nLicense: "
+                       "http://creativecommons.org/licenses/by/4.0/\n'Crossing the Chasm' by Kevin MacLeod\n"
+                       "Link: https://incompetech.filmmusic.io/song/3562-crossing-the-chasm\nLicense: "
+                       "http://creativecommons.org/licenses/by/4.0/\n'Killers' by Kevin MacLeod\n"
+                       "Link: https://incompetech.filmmusic.io/song/3952-killers\nLicense: "
+                       "http://creativecommons.org/licenses/by/4.0/\n'The Path of the Goblin King' by Kevin MacLeod"
+                       "Link: https://incompetech.filmmusic.io/song/4503-the-path-of-the-goblin-king\nLicense: "
+                       "http://creativecommons.org/licenses/by/4.0/\n", (10, 500), ffc.IMMORTAL_SMALL, ffc.BLACK)
+        time.sleep(20)
+
+
+class Pause(Game):
+    """Freezes the game until the continue button is hit."""
+
+    def handle_events(self):
+        pause = True
+        while pause:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    if frame.continue_button.box.collidepoint(event.pos):
+                        return
+
+
+class Yes_No(Game):
+    """Freezes the game until the YES or the NO button is hit."""
+
+    def handle_events(self):
+        GameScene.handle_events()
+        # TODO hit button 1 or button 2
