@@ -1,6 +1,6 @@
 """Fantasy Fight Project. A simple fight game with fantasy characters.
 
-This file is used to test the classes and their instances.
+This file is used to test the characters and items classes.
 Tests are runned with Pytest.
 """
 
@@ -8,10 +8,11 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-21-2020"
+__last_update__ = "04-28-2020"
 
 import pytest
-import ff_classes as ffc
+import characters as char
+import items
 import io
 
 
@@ -19,37 +20,37 @@ import io
 @pytest.fixture
 def corset():
     """returns an armour object : corset"""
-    return ffc.Armour('Corset', 100, 5)
+    return items.Armour('Corset', 100, 5)
 
 
 @pytest.fixture
 def underwear():
     """returns an armour object : underwear"""
-    return ffc.Armour('Underwear', 0, 0)
+    return items.Armour('Underwear', 0, 0)
 
 
 @pytest.fixture
 def blizzard():
     """returns a spell object : blizzard"""
-    return ffc.Spell('Blizzard', 200, 8, 16)
+    return items.Spell('Blizzard', 200, 8, 16)
 
 
 @pytest.fixture
 def no_spell():
     """returns a spell object : no spell"""
-    return ffc.Spell('No spell', 0, 0, 0)
+    return items.Spell('No spell', 0, 0, 0)
 
 
 @pytest.fixture
 def dagger():
     """returns a weapon object : dagger"""
-    return ffc.Weapon('Dagger', 150, 15, 25)
+    return items.Weapon('Dagger', 150, 15, 25)
 
 
 @pytest.fixture
 def fists():
     """returns a weapon object : fists"""
-    return ffc.Weapon('Fists', 0, -8, 4)
+    return items.Weapon('Fists', 0, -8, 4)
 
 
 @pytest.fixture
@@ -57,7 +58,7 @@ def hero(underwear, fists, no_spell):
     """Returns a hero : Banshee level 1.
     Stats : underwear, no spell, fists, life : 28, strength 8, intelligence 20, ability : Scream
     """
-    return ffc.Player('Aphios', 'Other', 'Banshee', underwear, fists, no_spell)
+    return char.Player('Aphios', 'Other', 'Banshee', underwear, fists, no_spell)
 
 
 @pytest.fixture
@@ -65,13 +66,13 @@ def monster(corset, dagger, no_spell):
     """Returns a monster : Tieflin level 9.
     Stats : corset, dagger, no spell, life : 55, strength : 38, intelligence : 28, ability : Sting whip
     """
-    return ffc.Character('Boss', 'Other', 'Tieflin', corset, dagger, no_spell, 9)
+    return char.Character('Boss', 'Other', 'Tieflin', corset, dagger, no_spell, 9)
 
 
 @pytest.fixture
 def small_shop(corset, dagger, blizzard):
     """Returns a shop containing one armour object, one weapon object, one spell object"""
-    return ffc.Shop({'Corset': corset}, {'Blizzard': blizzard}, {'Dagger': dagger})
+    return items.Shop({'Corset': corset}, {'Blizzard': blizzard}, {'Dagger': dagger})
 
 
 # WEAPON
