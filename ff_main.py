@@ -42,7 +42,7 @@ if __name__ == '__main__':
     import random
     import time
     import pyinputplus as pyip
-    import ff_classes as ffc
+    import characters as ffc
 
     # <<<<------ GAME INITIALIZATION ------>>>>
 

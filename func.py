@@ -9,11 +9,8 @@ __status__ = "Prototype"
 __start_date__ = "03-17-2020"
 __last_update__ = "04-27-2020"
 
-import pygame
 
-pygame.init()
 
-# Game functions
 def autogen(genders, races, male_names, female_names, other_names, armours, weapons, spells):
     """Generates random settings for a character.
 
@@ -31,12 +28,6 @@ def autogen(genders, races, male_names, female_names, other_names, armours, weap
     weapon = random.choice(weapons)
     spell = random.choice(spells)
     return {'name': name, 'gender': gender, 'race': race, 'armour': armour, 'weapon': weapon, 'spell': spell}
-
-
-
-
-
-# GUI functions
 
 
 
