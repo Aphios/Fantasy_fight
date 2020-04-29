@@ -7,10 +7,11 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-27-2020"
+__last_update__ = "04-28-2020"
 
 
 import pygame
+import time
 import constants
 import characters as char
 import items
@@ -22,7 +23,7 @@ import gui_elements as gui
 pygame.init()
 
 # Game creation
-fantasy_fight = char.Game()
+fantasy_fight = scenes.Game()
 
 # Individual equipment creation
 corset = items.Armour('Corset', 100, 4)
@@ -52,6 +53,20 @@ stock_spell = {'Blizzard': blizzard, 'Scorch': scorch, 'Venom gaze': venom_gaze,
                'Lightning': lightning}
 shop = items.Shop(stock_armour, stock_spell, stock_weapon)
 
+# Scenes creation and ordering
+# GAME INTRO
+title = scenes.GameTitle()
+story = scenes.GameStory()
+rules = scenes.GameRules()
+tips = scenes.GameTips()
+pause = scenes.Pause()
+intro_queue = [title, story, pause, rules, pause, tips, pause]
+# CHARACTER CREATION
+naming = scenes.EnterName()
+gendering = scenes.EnterGender()
+racing = scenes.EnterRace()
+# ENDING
+end = scenes.GameOver()
 
 # >>>>>> *** GAME LOOP *** <<<<<<<<
 launched = True
@@ -59,22 +74,25 @@ launched = True
 while launched:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            launched = False
+            pygame.quit()
+            quit()
 
-    # GAME INTRO
-    title = scenes.GameTitle()
-    story = scenes.GameStory()
-    rules = scenes.GameRules()
-    tips = scenes.GameTips()
-    pause = scenes.Pause()
-    intro_queue = [title, story, pause, rules, pause, tips]
+    # STORY DISPLAY
     for scene in intro_queue :
         scene.handle_events()
-        scene.update()
-        fantasy_fight.clock.tick(cst.FPS)
+        scene.run()
+        fantasy_fight.clock.tick(constants.FPS)
+
+    # CHARACTER CREATION
+    #FIXME
+    naming.handle_events()
+    p_name = naming.run(fantasy_fight.clock)
+    print(p_name)
+    fantasy_fight.clock.tick(constants.FPS)
 
 
-        # Stop intro music
+
+        # Stop intro music when shoping or fighting starts
         #pygame.mixer_music.fadeout(2500)
 
     # Shop and equip phases (play 'The path of the goblin king')
