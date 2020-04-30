@@ -8,7 +8,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-29-2020"
+__last_update__ = "04-30-2020"
 
 import pygame
 import constants as cst
@@ -40,7 +40,7 @@ class InputBox:
     Features a maximum length of characters.
     """
 
-    def __init__(self, x, y, w, h, max_len=30):
+    def __init__(self, x, y, w, h, max_len=20):
         self.rect = pygame.Rect(x, y, w, h)
         self.txt_color = cst.BLACK
         self.bg_color = cst.WHITE
@@ -48,22 +48,14 @@ class InputBox:
         self.max_len = max_len
         self.txt_surface = cst.IMMORTAL_SMALL.render(self.text, True, self.txt_color, self.bg_color)
 
-    def get_ui(self, clock, screen):
+    def handle_events(self):
         """Displays the text entered in the box if a key is pressed."""
-
-        #FIXME get_ui returns None
-        self.txt_surface = cst.IMMORTAL_SMALL.render(self.text, True, self.txt_color, self.bg_color)
-        # Blit the rect.
-        pygame.draw.rect(screen, self.bg_color, self.rect, 2)
-        # Blit the text.
-        screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
-        pygame.display.flip()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYUP:
+            if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     return self.text
                 elif event.key == pygame.K_BACKSPACE:
@@ -71,12 +63,20 @@ class InputBox:
                 else:
                     if len(self.text) < self.max_len:
                         self.text += event.unicode
-                        # Render the text.
-                        self.txt_surface = cst.IMMORTAL_SMALL.render(self.text, True, self.txt_color, self.bg_color)
-                        # Blit the rect.
-                        pygame.draw.rect(screen, self.bg_color, self.rect, 2)
-                        # Blit the text.
-                        screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
-                        pygame.display.flip()
-                        clock.tick()
+
+    def blit_txtbox(self, screen):
+        """Displays the text box with its content."""
+
+        # Render the text.
+        self.txt_surface = cst.IMMORTAL_SMALL.render(self.text, True, self.txt_color, self.bg_color)
+        # Blit the rect.
+        pygame.draw.rect(screen, self.bg_color, self.rect)
+        # Blit the text.
+        screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
+        pygame.display.update()
+
+    def clear(self):
+        """After the box has been used, it is necessary to clear it for further use."""
+
+        self.text = ''
 

@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-28-2020"
+__last_update__ = "04-29-2020"
 
 
 import pygame
@@ -63,7 +63,7 @@ pause = scenes.Pause()
 intro_queue = [title, story, pause, rules, pause, tips, pause]
 # CHARACTER CREATION
 naming = scenes.EnterName()
-gendering = scenes.EnterGender()
+genring = scenes.EnterGender()
 racing = scenes.EnterRace()
 # ENDING
 end = scenes.GameOver()
@@ -84,11 +84,25 @@ while launched:
         fantasy_fight.clock.tick(constants.FPS)
 
     # CHARACTER CREATION
-    #FIXME
+    # Player's name
     naming.handle_events()
-    p_name = naming.run(fantasy_fight.clock)
-    print(p_name)
+    p_name = naming.run()
     fantasy_fight.clock.tick(constants.FPS)
+    # Player's gender
+    p_gender = ''
+    while not func.verify_ui(p_gender, constants.GENDERS):
+        genring.handle_events()
+        p_gender = genring.run()
+        fantasy_fight.clock.tick(constants.FPS)
+    # Player's race
+    p_race = ''
+    while not func.verify_ui(p_race, constants.RACES):
+        racing.handle_events()
+        p_race = genring.run()
+        fantasy_fight.clock.tick(constants.FPS)
+
+    print(p_race)
+
 
 
 

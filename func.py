@@ -7,8 +7,11 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-27-2020"
+__last_update__ = "04-30-2020"
 
+import pygame
+
+pygame.init()
 
 
 def autogen(genders, races, male_names, female_names, other_names, armours, weapons, spells):
@@ -16,6 +19,7 @@ def autogen(genders, races, male_names, female_names, other_names, armours, weap
 
     Returns : a dict containing a name, a gender, a race, a weapon, an armour and a spell.
     """
+
     gender = random.choice(genders)
     race = random.choice(races)
     if gender == 'Male':
@@ -28,6 +32,18 @@ def autogen(genders, races, male_names, female_names, other_names, armours, weap
     weapon = random.choice(weapons)
     spell = random.choice(spells)
     return {'name': name, 'gender': gender, 'race': race, 'armour': armour, 'weapon': weapon, 'spell': spell}
+
+
+def verify_ui(inpt, accepted_terms):
+    """Checks if the user input corresponds to one of the accepted terms.
+
+    Args : accepted_terms must be a sequence of capitalized strings, e.g. ['Scythe', 'Scissors']...
+    """
+
+    if inpt not in accepted_terms:
+        return False
+    else:
+         return True
 
 
 
