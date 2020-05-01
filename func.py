@@ -7,9 +7,10 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-30-2020"
+__last_update__ = "05-01-2020"
 
 import pygame
+import random
 
 pygame.init()
 

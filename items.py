@@ -104,3 +104,32 @@ class Shop:
         """Displays the spell stocks."""
         for elt in self.stock_spell.values():
             print(elt)
+
+
+# ITEMS CREATION
+corset = Armour('Corset', 100, 4)
+leathersuit = Armour('Leathersuit', 250, 8)
+rags = Armour('Rags', 10, 1)
+underwear = Armour('Underwear', 0, 0)
+platemail = Armour('Platemail', 700, 12)
+mithril_jacket = Armour('Mithril jacket', 1500, 22)
+blizzard = Spell('Blizzard', 200, 11, 20)
+scorch = Spell('Scorch', 100, 6, 13)
+venom_gaze = Spell('Venom gaze', 150, 8, 18)
+wasp_stings = Spell('Wasp stings', 50, 0, 8)
+lightning = Spell('Lightning', 400, 24, 33)
+no_spell = Spell('No spell', 0, 0, 0)
+scythe = Weapon('Scythe', 400, 24, 33)
+scissors = Weapon('Scissors', 50, 0, 8)
+halbert = Weapon('Halbert', 200, 11, 20)
+club = Weapon('Club', 100, 6, 13)
+dagger = Weapon('Dagger', 150, 8, 18)
+fists = Weapon('Fists', 0, -2, 6)
+
+# Inventories and shop creation
+stock_armour = {'Corset': corset, 'Leathersuit': leathersuit, 'Rags': rags, 'Platemail': platemail,
+                'Mithril jacket': mithril_jacket}
+stock_weapon = {'Scythe': scythe, 'Scissors': scissors,'Halbert': halbert, 'Club': club, 'Dagger': dagger}
+stock_spell = {'Blizzard': blizzard, 'Scorch': scorch, 'Venom gaze': venom_gaze, 'Wasp stings': wasp_stings,
+               'Lightning': lightning}
+shop = Shop(stock_armour, stock_spell, stock_weapon)

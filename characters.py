@@ -8,7 +8,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-28-2020"
+__last_update__ = "05-01-2020"
 
 import functools
 import random
@@ -40,7 +40,7 @@ class Character:
         self.armour = armour
         self.weapon = weapon
         self.spell = spell
-        self.ability = csts.ABILITIES[self._race]
+        self.ability = cst.ABILITIES[self._race]
         self.strength = cst.STRENGTH_PTS[self._race]
         self.life = cst.LIFE_PTS[self._race]
         self.intelligence = cst.INTELLIGENCE_PTS[self._race]

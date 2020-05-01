@@ -73,7 +73,6 @@ class InputBox:
         pygame.draw.rect(screen, self.bg_color, self.rect)
         # Blit the text.
         screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
-        pygame.display.update()
 
     def clear(self):
         """After the box has been used, it is necessary to clear it for further use."""

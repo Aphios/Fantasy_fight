@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-27-2020"
+__last_update__ = "05-01-2020"
 
 
 import pygame
@@ -45,9 +45,11 @@ RESOLUTION = (800, 600)
 VIOLET = (108, 73, 179)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-GREY = (105, 95, 110)
+PRUNE_GREY = (105, 95, 110)
 NAVY = (7, 53, 179)
 BURGUNDY = (122, 15, 36)
+GOLD = (237, 206, 31)
+GREY = (166, 166, 166)
 
 # Fonts
 IMMORTAL_BIG = pygame.font.Font('Fonts/immortal.ttf', 36)

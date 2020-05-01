@@ -7,66 +7,24 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-29-2020"
+__last_update__ = "05-01-2020"
 
 
 import pygame
 import time
 import constants
 import characters as char
+import game_states as states
 import items
-import scenes
+import scenes as scn
 import func
 import gui_elements as gui
 
 
 pygame.init()
 
-# Game creation
-fantasy_fight = scenes.Game()
-
-# Individual equipment creation
-corset = items.Armour('Corset', 100, 4)
-leathersuit = items.Armour('Leathersuit', 250, 8)
-rags = items.Armour('Rags', 10, 1)
-underwear = items.Armour('Underwear', 0, 0)
-platemail = items.Armour('Platemail', 700, 12)
-mithril_jacket = items.Armour('Mithril jacket', 1500, 22)
-blizzard = items.Spell('Blizzard', 200, 11, 20)
-scorch = items.Spell('Scorch', 100, 6, 13)
-venom_gaze = items.Spell('Venom gaze', 150, 8, 18)
-wasp_stings = items.Spell('Wasp stings', 50, 0, 8)
-lightning = items.Spell('Lightning', 400, 24, 33)
-no_spell = items.Spell('No spell', 0, 0, 0)
-scythe = items.Weapon('Scythe', 400, 24, 33)
-scissors = items.Weapon('Scissors', 50, 0, 8)
-halbert = items.Weapon('Halbert', 200, 11, 20)
-club = items.Weapon('Club', 100, 6, 13)
-dagger = items.Weapon('Dagger', 150, 8, 18)
-fists = items.Weapon('Fists', 0, -2, 6)
-
-# Inventories and shop creation
-stock_armour = {'Corset': corset, 'Leathersuit': leathersuit, 'Rags': rags, 'Platemail': platemail,
-                'Mithril jacket': mithril_jacket}
-stock_weapon = {'Scythe': scythe, 'Scissors': scissors,'Halbert': halbert, 'Club': club, 'Dagger': dagger}
-stock_spell = {'Blizzard': blizzard, 'Scorch': scorch, 'Venom gaze': venom_gaze, 'Wasp stings': wasp_stings,
-               'Lightning': lightning}
-shop = items.Shop(stock_armour, stock_spell, stock_weapon)
-
-# Scenes creation and ordering
-# GAME INTRO
-title = scenes.GameTitle()
-story = scenes.GameStory()
-rules = scenes.GameRules()
-tips = scenes.GameTips()
-pause = scenes.Pause()
-intro_queue = [title, story, pause, rules, pause, tips, pause]
-# CHARACTER CREATION
-naming = scenes.EnterName()
-genring = scenes.EnterGender()
-racing = scenes.EnterRace()
-# ENDING
-end = scenes.GameOver()
+# Initialize game
+game = states.Game()
 
 # >>>>>> *** GAME LOOP *** <<<<<<<<
 launched = True
@@ -77,40 +35,123 @@ while launched:
             pygame.quit()
             quit()
 
-    # STORY DISPLAY
-    for scene in intro_queue :
-        scene.handle_events()
-        scene.run()
-        fantasy_fight.clock.tick(constants.FPS)
+    # INTRO
+    scn.title.handle_events()
+    scn.title.play_music(-1)
+    game.window.blit(game.screen, (0, 0))
+    scn.title.display_text((280, 270), game.font_big)
+    time.sleep(3)
+    game.clock.tick(constants.FPS)
 
-    # CHARACTER CREATION
+    # STORY DISPLAY
+    # Display story
+    scn.story.handle_events()
+    game.window.blit(game.bg, (0, 0))
+    scn.story.display_text_continue()
+    game.clock.tick(constants.FPS)
+    # Pause before displaying rules
+    scn.pause.handle_events()
+    scn.rules.handle_events()
+    game.window.blit(game.bg, (0, 0))
+    scn.rules.display_text_continue()
+    game.clock.tick(constants.FPS)
+    # Pause before displaying tips
+    scn.pause.handle_events()
+    scn.tips.handle_events()
+    game.window.blit(game.bg, (0, 0))
+    scn.tips.display_text_continue()
+    game.clock.tick(constants.FPS)
+    # Pause before entering player creation
+    scn.pause.handle_events()
+
+    # PLAYER CREATION
     # Player's name
-    naming.handle_events()
-    p_name = naming.run()
-    fantasy_fight.clock.tick(constants.FPS)
+    scn.enter_name.handle_events()
+    game.window.blit(game.bg, (0, 0))
+    scn.enter_name.ask_user()
+    p_name = game.get_ui()
     # Player's gender
+    game.input_box.clear()
     p_gender = ''
     while not func.verify_ui(p_gender, constants.GENDERS):
-        genring.handle_events()
-        p_gender = genring.run()
-        fantasy_fight.clock.tick(constants.FPS)
+        scn.enter_gender.handle_events()
+        game.window.blit(game.bg, (0, 0))
+        scn.enter_gender.ask_user()
+        p_gender = game.get_ui()
     # Player's race
+    game.input_box.clear()
     p_race = ''
     while not func.verify_ui(p_race, constants.RACES):
-        racing.handle_events()
-        p_race = genring.run()
-        fantasy_fight.clock.tick(constants.FPS)
+        scn.enter_race.handle_events()
+        game.window.blit(game.bg, (0, 0))
+        scn.enter_race.ask_user()
+        p_race = game.get_ui()
+    # Register player as a game attribute
+    game.player = char.Player(p_name, p_gender, p_race, items.underwear, items.fists, items.no_spell)
 
-    print(p_race)
+    # WELCOME PLAYER
+    welcome = states.GameScene(f"Welcome {game.player._name} !\n")
+    welcome.handle_events()
+    game.window.blit(game.bg, (0, 0))
+    welcome.display_text()
+    time.sleep(2)
+
+    continue_game = True
+
+    # <<<<------ MAIN GAME LOOP ------>>>>
+    while continue_game:
+        # Enemy creation
+        # Depending on player's level, the enemy may have some advanced equipment
+        if game.player.level < 5:
+            settings = func.autogen(constants.GENDERS, constants.RACES, constants.MALE_NAMES, constants.FEMALE_NAMES,
+                               constants.OTHER_NAMES, [items.corset, items.rags, items.rags, items.rags, items.corset,
+                                                       items.underwear, items.leathersuit],
+                               [items.scissors, items.fists, items.fists, items.fists, items.scissors, items.club,
+                                items.dagger],
+                               [items.scorch, items.wasp_stings, items.wasp_stings, items.no_spell, items.no_spell,
+                                items.no_spell])
+        elif game.player.level >= 5:
+            settings = func.autogen(constants.GENDERS, constants.RACES, constants.MALE_NAMES, constants.FEMALE_NAMES,
+                               constants.OTHER_NAMES, [items.corset, items.corset, items.platemail, items.leathersuit,
+                                                       items.leathersuit, items.leathersuit, items.platemail,
+                                                       items.mithril_jacket],
+                               [items.halbert, items.halbert, items.club, items.scythe, items.dagger, items.dagger,
+                                items.dagger],
+                               [items.lightning, items.venom_gaze, items.scorch, items.blizzard, items.blizzard,
+                                items.venom_gaze, items.no_spell])
+        game.enemy = char.Character(**settings)
+
+
+
+        # Stop intro music when shopping or fighting starts
+
+        # Shop and equip phases (play 'The path of the goblin king')
+
+        # Fight phase (play randomly 'Killers' or 'Crossing the chasm')
+
+
+        continue_game = False
+
+    ##################################
+    # END of the game :
+
+    scn.endgame.handle_events()
+    scn.endgame.play_music(-1)
+    game.window.blit(game.bg, (0, 0))
+    scn.endgame.display_text((70, 150), game.font_big)
+    game.clock.tick(constants.FPS)
+    time.sleep(5)
+
+    scn.credits.handle_events()
+    game.window.blit(game.bg, (0, 0))
+    scn.credits.display_text((70, 100))
+    time.sleep(5)
+    scn.credits.stop_music()
+    time.sleep(5)
+    pygame.quit()
+    quit()
+    ####################################
 
 
 
 
-        # Stop intro music when shoping or fighting starts
-        #pygame.mixer_music.fadeout(2500)
-
-    # Shop and equip phases (play 'The path of the goblin king')
-
-    # Fight phase (play randomly 'Killers' or 'Crossing the chasm')
-
-    # End game (play 'The descent')
