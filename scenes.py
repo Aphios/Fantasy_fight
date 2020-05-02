@@ -1,19 +1,15 @@
 """Fantasy Fight Project. A simple fight game with fantasy characters.
 
-This file contains the classes :
-- GameScene and its subclasses
+This file contains instances of GameScene, i.e. all the game scenes displayed throughout the game.
 """
 
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-01-2020"
+__last_update__ = "05-02-2020"
 
 import pygame
-import time
-import constants as cst
-import gui_elements as gui
 import game_states as states
 
 pygame.init()
@@ -68,23 +64,30 @@ credits = states.GameScene("Made with Python 3.7 and Pygame 1.9.6\n\nMusic:\n'Th
                        "\nLink: https://incompetech.filmmusic.io/song/4503-the-path-of-the-goblin-king\nLicense: "
                        "http://creativecommons.org/licenses/by/4.0/\n")
 
+# STATS
+view_stats = states.GameScene("Do you want to view your stats and equipment ?\n")
+
+# SHOP
+go_shop = states.GameScene("Do you want to go to the Shop to buy or sell some equipment ?")
+shop_menu = states.GameScene("Do you want to buy, sell, or exit shop ?\nPlease write your answer below (only 'Buy', "
+                             "'Sell' or 'Exit' accepted).", "Music/the-path-of-the-goblin-king.mp3")
+no_sell = states.GameScene("You have nothing to sell.\n")
+inventory_choose = states.GameScene("Please write the name of one of your posessions below (or 'Nothing').")
+already_yours = states.GameScene("You already have this item in your posession.\n")
+which_stock = states.GameScene("Which stocks do you wish to look at ? (Please choose between 'Armours', 'Spells' or "
+                               "'Weapons')\n")
+shop_stocks = states.GameScene("\nThose are the items available for sale. Please write below the name of the item you "
+                               "wish to purchase, or 'Nothing'.")
+
+# EQUIP
+inventory_equip = states.GameScene("Here's your inventory. Choose what you wish to equip.\n")
+no_equip = states.GameScene("You have nothing to equip !\n")
+
+# FIGHT
+enter_arena = states.GameScene("You meet your opponent in the arena : \n")
+last_level = states.GameScene("You have reached the last level and defeated all your enemies !\n")
+
 # OTHER STATES
 pause = states.Pause()
 yes_no = states.Yes_No()
-
-# TODO :
-
-# view_stats = """Allows the player to view their stats
-
-# shop_weapons = Allows the user to choose a weapon to buy or nothing
-# Prompt the user to type the exact name of what they want (i.e. "Scythe", "Scissors"... or "Exit)
-# Force answer.capitalize()
-# if answer =! 'Exit' or answer not in shop_stock, prompt again
-# if exit, exit loop, else get shop_stock[answer]
-
-# shop_spells =
-
-# shop_armours =
-
-# sell_items =
 

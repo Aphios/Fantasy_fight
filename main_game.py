@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-01-2020"
+__last_update__ = "05-02-2020"
 
 
 import pygame
@@ -35,50 +35,59 @@ while launched:
             pygame.quit()
             quit()
 
-    # INTRO
+    # *********--- INTRO ---**********
+    # First, handle events (for instance : quit)
     scn.title.handle_events()
+    # Launch ambiant music
     scn.title.play_music(-1)
+    # Always display the background when a new scene is displayed
     game.window.blit(game.screen, (0, 0))
+    # Display text
     scn.title.display_text((280, 270), game.font_big)
     time.sleep(3)
+    # Control the FPS flow
     game.clock.tick(constants.FPS)
 
     # STORY DISPLAY
-    # Display story
     scn.story.handle_events()
     game.window.blit(game.bg, (0, 0))
+    # Display text with continue button
     scn.story.display_text_continue()
     game.clock.tick(constants.FPS)
     # Pause before displaying rules
     scn.pause.handle_events()
+    # RULES DISPLAY
     scn.rules.handle_events()
     game.window.blit(game.bg, (0, 0))
     scn.rules.display_text_continue()
     game.clock.tick(constants.FPS)
-    # Pause before displaying tips
     scn.pause.handle_events()
+    # TIPS DISPLAY
     scn.tips.handle_events()
     game.window.blit(game.bg, (0, 0))
     scn.tips.display_text_continue()
     game.clock.tick(constants.FPS)
-    # Pause before entering player creation
     scn.pause.handle_events()
 
     # PLAYER CREATION
-    # Player's name
+    # PLAYER'S NAME
     scn.enter_name.handle_events()
     game.window.blit(game.bg, (0, 0))
+    # Display the input box
     scn.enter_name.ask_user()
+    # Retrieve the user's answer
     p_name = game.get_ui()
-    # Player's gender
+    # Don't forget to clear the game's input box before re-using
     game.input_box.clear()
+    # PLAYER'S GENDER
+    # Verify the input is authorized before retrieving it
     p_gender = ''
     while not func.verify_ui(p_gender, constants.GENDERS):
         scn.enter_gender.handle_events()
         game.window.blit(game.bg, (0, 0))
         scn.enter_gender.ask_user()
         p_gender = game.get_ui()
-    # Player's race
+    # PLAYER'S RACE
     game.input_box.clear()
     p_race = ''
     while not func.verify_ui(p_race, constants.RACES):
@@ -94,13 +103,13 @@ while launched:
     welcome.handle_events()
     game.window.blit(game.bg, (0, 0))
     welcome.display_text()
-    time.sleep(2)
+    game.clock.tick(constants.FPS)
 
     continue_game = True
 
     # <<<<------ MAIN GAME LOOP ------>>>>
     while continue_game:
-        # Enemy creation
+        # ENEMY CREATION
         # Depending on player's level, the enemy may have some advanced equipment
         if game.player.level < 5:
             settings = func.autogen(constants.GENDERS, constants.RACES, constants.MALE_NAMES, constants.FEMALE_NAMES,
@@ -119,7 +128,152 @@ while launched:
                                 items.dagger],
                                [items.lightning, items.venom_gaze, items.scorch, items.blizzard, items.blizzard,
                                 items.venom_gaze, items.no_spell])
+        # Save the enemy as a game attribute
         game.enemy = char.Character(**settings)
+
+        # VIEWING STATS AND INVENTORY
+        scn.view_stats.handle_events()
+        game.window.blit(game.bg, (0, 0))
+        # Displaying the yes/no buttons to give the player the choice to view their stats or skip this scene
+        scn.view_stats.display_text_yesno((20, 300))
+        game.clock.tick(constants.FPS)
+        view = scn.yes_no.handle_events()
+        if view:
+            game.window.blit(game.bg, (0, 0))
+            game.blit_text(str(game.player), (10, 20), game.font_small, constants.BLACK)
+            game.continue_button.blit_button(game.window, constants.GOLD)
+            pygame.display.flip()
+            game.clock.tick(constants.FPS)
+            scn.pause.handle_events()
+
+        # GOING TO SHOP
+        scn.go_shop.handle_events()
+        game.window.blit(game.bg, (0, 0))
+        scn.go_shop.display_text_yesno((20, 300))
+        game.clock.tick(constants.FPS)
+        shoping = scn.yes_no.handle_events()
+        game.window.blit(game.bg, (0, 0))
+        if shoping:
+            # Fadeout intro music
+            scn.go_shop.stop_music(2000)
+            game.blit_text("--Welcome to 'Fighters Bazaar' !--", (50, 250), game.font_big, constants.BLACK)
+            pygame.display.flip()
+            time.sleep(2.30)
+            game.clock.tick(constants.FPS)
+            continue_shop = True
+            # New music for shopping and equiping player
+            scn.shop_menu.play_music(-1)
+            while continue_shop:
+                game.input_box.clear()
+                p_choice = ''
+                # We want to know if the player wants to buy, sell or exit the shop
+                # SHOP LOOP
+                while not func.verify_ui(p_choice, ['Buy', 'Sell', 'Exit']):
+                    scn.shop_menu.handle_events()
+                    game.window.blit(game.bg, (0, 0))
+                    scn.shop_menu.ask_user()
+                    p_choice = game.get_ui()
+
+                # SELL ITEM
+                if p_choice == 'Sell' and game.player.available_items():
+                    item_sell = ''
+                    while not func.verify_ui(item_to_sell, game.player.available_items()):
+                        game.input_box.clear()
+                        scn.inventory_choose.handle_events()
+                        game.window.blit(game.bg, (0, 0))
+                        game.blit_text("Here's your inventory. Choose what you wish to sell.\n", (10, 20),
+                                       game.font_small, constants.BLACK)
+                        game.blit_text(game.player.display_inventory(), (10, 100), game.font_small, constants.BLACK)
+                        scn.inventory_choose.ask_user((30, 420))
+                        item_sell = game.get_ui()
+                    if item_sell == 'Nothing':
+                        continue
+                    else :
+                        trade = game.player.sell(item_sell)
+                        game.handle_events()
+                        game.window.blit(game.bg, (0, 0))
+                        print_sell = states.GameScene(trade)
+                        print_sell.display_text_continue()
+                        game.clock.tick(constants.FPS)
+                        scn.pause.handle_events()
+                # If the player have no item to sell, they return to the beginning of the shop loop
+                elif p_choice == 'Sell' and not game.player.available_items():
+                    scn.no_sell.handle_events()
+                    game.window.blit(game.bg, (0, 0))
+                    scn.no_sell.display_text_continue()
+                    game.clock.tick(constants.FPS)
+                    scn.pause.handle_events()
+
+                # BUY ITEM
+                elif p_choice == 'Buy':
+                    look_stock = ''
+                    item_buy = ''
+                    # We ask the player from which stocks they wish to make a purchase
+                    while not func.verify_ui(look_stock, ['Armours', 'Spells', 'Weapons']):
+                        game.input_box.clear()
+                        scn.which_stock.handle_events()
+                        game.window.blit(game.bg, (0, 0))
+                        scn.which_stock.ask_user()
+                        look_stock = game.get_ui()
+
+                    # DISPLAY ARMOUR STOCKS
+                    if look_stock == 'Armours':
+                        while not func.verify_ui(item_buy, items.shop.list_armour_sales):
+                            game.input_box.clear()
+                            scn.shop_stocks.handle_events()
+                            game.window.blit(game.bg, (0, 0))
+                            trade = items.shop.display_armour()
+                            game.blit_text(trade, (10, 20), game.font_small, constants.BLACK)
+                            scn.shop_stocks.ask_user((10, 420))
+                            item_buy = game.get_ui()
+
+                    # DISPLAY WEAPON STOCKS
+                    elif look_stock == 'Weapons':
+                        while not func.verify_ui(item_buy, items.shop.list_weapon_sales):
+                            game.input_box.clear()
+                            scn.shop_stocks.handle_events()
+                            game.window.blit(game.bg, (0, 0))
+                            trade = items.shop.display_weapon()
+                            game.blit_text(trade, (10, 20), game.font_small, constants.BLACK)
+                            scn.shop_stocks.ask_user((10, 420))
+                            item_buy = game.get_ui()
+
+                    # DISPLAY SPELL STOCKS
+                    elif look_stock == 'Spells':
+                        while not func.verify_ui(item_buy, items.shop.list_spell_sales):
+                            game.input_box.clear()
+                            scn.shop_stocks.handle_events()
+                            game.window.blit(game.bg, (0, 0))
+                            trade = items.shop.display_spell()
+                            game.blit_text(trade, (10, 20), game.font_small, constants.BLACK)
+                            scn.shop_stocks.ask_user((10, 420))
+                            item_buy = game.get_ui()
+
+                    # BUY ITEM
+                    # If player already have the item or don't want anything, go back to the beginning of shop loop
+                    if (item_buy in game.player.inventory or item_buy == game.player.weapon.name
+                        or item_buy == game.player.spell.name or item_buy == game.player.armour.name):
+                        scn.already_yours.handle_events()
+                        game.window.blit(game.bg, (0, 0))
+                        scn.already_yours.display_text_continue()
+                        game.clock.tick(constants.FPS)
+                        scn.pause.handle_events()
+                    elif item_buy == 'Nothing':
+                        game.handle_events()
+                        time.sleep(1.30)
+                        game.clock.tick(constants.FPS)
+                    else:
+                        buying = game.player.buy(item_buy, items.shop)
+                        game.handle_events()
+                        game.window.blit(game.bg, (0, 0))
+                        purchase = states.GameScene(buying)
+                        purchase.display_text_continue()
+                        game.clock.tick(constants.FPS)
+                        scn.pause.handle_events()
+
+                # EXITING SHOP
+                elif p_choice == 'Exit':
+                    continue_shop = False
 
 
 
@@ -144,10 +298,10 @@ while launched:
 
     scn.credits.handle_events()
     game.window.blit(game.bg, (0, 0))
-    scn.credits.display_text((70, 100))
-    time.sleep(5)
-    scn.credits.stop_music()
-    time.sleep(5)
+    scn.credits.display_text((70, 85))
+    time.sleep(6)
+    scn.credits.stop_music(5000)
+    time.sleep(6)
     pygame.quit()
     quit()
     ####################################

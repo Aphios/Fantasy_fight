@@ -8,7 +8,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-01-2020"
+__last_update__ = "05-02-2020"
 
 import functools
 import random
@@ -128,18 +128,19 @@ class Player(Character):
         return Character.__repr__(self) + f", inventory : {self.inventory}, gold : {self.gold}"
 
     def __str__(self):
-        return Character.__str__(self) + f">>>>Experience<<<<\n{self.experience} points. Next level in : " \
-                                         f"{cst.XP_LEVELS[str(self.level)] - self.experience} points."
+        return Character.__str__(self) + f">>>>Experience<<<<\n{self.experience} points. Next level in : "\
+                                         f"{cst.XP_LEVELS[str(self.level)] - self.experience} points.\n" + self.display_inventory()
 
     def display_inventory(self):
         """Prints the player's gold and inventory's content."""
-        print(f">>>>{self._name}'s inventory<<<<")
-        print(f"Gold : {self.gold}")
+        inv = ""
         for elt in self.inventory.values():
             if isinstance(elt, Weapon) or isinstance(elt, Spell):
-                print(f"{elt.name} : min.damage : {elt.damage_min}, max. damage : {elt.damage_max}")
+                inv += f"{elt.name} : min.damage : {elt.damage_min}, max. damage : {elt.damage_max}\n"
             elif isinstance(elt, Armour):
-                print(f"{elt.name} : protection : {elt.protection}")
+                inv += f"{elt.name} : protection : {elt.protection}\n"
+        return f">>>>{self._name}'s inventory<<<<\nGold : {self.gold}\n" + inv
+
 
     def equip(self, item):
         """Changes player's armour or spell or weapon.
@@ -249,11 +250,11 @@ class Player(Character):
         elif item in shop.stock_spell:
             eq = shop.stock_spell[item]
         if eq.price > self.gold:
-            print("You don't have enough gold to buy this piece of equipment.")
+            return "You don't have enough gold to buy this piece of equipment."
         else:
             self.inventory[item] = eq
             self.gold -= eq.price
-            print(f"{item} added to inventory.")
+            return f"{item} added to inventory."
 
     def sell(self, item):
         """Removes an item from player's inventory and adds to player's gold half of the item's price.
@@ -265,4 +266,4 @@ class Player(Character):
         eq = self.inventory[item]
         self.gold += eq.price // 2
         del self.inventory[item]
-        print(f"{item} sold for {eq.price // 2} gold pieces.")
+        return f"{item} sold for {eq.price // 2} gold pieces."

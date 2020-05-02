@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-01-2020"
+__last_update__ = "05-02-2020"
 
 import pygame
 import time
@@ -23,7 +23,7 @@ class Game:
         self.window = pygame.display.set_mode(cst.RESOLUTION)
         self.continue_button = gui.Button('Continue', cst.BLACK, cst.GOLD, cst.IMMORTAL_BIG, (400, 550))
         self.yes_button = gui.Button('Yes', cst.BLACK, cst.GOLD, cst.IMMORTAL_BIG, (350, 550))
-        self.no_button = gui.Button('No', cst.BLACK, cst.NAVY, cst.IMMORTAL_BIG, (450, 550))
+        self.no_button = gui.Button('No', cst.BLACK, cst.BURGUNDY, cst.IMMORTAL_BIG, (450, 550))
         self.clock = pygame.time.Clock()
         self.logo = pygame.image.load('Images/FF_logo.png').convert_alpha()
         self.screen = pygame.image.load('Images/Fantasy_fight.png').convert_alpha()
@@ -112,9 +112,9 @@ class GameScene(Game):
         pygame.mixer_music.load(self.music)
         pygame.mixer_music.play(repeats)
 
-    def stop_music(self):
+    def stop_music(self, fade_time):
         """Stops the current music with fadeout."""
-        pygame.mixer_music.fadeout(5000)
+        pygame.mixer_music.fadeout(fade_time)
         self.clock.tick(cst.FPS)
 
     def display_text(self, position=(10, 20), font=cst.IMMORTAL_SMALL):
@@ -169,7 +169,7 @@ class Yes_No(Game):
                     pygame.quit()
                     quit()
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    if self.yes_button_button.box.collidepoint(event.pos):
+                    if self.yes_button.box.collidepoint(event.pos):
                         return True
                     elif self.no_button.box.collidepoint(event.pos):
                         return False

@@ -7,35 +7,8 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-27-2020"
+__last_update__ = "04-29-2020"
 
-
-# Text elements
-# TODO : transpose them into game functions
-# Player creation
-create_player = "Let's start !\nEnter your character's name (anything will work and you can't go back so don't write " \
-                "crap unless you really mean to) : \n"
-create_player_2 = "\nNow choose your race !\n~Githzerais are agile and stealthy, but not so clever. They are healthy " \
-                  "but lack strength.\n~Banshees are really clever but not so full of life and they definitely lack " \
-                  "strength.\n~Tieflins are absolutely dumb but very strong and well built.\n~Illithids are madly " \
-                  "clever but rather frail.\n~Rakshasas are very strong and resisting, but nearly as dumb as " \
-                  "Tieflins.\n"
-
-# Shop
-welcome_shop = "--Welcome to 'Fighters Bazaar' !--"
-no_sell = "You have nothing to sell.\n"
-inventory_choose = "Here's your inventory. Choose what you wish to sell.\n"
-buy_shop = "Here are the items available for sale. Choose what you wish to buy.\n"
-already_yours = "You already have this item in your posession.\n"
-which_stock = "Which stocks do you wish to look at ?\n"
-
-# Equip
-inventory_equip = "Here's your inventory. Choose what you wish to equip.\n"
-no_equip = "You have nothing to equip !\n"
-
-# Fight
-enter_arena = "You meet your opponent in the arena : \n"
-last_level = "You have reached the last level and defeated all your enemies !\n"
 
 # Main program
 if __name__ == '__main__':
@@ -129,7 +102,7 @@ if __name__ == '__main__':
                     elif stock_type== 'Weapons':
                         shop.display_weapon()
                         print("\n")
-                        buying = pyip.inputMenu(shop.list_weapon_sales_sales, numbered=True)
+                        buying = pyip.inputMenu(shop.list_weapon_sales, numbered=True)
 
                     if buying == 'Nothing':
                         continue

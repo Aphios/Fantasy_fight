@@ -28,7 +28,7 @@ class Armour:
         self.nature = "Armour"
 
     def __str__(self):
-        return f"{self.name} ({self.nature}) >> protection : {self.protection}, price : {self.price}"
+        return f"{self.name} ({self.nature}) >> protection : {self.protection}, price : {self.price}\n"
 
 
 class Weapon:
@@ -48,7 +48,7 @@ class Weapon:
 
     def __str__(self):
         return f"{self.name} ({self.nature}) >> min. damage : {self.damage_min}, max. damage : {self.damage_max}, " \
-               f"price : {self.price}"
+               f"price : {self.price}\n"
 
 
 class Spell():
@@ -68,7 +68,7 @@ class Spell():
 
     def __str__(self):
         return f"{self.name} ({self.nature}) >> min. damage : {self.damage_min}, max. damage : {self.damage_max}, " \
-               f"price : {self.price}"
+               f"price : {self.price}\n"
 
 
 class Shop:
@@ -92,18 +92,24 @@ class Shop:
 
     def display_armour(self):
         """Displays the armour stocks."""
+        a_stock = ''
         for elt in self.stock_armour.values():
-            print(elt)
+            a_stock += str(elt)
+        return a_stock
 
     def display_weapon(self):
         """Displays the weapon stocks."""
+        w_stock = ''
         for elt in self.stock_weapon.values():
-            print(elt)
+            w_stock += str(elt)
+        return w_stock
 
     def display_spell(self):
         """Displays the spell stocks."""
+        s_stock = ''
         for elt in self.stock_spell.values():
-            print(elt)
+            s_stock += str(elt)
+        return s_stock
 
 
 # ITEMS CREATION

@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-01-2020"
+__last_update__ = "05-02-2020"
 
 
 import pygame
@@ -53,7 +53,7 @@ GREY = (166, 166, 166)
 
 # Fonts
 IMMORTAL_BIG = pygame.font.Font('Fonts/immortal.ttf', 36)
-IMMORTAL_SMALL = pygame.font.Font('Fonts/immortal.ttf', 16)
+IMMORTAL_SMALL = pygame.font.Font('Fonts/immortal.ttf', 18)
 
 # Animation
 FPS = 30
