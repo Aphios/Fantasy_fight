@@ -277,7 +277,7 @@ while launched:
 
 
 
-        # Stop intro music when shopping or fighting starts
+        # Stop  music when shopping or fighting starts and start new music corresponding to scene
 
         # Shop and equip phases (play 'The path of the goblin king')
 
