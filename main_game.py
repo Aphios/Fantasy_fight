@@ -278,21 +278,77 @@ while launched:
                 elif p_choice == 'Exit':
                     continue_shop = False
 
+        # EQUIPING
+        # Ask the player if they want to don some equipment
+        scn.go_equip.handle_events()
+        game.window.blit(game.bg, (0, 0))
+        scn.go_equip.display_text_yesno((20, 300))
+        game.clock.tick(constants.FPS)
+        equiping = scn.yes_no.handle_events()
+        game.window.blit(game.bg, (0, 0))
+        if equiping:
+            # If player didn't go shop before, it's time to switch the music
+            if not shoping:
+                scn.go_equip.stop_music(2000)
+                time.sleep(2)
+                scn.shop_menu.play_music(-1)
+            continue_equip = True
+            while continue_equip:
+                game.input_box.clear()
+                eq_item = ''
+                # If the player have something in their inventory, make them choose what to equip
+                if game.player.available_items():
+                    while not func.verify_ui(eq_item, game.player.available_items()):
+                        game.handle_events()
+                        game.window.blit(game.bg, (0, 0))
+                        p_inv = game.player.display_inventory()
+                        game.blit_text(p_inv, (10, 20), game.font_small, constants.BLACK)
+                        scn.inventory_choose.ask_user()
+                        eq_item = game.get_ui()
+                    if eq_item != 'Nothing':
+                        game.player.equip(eq_item)
+                        # Ask the player if they want to continue equiping themself
+                        scn.re_equip.handle_events()
+                        game.window.blit(game.bg, (0, 0))
+                        scn.re_equip.display_text_yesno()
+                        game.clock.tick(constants.FPS)
+                        re_equiping = scn.yes_no.handle_events()
+                        if not re_equiping:
+                            continue_equip = False
+                # If they have nothing, we end the equiping loop
+                else:
+                    scn.no_equip.handle_events()
+                    game.window.blit(game.bg, (0, 0))
+                    scn.no_equip.display_text_continue()
+                    game.clock.tick(constants.FPS)
+                    scn.pause.handle_events()
+                    continue_equip = False
 
-
-        # Stop  music when shopping or fighting starts and start new music corresponding to scene
-
-        # Shop and equip phases (play 'The path of the goblin king')
-
-        # Fight phase (play randomly 'Killers' or 'Crossing the chasm')
+        # INTRODUCING THE ENEMY
+        # Fadeout current music before introducing new one
+        scn.go_equip.stop_music(2000)
+        scn.enter_arena.handle_events()
+        time.sleep(1)
+        game.window.blit(game.bg, (0, 0))
+        scn.enter_arena.display_text()
+        show_enemy = str(game.enemy)
+        game.blit_text(show_enemy, (10, 50), game.font_small, constants.BLACK)
+        game.continue_button.blit_button(game.window)
+        pygame.display.flip()
+        # Launch a random fighting music
+        game.play_random_music(-1)
+        game.clock.tick(constants.FPS)
+        scn.pause.handle_events()
 
 
         continue_game = False
 
     ##################################
     # END of the game :
-
+    # Fading ancient music before introducing new one
+    scn.endgame.stop_music(1500)
     scn.endgame.handle_events()
+    time.sleep(1)
     scn.endgame.play_music(-1)
     game.window.blit(game.bg, (0, 0))
     scn.endgame.display_text((70, 150), game.font_big)

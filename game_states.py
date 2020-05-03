@@ -10,6 +10,7 @@ __start_date__ = "03-17-2020"
 __last_update__ = "05-02-2020"
 
 import pygame
+import random
 import time
 import constants as cst
 import gui_elements as gui
@@ -95,6 +96,13 @@ class Game:
             pygame.display.flip()
             self.clock.tick()
         return ui.capitalize()
+
+    def play_random_music(self, repeats):
+        """Loads and plays a random music for a certain number of repetitions."""
+        music = random.choice(["Music/crossing-the-chasm.mp3", "Music/killers.mp3"])
+        pygame.mixer_music.set_volume(0.50)
+        pygame.mixer_music.load(music)
+        pygame.mixer_music.play(repeats)
 
 
 class GameScene(Game):

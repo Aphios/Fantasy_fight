@@ -10,6 +10,7 @@ __start_date__ = "03-17-2020"
 __last_update__ = "05-02-2020"
 
 import pygame
+import random
 import game_states as states
 
 pygame.init()
@@ -80,8 +81,10 @@ shop_stocks = states.GameScene("\nThose are the items available for sale. Please
                                "wish to purchase, or 'Nothing'.")
 
 # EQUIP
-inventory_equip = states.GameScene("Here's your inventory. Choose what you wish to equip.\n")
+go_equip = states.GameScene("Do you wish to equip yourself before going to fight ?\n")
+inventory_choose = states.GameScene("Please write down the name of the item you wish to equip.")
 no_equip = states.GameScene("You have nothing to equip !\n")
+re_equip = states.GameScene("Done ! Do you want to continue changing your equipment ?\n'")
 
 # FIGHT
 enter_arena = states.GameScene("You meet your opponent in the arena : \n")
