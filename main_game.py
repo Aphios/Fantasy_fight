@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-02-2020"
+__last_update__ = "05-03-2020"
 
 
 import pygame
@@ -140,6 +140,8 @@ while launched:
         view = scn.yes_no.handle_events()
         if view:
             game.window.blit(game.bg, (0, 0))
+            # for a reason yet unknown, we can't use the GameScene display_text_continue function with a
+            # string that is a result of a function, so we have to use the raw game functions blit_text and blit_button
             game.blit_text(str(game.player), (10, 20), game.font_small, constants.BLACK)
             game.continue_button.blit_button(game.window, constants.GOLD)
             pygame.display.flip()
@@ -224,7 +226,7 @@ while launched:
                             game.window.blit(game.bg, (0, 0))
                             trade = items.shop.display_armour()
                             game.blit_text(trade, (10, 20), game.font_small, constants.BLACK)
-                            scn.shop_stocks.ask_user((10, 420))
+                            scn.shop_stocks.ask_user((10, 250))
                             item_buy = game.get_ui()
 
                     # DISPLAY WEAPON STOCKS
@@ -235,7 +237,7 @@ while launched:
                             game.window.blit(game.bg, (0, 0))
                             trade = items.shop.display_weapon()
                             game.blit_text(trade, (10, 20), game.font_small, constants.BLACK)
-                            scn.shop_stocks.ask_user((10, 420))
+                            scn.shop_stocks.ask_user((10, 250))
                             item_buy = game.get_ui()
 
                     # DISPLAY SPELL STOCKS
@@ -246,7 +248,7 @@ while launched:
                             game.window.blit(game.bg, (0, 0))
                             trade = items.shop.display_spell()
                             game.blit_text(trade, (10, 20), game.font_small, constants.BLACK)
-                            scn.shop_stocks.ask_user((10, 420))
+                            scn.shop_stocks.ask_user((10, 250))
                             item_buy = game.get_ui()
 
                     # BUY ITEM
@@ -266,8 +268,9 @@ while launched:
                         buying = game.player.buy(item_buy, items.shop)
                         game.handle_events()
                         game.window.blit(game.bg, (0, 0))
-                        purchase = states.GameScene(buying)
-                        purchase.display_text_continue()
+                        game.blit_text(buying, (10, 20), game.font_small, constants.BLACK)
+                        game.continue_button.blit_button(game.window, constants.GOLD)
+                        pygame.display.flip()
                         game.clock.tick(constants.FPS)
                         scn.pause.handle_events()
 
