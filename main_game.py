@@ -14,7 +14,7 @@ import pygame
 import time
 import constants
 import characters as char
-import game_states as states
+import game_class as states
 import items
 import scenes as scn
 import func
@@ -88,8 +88,8 @@ while launched:
         scn.enter_gender.ask_user()
         p_gender = game.get_ui()
     # PLAYER'S RACE
-    game.input_box.clear()
     p_race = ''
+    game.input_box.clear()
     while not func.verify_ui(p_race, constants.RACES):
         scn.enter_race.handle_events()
         game.window.blit(game.bg, (0, 0))
@@ -179,13 +179,12 @@ while launched:
                 # SELL ITEM
                 if p_choice == 'Sell' and game.player.available_items():
                     item_sell = ''
+                    game.input_box.clear()
                     while not func.verify_ui(item_to_sell, game.player.available_items()):
-                        game.input_box.clear()
                         scn.inventory_choose.handle_events()
                         game.window.blit(game.bg, (0, 0))
-                        game.blit_text("Here's your inventory. Choose what you wish to sell.\n", (10, 20),
-                                       game.font_small, constants.BLACK)
-                        game.blit_text(game.player.display_inventory(), (10, 100), game.font_small, constants.BLACK)
+                        game.blit_text("Here's your inventory. Choose what you wish to sell.\n" +
+                                       game.player.display_inventory(), (10, 20), game.font_small, constants.BLACK)
                         scn.inventory_choose.ask_user((30, 420))
                         item_sell = game.get_ui()
                     if item_sell == 'Nothing':
@@ -211,8 +210,8 @@ while launched:
                     look_stock = ''
                     item_buy = ''
                     # We ask the player from which stocks they wish to make a purchase
+                    game.input_box.clear()
                     while not func.verify_ui(look_stock, ['Armours', 'Spells', 'Weapons']):
-                        game.input_box.clear()
                         scn.which_stock.handle_events()
                         game.window.blit(game.bg, (0, 0))
                         scn.which_stock.ask_user()
@@ -220,8 +219,8 @@ while launched:
 
                     # DISPLAY ARMOUR STOCKS
                     if look_stock == 'Armours':
+                        game.input_box.clear()
                         while not func.verify_ui(item_buy, items.shop.list_armour_sales):
-                            game.input_box.clear()
                             scn.shop_stocks.handle_events()
                             game.window.blit(game.bg, (0, 0))
                             trade = items.shop.display_armour()
@@ -231,8 +230,8 @@ while launched:
 
                     # DISPLAY WEAPON STOCKS
                     elif look_stock == 'Weapons':
+                        game.input_box.clear()
                         while not func.verify_ui(item_buy, items.shop.list_weapon_sales):
-                            game.input_box.clear()
                             scn.shop_stocks.handle_events()
                             game.window.blit(game.bg, (0, 0))
                             trade = items.shop.display_weapon()
@@ -242,8 +241,8 @@ while launched:
 
                     # DISPLAY SPELL STOCKS
                     elif look_stock == 'Spells':
+                        game.input_box.clear()
                         while not func.verify_ui(item_buy, items.shop.list_spell_sales):
-                            game.input_box.clear()
                             scn.shop_stocks.handle_events()
                             game.window.blit(game.bg, (0, 0))
                             trade = items.shop.display_spell()
