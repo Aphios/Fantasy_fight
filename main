@@ -1,0 +1,200 @@
+"""Fantasy Fight Project. A simple fight game with fantasy characters.
+
+This file contains the main game loop.
+"""
+
+__version__ = 0.2
+__author__ = "Sophie Blanchard"
+__status__ = "Prototype"
+__start_date__ = "03-17-2020"
+__last_update__ = "05-05-2020"
+
+
+import pygame
+import time
+import constants
+import characters as char
+import game_class as game
+import items
+import scenes as scn
+import func
+import gui_elements as gui
+
+
+pygame.init()
+
+# Initialize game
+game = game.Game()
+
+# >>>>>>>>>>---- PYGAME LOOP ----<<<<<<<<<<<
+while launched:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            quit()
+
+    # >>>>>>>>--- INTRO ----<<<<<<<<<<
+    # Display title and start music
+    game.display_text_music_sleep(scn.title, 3, game.screen, (280, 270),  game.intro_music, -1, game.font_big)
+    # Display the game intro texts with continue button
+    game.display_text_continue(scn.story, game.bg)
+    game.display_text_continue(scn.rules, game.bg)
+    game.display_text_continue(scn.tips, game.bg)
+
+    # >>>>>>>--- PLAYER CREATION ---<<<<<<<<
+    # Get the player's name
+    p_name = game.ask_user(scn.enter_name, game.bg)
+    # Get player's gender
+    p_gender = game.ask_and_check(scn.enter_gender, game.bg, constants.GENDERS)
+    # Get player's race
+    p_race = game.ask_and_check(scn.enter_race, game.bg, constants.RACES)
+    # Register player as a game attribute
+    game.player = char.Player(p_name, p_gender, p_race, items.underwear, items.fists, items.no_spell)
+    # Welcome player
+    game.display_text(f"Welcome {game.player._name} !\n", game.bg, (280, 280), 2, constants.IMMORTAL_BIG)
+
+    # Initialize game loop
+    continue_game = True
+
+    # >>>>>>---- MAIN GAME LOOP ----<<<<<<<
+    while continue_game:
+        # >>>>>>>---- ENEMY CREATION ----<<<<<<<<
+        # Depending on player's level, the enemy may have some advanced equipment
+        if game.player.level < 5:
+            settings = func.autogen(constants.GENDERS, constants.RACES, constants.MALE_NAMES, constants.FEMALE_NAMES,
+                                    constants.OTHER_NAMES,
+                                    [items.corset, items.rags, items.rags, items.rags, items.corset,
+                                     items.underwear, items.leathersuit],
+                                    [items.scissors, items.fists, items.fists, items.fists, items.scissors, items.club,
+                                     items.dagger],
+                                    [items.scorch, items.wasp_stings, items.wasp_stings, items.no_spell, items.no_spell,
+                                     items.no_spell])
+        elif game.player.level >= 5:
+            settings = func.autogen(constants.GENDERS, constants.RACES, constants.MALE_NAMES, constants.FEMALE_NAMES,
+                                    constants.OTHER_NAMES,
+                                    [items.corset, items.corset, items.platemail, items.leathersuit,
+                                     items.leathersuit, items.leathersuit, items.platemail,
+                                     items.mithril_jacket],
+                                    [items.halbert, items.halbert, items.club, items.scythe, items.dagger, items.dagger,
+                                     items.dagger],
+                                    [items.lightning, items.venom_gaze, items.scorch, items.blizzard, items.blizzard,
+                                     items.venom_gaze, items.no_spell])
+        # Save the enemy as a game attribute
+        game.enemy = char.Character(**settings)
+
+        # >>>>>>>---- VIEW STATS AND INVENTORY ----<<<<<<
+        # Player can skip this scene if they don't want to look at their stats
+        view = game.display_text_yesno(scn.view_stats, game.bg)
+        if view:
+            game.display_text_continue(str(game.player), game.bg)
+
+        # >>>>>>---- SHOP -----<<<<<<<<<
+        # Player can skip thse scene if they don't want to go shop
+        shoping = game.display_text_yesno(scn.go_shop, game.bg)
+        if shoping:
+            # We display the name of the shop while changing the musics with a light transition
+            game.stop_music(2000)
+            game.display_text_music_sleep(scn.bazaar, 2, game.bg, (50, 250), font=game.font_big)
+            game.play_music(game.shop_music)
+            # Initialize shop loop
+            continue_shop = True
+            while continue_shop:
+                # We propose the player to either buy, sell or exit the shop
+                p_choice = game.ask_and_check(scn.shop_menu, game.bg, ['Buy', 'Sell', 'Exit'])
+                # Sell item
+                if p_choice == 'Sell' and game.player.available_items():
+                    item_sell = game.ask_and_check(scn.inventory_choose, game.bg, game.player.available_items(),
+                                                   (30, 420), game.player.display_inventory())
+                    if item_sell == 'Nothing':
+                        continue
+                    else:
+                        game.display_text_continue(game.player.sell(item_sell), game.bg, (50, 250))
+                # If the player has no item to sell, they return to the beginning of the shop loop
+                elif p_choice == 'Sell' and not game.player.available_items():
+                    game.display_text_continue(scn.no_sell, game.bg, (50, 250))
+                # BUY ITEM
+                elif p_choice == 'Buy':
+                    # We ask the player which stocks they want to see
+                    look_stock = game.ask_and_check(scn.which_stock, game.bg, ['Armours', 'Spells', 'Weapons'])
+                    # Display armours
+                    if look_stock == 'Armours':
+                        item_buy = game.ask_and_check(scn.shop_stocks, game.bg, items.shop.list_armour_sales,
+                                                      (30, 420), items.shop.display_armour())
+                    # Display weapons
+                    elif look_stock == 'Weapons':
+                        item_buy = game.ask_and_check(scn.shop_stocks, game.bg, items.shop.list_weapon_sales,
+                                                      (30, 420), items.shop.display_weapon())
+                    # Display spells
+                    elif look_stock == 'Spells':
+                        item_buy = game.ask_and_check(scn.shop_stocks, game.bg, items.shop.list_spell_sales,
+                                                      (30, 420), items.shop.display_spell())
+
+                    # Make the transaction
+                    # If player already have the item or don't want anything, go back to the beginning of shop loop
+                    if item_buy == 'Nothing':
+                        continue
+                    elif (item_buy in game.player.inventory or item_buy == game.player.weapon.name
+                        or item_buy == game.player.spell.name or item_buy == game.player.armour.name):
+                        game.display_text_continue(scn.already_yours, game.bg, (50, 250))
+                    else:
+                        game.display_text_continue(game.player.buy(item_buy, items.shop), game.bg, (50, 250))
+
+                # EXITING SHOP
+                elif p_choice == 'Exit':
+                    continue_shop = False
+
+        # EQUIPING
+        # Ask the player if they want to don some equipment
+        equiping = game.display_text_yesno(scn.go_equip, game.bg)
+        if equiping:
+            # If player didn't go shop before, it's time to switch the musics
+            if not shoping:
+                game.stop_music(2000)
+                game.display_text_music_sleep(scn.your_pack, 2, game.bg, (50, 250), font=game.font_big)
+                game.play_music(game.shop_music)
+            # Initialize equip loop
+            continue_equip = True
+            while continue_equip:
+                # If the player have something in their inventory, make them choose what to equip
+                if game.player.available_items():
+                    eq_item = game.ask_and_check(scn.inventory_choose, game.bg, game.player.available_items(),
+                                                 (30, 420), game.player.display_inventory())
+                    if eq_item != 'Nothing':
+                        game.player.equip(eq_item)
+                        re_equiping = game.display_text_yesno(scn.re_equip, game.bg)
+                        if not re_equiping:
+                            continue_equip = False
+                # If player as nothing to equip, we end the equiping loop
+                else:
+                    game.display_text_continue(scn.no_equip, game.bg, (50, 250))
+                    continue_equip = False
+
+        # >>>>>>---- INTRODUCING THE ENEMY ----<<<<<<<<<
+        # Fadeout current music before introducing new one
+        game.stop_music(2000)
+        game.display_text_music_sleep(scn.enter_arena, 2, game.bg, (50, 250), font=game.font_big)
+        game.play_random_music()
+        # Display the enemy's stats
+        game.display_text_continue(str(game.enemy), game.bg)
+
+        # >>>>>>>---- FIGHT -----<<<<<<<
+        # TODO : write fight thread
+
+        continue_game = False
+
+    # >>>>>>>----- THE END -------<<<<<<<<<<
+    # Fading ancient music before playing new one
+    game.stop_music(1500)
+    time.sleep(1.50)
+    game.display_text_music_sleep(scn.endgame, 5, game.bg, (70, 150), game.intro_music, -1, game.font_big)
+    # Display credits
+    game.display_text_music_sleep(scn.credits, 6, game.bg, (70, 85))
+    game.stop_music(5000)
+    time.sleep(6)
+    # Automatically quit program
+    pygame.quit()
+    quit()
+
+
+
+

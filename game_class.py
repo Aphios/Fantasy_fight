@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-04-2020"
+__last_update__ = "05-05-2020"
 
 import pygame
 import random
@@ -83,7 +83,7 @@ class Game:
         return ui.capitalize()
 
 
-    def play_random_music(self, repeats):
+    def play_random_music(self, repeats=-1):
         """Loads and plays a random music for a certain number of repetitions."""
 
         music = random.choice([self.fight_music1, self.fight_music2])
@@ -92,7 +92,7 @@ class Game:
         pygame.mixer_music.play(repeats)
 
 
-    def play_music(self, music, repeats):
+    def play_music(self, music, repeats=-1):
         """Loads and plays a music for a certain number of repetitions."""
 
         pygame.mixer_music.set_volume(0.50)
@@ -149,18 +149,16 @@ class Game:
             return True
 
 
-    def display_text_music_sleep(self, text, music, sleep_time, back_surf, pos_txt=(10, 20), rpt_music=None,
+    def display_text_music_sleep(self, text, sleep_time, back_surf, pos_txt=(20, 30), music=None, rpt_music=-1,
                             font=constants.IMMORTAL_SMALL, font_color=constants.BLACK):
         """Plays a music, blits the back surface with a text, then makes the program sleep.
         Text may be a Scene.text
 
-        Encoutered : 2 times l.40-49,
-        1 variant l.352-356 with window.blit(bg) and not screen
-        1 variant encountered l. 160-164 with no music
+        Encoutered : l.40-49, 160-164, 352-356 = OK
         """
 
         self.handle_events()
-        if rpt_music is not None:
+        if music is not None:
             self.play_music(music, rpt_music)
         self.window.blit(back_surf, (0, 0))
         self.blit_text(text, pos_txt, font, font_color)
@@ -169,18 +167,17 @@ class Game:
         self.clock.tick(constants.FPS)
 
 
-    def display_text_continue(self, text, pos=(10, 20), button_color=constants.GOLD,
+    def display_text_continue(self, text, back_surf, pos=(20, 30), button_color=constants.GOLD,
                               font=constants.IMMORTAL_SMALL, font_color=constants.BLACK):
-        """Blits the colored background, displays text (by default, the text attribute of the scene) at default
-        position (10, 20) and the continue button, handles the pause system.
+        """Blits the colored background, displays text (by default, the text attribute of the scene) and the
+        continue button, handles the pause system.
 
-        Encoutered : 7 times l.52-58, 60-64, 68-70, 195-200, 203-207, 258-262, 320-324
-        Encountered 4 variants l.142-149, 195-200, 269-275, 332-337
-
+        Encoutered : l.52-58, 60-64, 68-70, l.142-149, 195-200, 203-207, 258-262, 269-275, 320-324, = OK
+         / 332-337
         """
 
         self.handle_events()
-        self.window.blit(game.bg, (0, 0))
+        self.window.blit(back_surf, (0, 0))
         self.blit_text(text, pos, font, font_color)
         self.continue_button.blit_button(self.window, button_color)
         pygame.display.flip()
@@ -188,19 +185,21 @@ class Game:
         self.pause()
 
 
-    def ask_user(self, text, var, accepted, additional_text='', pos_add=(10, 20), font=constants.IMMORTAL_SMALL,
-                 font_color=constants.BLACK, pos_question=(10, 150)):
-        """A loop to verify user input. Default background is displayed + optionnal text + a question to the player +
-        the input box. The verified result is returned.
+    def ask_and_check(self, question, back_surf, accepted, pos_question=(20, 150), additional_text='', pos_add=(20, 30),
+                 font=constants.IMMORTAL_SMALL, font_color=constants.BLACK):
+        """A loop to verify user input.
 
-        Encoutered 4 times l. 85-89, 93-97, 173-177, 214-219
-        Encountered 5 variants l.183-191, 223-230, 234-241, 245-252, 301-307
+        Displays background + optional text + a question to the player + the input box. The verified result is
+        returned.
+
+        Encoutered : 85-89, 93-97, 173-177, 183-191, 214-219, 223-230, 234-241, 245-252, 301-307 = OK
         """
 
         self.input_box.clear()
+        var = ''
         while not self.verify_ui(var, accepted):
             self.handle_events()
-            self.window.blit(game.bg, (0, 0))
+            self.window.blit(back_surf, (0, 0))
             if additional_text:
                 self.blit_text(additional_text, pos_add, font, font_color)
             self.blit_text(text, pos_question, font, font_color)
@@ -210,26 +209,47 @@ class Game:
         return var
 
 
-    def display_text(self, text, pos=(10, 20), font=constants.IMMORTAL_SMALL, font_color=constants.BLACK):
+    def ask_user(self, question, back_surf, pos_question=(20, 150), font=constants.IMMORTAL_SMALL,
+                 font_color=constants.BLACK, ):
+        """Asks a question to the user and retrieves the input without checking it.
+
+        Default background is displayed + a question to the player + the input box.
+        """
+
+        self.input_box.clear()
+        self.handle_events()
+        self.window.blit(back_surf, (0, 0))
+        self.blit_text(question, pos_question, font, font_color)
+        self.input_box.blit_txtbox(self.window)
+        pygame.display.flip()
+        answer = self.get_ui()
+        return answer
+
+
+    def display_text(self, text, back_surf, pos=(20, 30), wait=0, font=constants.IMMORTAL_SMALL,
+                     font_color=constants.BLACK):
         """Displays scene.text at default position (10, 20) on the background with default font.
 
-        Encountered 1 time  l. 102-107
+        Encountered 1 time  l. 102-107 = OK
         """
+
         self.handle_events()
-        self.window.blit(self.bg, (0, 0))
+        self.window.blit(back_surf, (0, 0))
         self.blit_text(text, pos, font, font_color)
         pygame.display.flip()
+        if wait:
+            time.sleep(wait)
         self.clock.tick(constants.FPS)
 
 
-    def display_text_yesno(self, text, pos_txt, font=constants.IMMORTAL_SMALL, font_color=constants.BLACK):
+    def display_text_yesno(self, text, back_surf, pos_txt=(20, 300), font=constants.IMMORTAL_SMALL, font_color=constants.BLACK):
         """ Blits text on the background and the yes/no buttons, then returns the user's answer (True or False).
 
-        Encountered 4 times : l.135-140, 152-156, 283-287, 311-315
+        Encountered 4 times : l.135-140, 152-156, 283-287, 311-315 = OK
         """
 
         self.handle_events()
-        self.window.blit(self.bg, (0, 0))
+        self.window.blit(back_surf, (0, 0))
         self.blit_text(text, pos_txt, font, font_color)
         self.yes_button.blit_button(self.window)
         self.no_button.blit_button(self.window)
