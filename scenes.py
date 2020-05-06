@@ -87,6 +87,3 @@ last_level = "You have reached the last level and defeated all your enemies !\n"
 attacks = "Those are the attacks you may use. Please write down the name of the attack you wish to launch against" \
          " your enemy.\n"
 fight_again = "Do you want to fight another adversary \n?"
-desequip = "Before going to the shop, if you intend to sell some items, you need to unequip them and put them back into" \
-           "your inventory. Do you wish to desequip now ?"
-no_desequip = "You cannot unequip at this time. You need to have some replacement items for that."

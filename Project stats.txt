@@ -4,4 +4,6 @@ Version 0.1 :
 ~ 100 hours of work
 
 Version 0.2 :
-started 04-17
+started 04-17, ended 05-06
+1513 code lines
+~ 80 hours of work
