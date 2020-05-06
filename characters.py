@@ -6,7 +6,6 @@ This file contains the classes :
 
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
-__status__ = "Prototype"
 __start_date__ = "03-17-2020"
 __last_update__ = "05-02-2020"
 
@@ -108,7 +107,7 @@ class Character:
                    f"{enemy._name}'s armour absorbs {damage - final_damage} damage. \n"\
                    f"{enemy._name}'s life points are now {enemy.life}.\n"
         else:
-            return f"{self._name} uses {attack.lower()} to attack ! {enemy._name} dodges the attack!\n"\
+            return f"{self._name} uses {attack.lower()} to attack ! {enemy._name} dodges the attack !\n"\
                    f"{enemy._name}'s life points are still {enemy.life}.\n"
 
 
@@ -169,16 +168,14 @@ class Player(Character):
         """Adds to player's gold a random amount of gold."""
         g = random.randint(0, 100)
         self.gold += g
-        print(f"You loot {g} gold pieces.")
+        return f"You loot {g} gold pieces."
 
     def gain_xp(self, enemy):
         """Increases player's experience depending on enemy's level and levels player up if need be."""
         assert isinstance(enemy, Character)
         el = str(enemy.level)
         self.experience += cst.XP_GAINS[el]
-        print(f"You gain {cst.XP_GAINS[el]} experience points.")
-        while self.experience > cst.XP_LEVELS[str(self.level)]:
-            self.level_up()
+        return f"You gain {cst.XP_GAINS[el]} experience points."
 
     def level_up(self):
         """Increases player's level, life, strength, intelligence and special ability."""
@@ -189,7 +186,7 @@ class Player(Character):
         self.ability['damage_min'] += self.level // 2
         self.ability['damage_max'] += self.level // 2
 
-        print(f"New level reached ! Congratulations, you are now level {self.level}.")
+        return f"New level reached ! Congratulations, you are now level {self.level}."
 
     def achievements(self):
         """Prints player's wins and level."""
@@ -197,21 +194,25 @@ class Player(Character):
                f"{self.level}\n"
 
     def choose_attack(self):
-        """Prompts the player to choose their weapon, ability or spell (if existing) to attack and returns choice."""
+        """Prompts the player to choose their weapon, ability or spell (if existing) to attack."""
         if self.spell.name != 'No spell':
-            print(f"Choose what you will use to attack :\nYour weapon : {self.weapon.name}, min.damage : "
-                  f"{self.weapon.damage_min}, max.damage : {self.weapon.damage_max}\nYour special ability : "
-                  f"{self.ability['name']}, min. damage : {self.ability['damage_min']}, max. damage : "
-                  f"{self.ability['damage_max']}\nYour spell : {self.spell.name}, min.damage : "
-                  f"{self.spell.damage_min}, max.damage : {self.spell.damage_max}\n")
-            choice = pyip.inputMenu([self.weapon.name, self.ability['name'], self.spell.name], numbered=True)
+            return f"Choose what you will use to attack :\nYour weapon : {self.weapon.name}, min.damage : "\
+                   f"{self.weapon.damage_min}, max.damage : {self.weapon.damage_max}\nYour special ability : "\
+                   f"{self.ability['name']}, min. damage : {self.ability['damage_min']}, max. damage : "\
+                   f"{self.ability['damage_max']}\nYour spell : {self.spell.name}, min.damage : "\
+                   f"{self.spell.damage_min}, max.damage : {self.spell.damage_max}\n"
         else:
-            print(f"Choose what you will use to attack :\nYour weapon : {self.weapon.name}, min.damage : "
-                  f"{self.weapon.damage_min}, max.damage : {self.weapon.damage_max}\nYour special ability : "
-                  f"{self.ability['name']}, min. damage : {self.ability['damage_min']}, max. damage : "
-                  f"{self.ability['damage_max']}\n")
-            choice = pyip.inputMenu([self.weapon.name, self.ability['name']], numbered=True)
-        return choice
+            return f"Choose what you will use to attack :\nYour weapon : {self.weapon.name}, min.damage : "\
+                   f"{self.weapon.damage_min}, max.damage : {self.weapon.damage_max}\nYour special ability : "\
+                   f"{self.ability['name']}, min. damage : {self.ability['damage_min']}, max. damage : "\
+                   f"{self.ability['damage_max']}\n"
+
+    def available_attacks(self):
+        """Returns a list of the names the player may use in combat."""
+        res = [self.weapon.name, self.ability['name']]
+        if self.spell.name != 'No spell':
+            res.append(self.spell.name)
+        return res
 
     def available_items(self):
         """Returns the list of the items the player may sell or equip."""
@@ -224,16 +225,14 @@ class Player(Character):
         return av_list
 
     def win_or_loose(self, enemy):
-        """Returns true if the hero survives the fight (i.e. has at least 1 life point left), false otherwise."""
+        """Returns description of how hero survives the fight or fell."""
         if self.life > enemy.life:
-            print("You win the fight !\n")
-            return True
+            return "You win the fight !\n"
         elif self.life == enemy.life:
-            print("You and your enemy die at each other's hands ! You mutually curse yourselves with your "
-                  "last breath.\n")
+            return "You and your enemy die at each other's hands ! You mutually curse yourselves with your "\
+                  "last breath.\n"
         else:
-            print("You lost the fight ! You are dead and now roam the realms of forgotten memories.\n")
-        return False
+            return "You lost the fight ! You are dead and now roam the realms of forgotten memories.\n"
 
     def buy(self, item, shop):
         """Buys an item from the shop and puts it in player's inventory.

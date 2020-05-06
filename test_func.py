@@ -6,7 +6,6 @@ Tests to be runned with Pytest.
 
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
-__status__ = "Prototype"
 __start_date__ = "03-17-2020"
 __last_update__ = "05-06-2020"
 

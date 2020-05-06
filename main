@@ -5,7 +5,6 @@ This file contains the main game loop.
 
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
-__status__ = "Prototype"
 __start_date__ = "03-17-2020"
 __last_update__ = "05-06-2020"
 
@@ -56,6 +55,9 @@ while launched:
 
     # Initialize game loop
     continue_game = True
+
+    # Initialize the repeat fight variable (it will be used to propose the player to desequip after the fights)
+    more_fight = ''
 
     # >>>>>>---- MAIN GAME LOOP ----<<<<<<<
     while continue_game:
@@ -120,15 +122,15 @@ while launched:
                     # Display armours
                     if look_stock == 'Armours':
                         item_buy = game.ask_and_check(scn.shop_stocks, game.bg, items.shop.list_armour_sales,
-                                                      (30, 300), items.shop.display_armour(), (20, 100))
+                                                      (30, 300), items.shop.display_armour(), (30, 100))
                     # Display weapons
                     elif look_stock == 'Weapons':
                         item_buy = game.ask_and_check(scn.shop_stocks, game.bg, items.shop.list_weapon_sales,
-                                                      (30, 300), items.shop.display_weapon(), (20, 100))
+                                                      (30, 300), items.shop.display_weapon(), (30, 100))
                     # Display spells
                     elif look_stock == 'Spells':
                         item_buy = game.ask_and_check(scn.shop_stocks, game.bg, items.shop.list_spell_sales,
-                                                      (30, 300), items.shop.display_spell(), (20, 100))
+                                                      (30, 300), items.shop.display_spell(), (30, 100))
 
                     # Make the transaction
                     # If player already have the item or don't want anything, go back to the beginning of shop loop
@@ -179,9 +181,46 @@ while launched:
         game.display_text_continue(str(game.enemy), game.bg)
 
         # >>>>>>>---- FIGHT -----<<<<<<<
-        # TODO : write fight thread
+        # Save starting life points for future restoration
+        reset_life = game.player.life
+        while True:
+            # TURN BY TURN
+            # Player chooses their attack and hits
+            attack = game.ask_and_check(scn.attacks, game.bg, game.player.available_attacks(), (30, 350),
+                               game.player.choose_attack(), (30, 100))
+            game.display_text_continue(game.player.hit(game.enemy, attack), game.bg)
+            if game.enemy.life <= 0:
+                break
+            # Enemy "chooses" their attack and hits
+            counterattack = game.enemy.random_attack()
+            game.display_text_continue(game.enemy.hit(game.player, counterattack), game.bg,
+                                       font_color=constants.BURGUNDY)
+            if game.player.life <= 0:
+                break
 
-        continue_game = False
+        # If player wins : reset life to full, gain xp, add a win and loot
+        fight_result = game.player.win_or_loose(game.enemy)
+        if fight_result == "You win the fight !\n":
+            game.player.life = reset_life
+            game.display_text_continue(fight_result + game.player.gain_xp(game.enemy), game.bg)
+            while game.player.experience >= constants.XP_LEVELS[str(game.player.level)]:
+                game.display_text_continue(game.player.level_up(), game.bg)
+            game.player.wins += 1
+            game.display_text_continue(game.player.loot(), game.bg)
+        # If player looses go to THE END
+        else:
+            game.display_text_continue(fight_result, game.bg)
+            break
+
+        # Propose player to start another fight if they haven't reached last level. If not, stop the game.
+        if game.player.level < 10:
+            more_fight = game.display_text_yesno(scn.fight_again, game.bg)
+            if not more_fight:
+                continue_game = False
+        # If player has reached the last level, congratulate them and stop the game.
+        if game.player.level >= 10:
+            game.display_text_continue(scn.last_level, game.bg, (50, 250))
+            continue_game = False
 
     # >>>>>>>----- THE END -------<<<<<<<<<<
     # Fading ancient music before playing new one

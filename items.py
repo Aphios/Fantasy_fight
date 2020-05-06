@@ -9,7 +9,6 @@ This file contains the classes :
 
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
-__status__ = "Prototype"
 __start_date__ = "03-17-2020"
 __last_update__ = "04-28-2020"
 
