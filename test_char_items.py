@@ -8,7 +8,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-28-2020"
+__last_update__ = "05-06-2020"
 
 import pytest
 import characters as char
@@ -116,12 +116,11 @@ def test_get_stock(small_shop):
     assert 'Blizzard' in small_shop.stock_spell
 
 
-def test_set_and_display_stock(capsys, small_shop, underwear):
+def test_set_and_display_stock(small_shop, underwear):
     small_shop.stock_armour['Underwear'] = underwear
-    small_shop.display_armour()
-    d = capsys.readouterr()
-    assert "Corset (Armour) >> protection : 5, price : 100" in d.out and "Underwear (Armour) >> protection : 0, " \
-                                                                         "price : 0" in d.out
+    res = small_shop.display_armour()
+    assert "Corset (Armour) >> protection : 5, price : 100" in res and "Underwear (Armour) >> protection : 0, " \
+                                                                       "price : 0" in res
 
 
 def test_buy_with_wrong_item_type(small_shop, hero, corset):
@@ -201,12 +200,11 @@ def test_set_player_armour_wrong_operand(hero, corset):
         hero.armour += corset
 
 
-def test_display_inventory(capsys, hero, dagger):
+def test_display_inventory(hero, dagger):
     hero.gold = 5
     hero.inventory['Dagger'] = dagger
-    hero.display_inventory()
-    i = capsys.readouterr()
-    assert i.out == ">>>>Aphios's inventory<<<<\nGold : 5\nDagger : min.damage : 15, max. damage : 25\n"
+    res = hero.display_inventory()
+    assert res == ">>>>Aphios's inventory<<<<\nGold : 5\nDagger : min.damage : 15, max. damage : 25\n"
 
 
 def test_loot(hero):
@@ -216,7 +214,6 @@ def test_loot(hero):
 
 
 def test_gain_xp_and_2_levels_up(hero, monster):
-    print(hero)
     hero.gain_xp(monster)
     hero.gain_xp(monster)
     assert hero.level == 3
@@ -226,17 +223,18 @@ def test_gain_xp_and_2_levels_up(hero, monster):
 
 def test_achievements(capsys, hero):
     hero.wins += 3
-    hero.achievements()
-    a = capsys.readouterr()
-    assert a.out == ">>>>> Aphios's achievements <<<<<\n3 enemies defeated. Last level reached : 1\n"
+    res = hero.achievements()
+    assert res == ">>>>> Aphios's achievements <<<<<\n3 enemies defeated. Last level reached : 1\n"
 
 
 def test_display_player(hero):
+    hero.gold = 10
     p = str(hero)
     assert p == "Name : Aphios\nGender : Other\nRace : Banshee\nLevel : 1\nStrength : 8\nIntelligence : 20\n" \
                 "Life : 28\nSpecial Ability : Scream\n>>>>Equipment<<<<\nArmour : Underwear (protection : 0)\n" \
                 "Weapon : Fists (min.damage : -8, max. damage : 4)\nSpell : No spell (min.damage : 0, " \
-                "max. damage : 0\n>>>>Experience<<<<\n0 points. Next level in : 500 points."
+                "max. damage : 0\n>>>>Experience<<<<\n0 points. Next level in : 500 points.\n>>>>Aphios's " \
+                "inventory<<<<\nGold : 10\n"
 
 
 def test_no_available_items(hero):
@@ -294,9 +292,8 @@ def test_player_hit_missed(monkeypatch, monster, hero):
     assert monster.life == 55
 
 
-def test_player_hit_desc(capsys, monkeypatch, monster, hero):
+def test_player_hit_desc(monkeypatch, monster, hero):
     monkeypatch.setattr('random.randint', lambda a, b: 20)
-    hero.hit(monster, 'Scream')
-    h = capsys.readouterr()
-    assert h.out == "Aphios uses scream to attack !\n20 damage dealt !\nBoss's armour absorbs 5 damage. " \
+    res = hero.hit(monster, 'Scream')
+    assert res == "Aphios uses scream to attack !\n20 damage dealt !\nBoss's armour absorbs 5 damage. " \
                     "\nBoss's life points are now 40.\n"

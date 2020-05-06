@@ -93,7 +93,7 @@ class Character:
         if final_dmg > 0:
             enemy.life -= final_dmg
 
-        self.desc_hit(dmg, final_dmg, enemy, attack)
+        return self.desc_hit(dmg, final_dmg, enemy, attack)
 
     def desc_hit(self, damage, final_damage, enemy, attack):
         """Prints a description of the attack against the enemy.
@@ -104,12 +104,12 @@ class Character:
         damage and final_damage : ints
         """
         if final_damage > 0:
-            print(f"{self._name} uses {attack.lower()} to attack !\n{damage} damage dealt !\n"
-                  f"{enemy._name}'s armour absorbs {damage - final_damage} damage. \n"
-                  f"{enemy._name}'s life points are now {enemy.life}.")
+            return f"{self._name} uses {attack.lower()} to attack !\n{damage} damage dealt !\n"\
+                   f"{enemy._name}'s armour absorbs {damage - final_damage} damage. \n"\
+                   f"{enemy._name}'s life points are now {enemy.life}.\n"
         else:
-            print(f"{self._name} uses {attack.lower()} to attack ! {enemy._name} dodges the attack!\n"
-                  f"{enemy._name}'s life points are still {enemy.life}.")
+            return f"{self._name} uses {attack.lower()} to attack ! {enemy._name} dodges the attack!\n"\
+                   f"{enemy._name}'s life points are still {enemy.life}.\n"
 
 
 class Player(Character):
@@ -193,8 +193,8 @@ class Player(Character):
 
     def achievements(self):
         """Prints player's wins and level."""
-        print(f">>>>> {self._name}'s achievements <<<<<\n{self.wins} enemies defeated. Last level reached : "
-              f"{self.level}")
+        return f">>>>> {self._name}'s achievements <<<<<\n{self.wins} enemies defeated. Last level reached : " \
+               f"{self.level}\n"
 
     def choose_attack(self):
         """Prompts the player to choose their weapon, ability or spell (if existing) to attack and returns choice."""

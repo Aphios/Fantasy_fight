@@ -8,7 +8,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "04-28-2020"
+__last_update__ = "05-06-2020"
 
 
 import items
@@ -18,12 +18,12 @@ import func
 males = ['Bob', 'Alex']
 females = ['Sam', 'Alice']
 others = ['Tic', 'Tac']
-corset = ffc.Armour('Corset', 100, 5)
-underwear = ffc.Armour('Underwear', 0, 0)
-blizzard = ffc.Spell('Blizzard', 200, 8, 16)
-no_spell = ffc.Spell('No spell', 0, 0, 0)
-dagger = ffc.Weapon('Dagger', 150, 15, 25)
-fists = ffc.Weapon('Fists', 0, -8, 4)
+corset = items.Armour('Corset', 100, 5)
+underwear = items.Armour('Underwear', 0, 0)
+blizzard = items.Spell('Blizzard', 200, 8, 16)
+no_spell = items.Spell('No spell', 0, 0, 0)
+dagger = items.Weapon('Dagger', 150, 15, 25)
+fists = items.Weapon('Fists', 0, -8, 4)
 genders = ['Male', 'Female', 'Unknown']
 races = ['Elf', 'Gobelin', 'Dwarf']
 
