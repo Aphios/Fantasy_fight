@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-05-2020"
+__last_update__ = "05-06-2020"
 
 import pygame
 import random
@@ -87,7 +87,7 @@ class Game:
         """Loads and plays a random music for a certain number of repetitions."""
 
         music = random.choice([self.fight_music1, self.fight_music2])
-        pygame.mixer_music.set_volume(0.50)
+        pygame.mixer_music.set_volume(0.30)
         pygame.mixer_music.load(music)
         pygame.mixer_music.play(repeats)
 
@@ -95,7 +95,7 @@ class Game:
     def play_music(self, music, repeats=-1):
         """Loads and plays a music for a certain number of repetitions."""
 
-        pygame.mixer_music.set_volume(0.50)
+        pygame.mixer_music.set_volume(0.30)
         pygame.mixer_music.load(music)
         pygame.mixer_music.play(repeats)
 
@@ -150,7 +150,7 @@ class Game:
 
 
     def display_text_music_sleep(self, text, sleep_time, back_surf, pos_txt=(20, 30), music=None, rpt_music=-1,
-                            font=constants.IMMORTAL_SMALL, font_color=constants.BLACK):
+                            font=cst.IMMORTAL_SMALL, font_color=cst.BLACK):
         """Plays a music, blits the back surface with a text, then makes the program sleep.
         Text may be a Scene.text
 
@@ -164,11 +164,11 @@ class Game:
         self.blit_text(text, pos_txt, font, font_color)
         pygame.display.flip()
         time.sleep(sleep_time)
-        self.clock.tick(constants.FPS)
+        self.clock.tick(cst.FPS)
 
 
-    def display_text_continue(self, text, back_surf, pos=(20, 30), button_color=constants.GOLD,
-                              font=constants.IMMORTAL_SMALL, font_color=constants.BLACK):
+    def display_text_continue(self, text, back_surf, pos=(20, 30), button_color=cst.GOLD,
+                              font=cst.IMMORTAL_SMALL, font_color=cst.BLACK):
         """Blits the colored background, displays text (by default, the text attribute of the scene) and the
         continue button, handles the pause system.
 
@@ -181,12 +181,12 @@ class Game:
         self.blit_text(text, pos, font, font_color)
         self.continue_button.blit_button(self.window, button_color)
         pygame.display.flip()
-        self.clock.tick(constants.FPS)
+        self.clock.tick(cst.FPS)
         self.pause()
 
 
     def ask_and_check(self, question, back_surf, accepted, pos_question=(20, 150), additional_text='', pos_add=(20, 30),
-                 font=constants.IMMORTAL_SMALL, font_color=constants.BLACK):
+                 font=cst.IMMORTAL_SMALL, font_color=cst.BLACK):
         """A loop to verify user input.
 
         Displays background + optional text + a question to the player + the input box. The verified result is
@@ -202,15 +202,15 @@ class Game:
             self.window.blit(back_surf, (0, 0))
             if additional_text:
                 self.blit_text(additional_text, pos_add, font, font_color)
-            self.blit_text(text, pos_question, font, font_color)
+            self.blit_text(question, pos_question, font, font_color)
             self.input_box.blit_txtbox(self.window)
             pygame.display.flip()
             var = self.get_ui()
         return var
 
 
-    def ask_user(self, question, back_surf, pos_question=(20, 150), font=constants.IMMORTAL_SMALL,
-                 font_color=constants.BLACK, ):
+    def ask_user(self, question, back_surf, pos_question=(20, 150), font=cst.IMMORTAL_SMALL,
+                 font_color=cst.BLACK, ):
         """Asks a question to the user and retrieves the input without checking it.
 
         Default background is displayed + a question to the player + the input box.
@@ -226,8 +226,8 @@ class Game:
         return answer
 
 
-    def display_text(self, text, back_surf, pos=(20, 30), wait=0, font=constants.IMMORTAL_SMALL,
-                     font_color=constants.BLACK):
+    def display_text(self, text, back_surf, pos=(20, 30), wait=0, font=cst.IMMORTAL_SMALL,
+                     font_color=cst.BLACK):
         """Displays scene.text at default position (10, 20) on the background with default font.
 
         Encountered 1 time  l. 102-107 = OK
@@ -239,10 +239,10 @@ class Game:
         pygame.display.flip()
         if wait:
             time.sleep(wait)
-        self.clock.tick(constants.FPS)
+        self.clock.tick(cst.FPS)
 
 
-    def display_text_yesno(self, text, back_surf, pos_txt=(20, 300), font=constants.IMMORTAL_SMALL, font_color=constants.BLACK):
+    def display_text_yesno(self, text, back_surf, pos_txt=(20, 300), font=cst.IMMORTAL_SMALL, font_color=cst.BLACK):
         """ Blits text on the background and the yes/no buttons, then returns the user's answer (True or False).
 
         Encountered 4 times : l.135-140, 152-156, 283-287, 311-315 = OK
@@ -254,5 +254,5 @@ class Game:
         self.yes_button.blit_button(self.window)
         self.no_button.blit_button(self.window)
         pygame.display.flip()
-        self.clock.tick(constants.FPS)
+        self.clock.tick(cst.FPS)
         return self.yes_no()

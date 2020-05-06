@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-05-2020"
+__last_update__ = "05-06-2020"
 
 import pygame
 import random
@@ -80,7 +80,7 @@ shop_stocks = "\nThose are the items available for sale. Please write below the 
 go_equip = "Do you wish to equip yourself before going to fight ?\n"
 your_pack = "Let's have a look at your pack !\n"
 no_equip = "You have nothing to equip !\n"
-re_equip = "Done ! Do you want to continue changing your equipment ?\n'"
+re_equip = "Done ! Do you want to continue changing your equipment ?\n"
 
 # FIGHT
 enter_arena = "You meet your opponent in the arena : \n"

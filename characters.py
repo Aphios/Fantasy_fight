@@ -15,6 +15,7 @@ import random
 import pyinputplus as pyip
 import pygame
 import constants as cst
+import items as it
 
 
 pygame.init()
@@ -135,9 +136,9 @@ class Player(Character):
         """Prints the player's gold and inventory's content."""
         inv = ""
         for elt in self.inventory.values():
-            if isinstance(elt, Weapon) or isinstance(elt, Spell):
+            if isinstance(elt, it.Weapon) or isinstance(elt, it.Spell):
                 inv += f"{elt.name} : min.damage : {elt.damage_min}, max. damage : {elt.damage_max}\n"
-            elif isinstance(elt, Armour):
+            elif isinstance(elt, it.Armour):
                 inv += f"{elt.name} : protection : {elt.protection}\n"
         return f">>>>{self._name}'s inventory<<<<\nGold : {self.gold}\n" + inv
 
@@ -151,13 +152,13 @@ class Player(Character):
         Vars : eq : the object corresponding to the name item
         """
         eq = self.inventory[item]
-        if isinstance(eq, Weapon):
+        if isinstance(eq, it.Weapon):
             self.inventory[self.weapon.name] = self.weapon
             self.weapon = eq
-        elif isinstance(eq, Spell):
+        elif isinstance(eq, it.Spell):
             self.inventory[self.spell.name] = self.spell
             self.spell = eq
-        elif isinstance(eq, Armour):
+        elif isinstance(eq, it.Armour):
             self.inventory[self.armour.name] = self.armour
             self.armour = eq
         else:

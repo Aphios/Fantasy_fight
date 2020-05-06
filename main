@@ -7,7 +7,7 @@ __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __status__ = "Prototype"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-05-2020"
+__last_update__ = "05-06-2020"
 
 
 import pygame
@@ -27,6 +27,7 @@ pygame.init()
 game = game.Game()
 
 # >>>>>>>>>>---- PYGAME LOOP ----<<<<<<<<<<<
+launched = True
 while launched:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -51,7 +52,7 @@ while launched:
     # Register player as a game attribute
     game.player = char.Player(p_name, p_gender, p_race, items.underwear, items.fists, items.no_spell)
     # Welcome player
-    game.display_text(f"Welcome {game.player._name} !\n", game.bg, (280, 280), 2, constants.IMMORTAL_BIG)
+    game.display_text(f"Welcome {game.player._name} !\n", game.bg, (250, 280), 2, constants.IMMORTAL_BIG)
 
     # Initialize game loop
     continue_game = True
@@ -119,15 +120,15 @@ while launched:
                     # Display armours
                     if look_stock == 'Armours':
                         item_buy = game.ask_and_check(scn.shop_stocks, game.bg, items.shop.list_armour_sales,
-                                                      (30, 420), items.shop.display_armour())
+                                                      (30, 300), items.shop.display_armour(), (20, 100))
                     # Display weapons
                     elif look_stock == 'Weapons':
                         item_buy = game.ask_and_check(scn.shop_stocks, game.bg, items.shop.list_weapon_sales,
-                                                      (30, 420), items.shop.display_weapon())
+                                                      (30, 300), items.shop.display_weapon(), (20, 100))
                     # Display spells
                     elif look_stock == 'Spells':
                         item_buy = game.ask_and_check(scn.shop_stocks, game.bg, items.shop.list_spell_sales,
-                                                      (30, 420), items.shop.display_spell())
+                                                      (30, 300), items.shop.display_spell(), (20, 100))
 
                     # Make the transaction
                     # If player already have the item or don't want anything, go back to the beginning of shop loop
