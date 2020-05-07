@@ -20,7 +20,7 @@ FEMALE_NAMES = ['Lydia', 'Tulie', 'Aimee', 'Selene', 'Kira', 'Ksyncix']
 OTHER_NAMES = ['Al', 'Effen', 'Juno', 'Lerrewen', 'Gorgo', 'Jviz']
 GENDERS = ['Male', 'Female', 'Other']
 RACES = ['Githzerai', 'Rakshasa', 'Illithid', 'Tieflin', 'Banshee']
-ABILITIES = {'Githzerai': {'name': 'Vicious Swash', 'damage_min': -30, 'damage_max': 40},
+ABILITIES = {'Githzerai': {'name': 'Vicious swash', 'damage_min': -30, 'damage_max': 40},
              'Rakshasa': {'name': 'Subjugate', 'damage_min': -30, 'damage_max': 40},
              'Illithid': {'name': 'Mind pump', 'damage_min': -30, 'damage_max': 40},
              'Tieflin': {'name': 'Sting whip', 'damage_min': -30, 'damage_max': 40},

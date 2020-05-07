@@ -6,7 +6,7 @@ This file contains the main game loop.
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-06-2020"
+__last_update__ = "05-07-2020"
 
 
 import pygame
@@ -97,40 +97,47 @@ while launched:
         if shoping:
             # We display the name of the shop while changing the musics with a light transition
             game.stop_music(2000)
-            game.display_text_music_sleep(scn.bazaar, 2, game.bg, (50, 250), font=game.font_big)
+            game.display_text_music_sleep(scn.bazaar, 2, game.img_shop, (50, 250), font=game.font_big,
+                                          back=constants.WHITE)
             game.play_music(game.shop_music)
             # Initialize shop loop
             continue_shop = True
             while continue_shop:
                 # We propose the player to either buy, sell or exit the shop
-                p_choice = game.ask_and_check(scn.shop_menu, game.bg, ['Buy', 'Sell', 'Exit'])
+                p_choice = game.ask_and_check(scn.shop_menu, game.img_shop, ['Buy', 'Sell', 'Exit'],
+                                              back=constants.WHITE)
                 # Sell item
                 if p_choice == 'Sell' and game.player.available_items():
-                    item_sell = game.ask_and_check(scn.inventory_choose, game.bg, game.player.available_items(),
-                                                   (30, 420), game.player.display_inventory())
+                    item_sell = game.ask_and_check(scn.inventory_choose, game.img_shop, game.player.available_items(),
+                                                   (30, 420), game.player.display_inventory(), back=constants.WHITE)
                     if item_sell == 'Nothing':
                         continue
                     else:
-                        game.display_text_continue(game.player.sell(item_sell), game.bg, (50, 250))
+                        game.display_text_continue(game.player.sell(item_sell), game.img_shop, (50, 250),
+                                                   back=constants.WHITE)
                 # If the player has no item to sell, they return to the beginning of the shop loop
                 elif p_choice == 'Sell' and not game.player.available_items():
-                    game.display_text_continue(scn.no_sell, game.bg, (50, 250))
+                    game.display_text_continue(scn.no_sell, game.img_shop, (50, 250), back=constants.WHITE)
                 # BUY ITEM
                 elif p_choice == 'Buy':
                     # We ask the player which stocks they want to see
-                    look_stock = game.ask_and_check(scn.which_stock, game.bg, ['Armours', 'Spells', 'Weapons'])
+                    look_stock = game.ask_and_check(scn.which_stock, game.img_shop, ['Armours', 'Spells', 'Weapons'],
+                                                    back=constants.WHITE)
                     # Display armours
                     if look_stock == 'Armours':
-                        item_buy = game.ask_and_check(scn.shop_stocks, game.bg, items.shop.list_armour_sales,
-                                                      (30, 300), items.shop.display_armour(), (30, 100))
+                        item_buy = game.ask_and_check(scn.shop_stocks, game.img_shop, items.shop.list_armour_sales,
+                                                      (30, 300), items.shop.display_armour(), (30, 100),
+                                                      back=constants.WHITE)
                     # Display weapons
                     elif look_stock == 'Weapons':
-                        item_buy = game.ask_and_check(scn.shop_stocks, game.bg, items.shop.list_weapon_sales,
-                                                      (30, 300), items.shop.display_weapon(), (30, 100))
+                        item_buy = game.ask_and_check(scn.shop_stocks, game.img_shop, items.shop.list_weapon_sales,
+                                                      (30, 300), items.shop.display_weapon(), (30, 100),
+                                                      back=constants.WHITE)
                     # Display spells
                     elif look_stock == 'Spells':
-                        item_buy = game.ask_and_check(scn.shop_stocks, game.bg, items.shop.list_spell_sales,
-                                                      (30, 300), items.shop.display_spell(), (30, 100))
+                        item_buy = game.ask_and_check(scn.shop_stocks, game.img_shop, items.shop.list_spell_sales,
+                                                      (30, 300), items.shop.display_spell(), (30, 100),
+                                                      back=constants.WHITE)
 
                     # Make the transaction
                     # If player already have the item or don't want anything, go back to the beginning of shop loop
@@ -138,12 +145,14 @@ while launched:
                         continue
                     elif (item_buy in game.player.inventory or item_buy == game.player.weapon.name
                         or item_buy == game.player.spell.name or item_buy == game.player.armour.name):
-                        game.display_text_continue(scn.already_yours, game.bg, (50, 250))
+                        game.display_text_continue(scn.already_yours, game.img_shop, (50, 250), back=constants.WHITE)
                     else:
-                        game.display_text_continue(game.player.buy(item_buy, items.shop), game.bg, (50, 250))
+                        game.display_text_continue(game.player.buy(item_buy, items.shop), game.img_shop, (50, 250),
+                                                   back=constants.WHITE)
 
                 # EXITING SHOP
                 elif p_choice == 'Exit':
+                    time.sleep(1)
                     continue_shop = False
 
         # EQUIPING
@@ -178,7 +187,7 @@ while launched:
         game.display_text_music_sleep(scn.enter_arena, 2, game.bg, (50, 250), font=game.font_big)
         game.play_random_music()
         # Display the enemy's stats
-        game.display_text_continue(str(game.enemy), game.bg)
+        game.display_text_continue(str(game.enemy), game.img_arena, back=constants.WHITE)
 
         # >>>>>>>---- FIGHT -----<<<<<<<
         # Save starting life points for future restoration
@@ -186,14 +195,14 @@ while launched:
         while True:
             # TURN BY TURN
             # Player chooses their attack and hits
-            attack = game.ask_and_check(scn.attacks, game.bg, game.player.available_attacks(), (30, 350),
-                               game.player.choose_attack(), (30, 100))
-            game.display_text_continue(game.player.hit(game.enemy, attack), game.bg)
+            attack = game.ask_and_check(game.player.choose_attack(), game.img_arena, game.player.available_attacks(),
+                                        (20, 30))
+            game.display_text_continue(game.player.hit(game.enemy, attack), game.img_arena)
             if game.enemy.life <= 0:
                 break
             # Enemy "chooses" their attack and hits
             counterattack = game.enemy.random_attack()
-            game.display_text_continue(game.enemy.hit(game.player, counterattack), game.bg,
+            game.display_text_continue(game.enemy.hit(game.player, counterattack), game.img_arena,
                                        font_color=constants.BURGUNDY)
             if game.player.life <= 0:
                 break
@@ -202,24 +211,24 @@ while launched:
         fight_result = game.player.win_or_loose(game.enemy)
         if fight_result == "You win the fight !\n":
             game.player.life = reset_life
-            game.display_text_continue(fight_result + game.player.gain_xp(game.enemy), game.bg)
+            game.display_text_continue(fight_result + game.player.gain_xp(game.enemy), game.img_arena)
             while game.player.experience >= constants.XP_LEVELS[str(game.player.level)]:
-                game.display_text_continue(game.player.level_up(), game.bg)
+                game.display_text_continue(game.player.level_up(), game.img_arena)
             game.player.wins += 1
-            game.display_text_continue(game.player.loot(), game.bg)
+            game.display_text_continue(game.player.loot(), game.img_arena)
         # If player looses go to THE END
         else:
-            game.display_text_continue(fight_result, game.bg)
+            game.display_text_continue(fight_result, game.img_arena)
             break
 
         # Propose player to start another fight if they haven't reached last level. If not, stop the game.
         if game.player.level < 10:
-            more_fight = game.display_text_yesno(scn.fight_again, game.bg)
+            more_fight = game.display_text_yesno(scn.fight_again, game.img_arena, (20, 30))
             if not more_fight:
                 continue_game = False
         # If player has reached the last level, congratulate them and stop the game.
         if game.player.level >= 10:
-            game.display_text_continue(scn.last_level, game.bg, (50, 250))
+            game.display_text_continue(scn.last_level, game.img_arena, (20, 30))
             continue_game = False
 
     # >>>>>>>----- THE END -------<<<<<<<<<<

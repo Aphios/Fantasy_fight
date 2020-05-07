@@ -3,10 +3,10 @@
 This file contains the class handling the game states, such as the main game functions, intro, end, pause, etc.
 """
 
-__version__ = 0.2
+__version__ = 0.3
 __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-06-2020"
+__last_update__ = "05-07-2020"
 
 import pygame
 import random
@@ -27,6 +27,8 @@ class Game:
         self.clock = pygame.time.Clock()
         self.logo = pygame.image.load('Images/FF_logo.png').convert_alpha()
         self.screen = pygame.image.load('Images/Fantasy_fight.png').convert_alpha()
+        self.img_shop = pygame.image.load('Images/shop1.jpg').convert_alpha()
+        self.img_arena = pygame.image.load('Images/arena2.JPG').convert_alpha()
         self.bg = pygame.image.load('Images/Fantasy_fight_bg.png').convert_alpha()
         self.font_big = cst.IMMORTAL_BIG
         self.font_small = cst.IMMORTAL_SMALL
@@ -46,7 +48,7 @@ class Game:
                 quit()
 
 
-    def blit_text(self, text, position, font, font_color):
+    def blit_text(self, text, position, font, font_color, back):
         """Blits hashed text, respecting newlines.
 
         Args : position : a tuple / font : font object / font_color : color object / text : string
@@ -59,7 +61,7 @@ class Game:
         x, y = position
         for line in words:
             for word in line:
-                word_surface = font.render(word, True, font_color)
+                word_surface = font.render(word, True, font_color, back)
                 word_width, word_height = word_surface.get_size()
                 if x + word_width >= max_width:
                     x = position[0]  # Reset the x.
@@ -149,7 +151,7 @@ class Game:
 
 
     def display_text_music_sleep(self, text, sleep_time, back_surf, pos_txt=(20, 30), music=None, rpt_music=-1,
-                            font=cst.IMMORTAL_SMALL, font_color=cst.BLACK):
+                            font=cst.IMMORTAL_SMALL, font_color=cst.BLACK, back=None):
         """Plays a music, blits the back surface with a text, then makes the program sleep.
         Text may be a Scene.text
 
@@ -160,14 +162,14 @@ class Game:
         if music is not None:
             self.play_music(music, rpt_music)
         self.window.blit(back_surf, (0, 0))
-        self.blit_text(text, pos_txt, font, font_color)
+        self.blit_text(text, pos_txt, font, font_color, back)
         pygame.display.flip()
         time.sleep(sleep_time)
         self.clock.tick(cst.FPS)
 
 
     def display_text_continue(self, text, back_surf, pos=(20, 30), button_color=cst.GOLD,
-                              font=cst.IMMORTAL_SMALL, font_color=cst.BLACK):
+                              font=cst.IMMORTAL_SMALL, font_color=cst.BLACK, back=None):
         """Blits the colored background, displays text (by default, the text attribute of the scene) and the
         continue button, handles the pause system.
 
@@ -177,7 +179,7 @@ class Game:
 
         self.handle_events()
         self.window.blit(back_surf, (0, 0))
-        self.blit_text(text, pos, font, font_color)
+        self.blit_text(text, pos, font, font_color, back)
         self.continue_button.blit_button(self.window, button_color)
         pygame.display.flip()
         self.clock.tick(cst.FPS)
@@ -185,7 +187,7 @@ class Game:
 
 
     def ask_and_check(self, question, back_surf, accepted, pos_question=(20, 150), additional_text='', pos_add=(20, 30),
-                 font=cst.IMMORTAL_SMALL, font_color=cst.BLACK):
+                 font=cst.IMMORTAL_SMALL, font_color=cst.BLACK, back=None):
         """A loop to verify user input.
 
         Displays background + optional text + a question to the player + the input box. The verified result is
@@ -200,8 +202,8 @@ class Game:
             self.handle_events()
             self.window.blit(back_surf, (0, 0))
             if additional_text:
-                self.blit_text(additional_text, pos_add, font, font_color)
-            self.blit_text(question, pos_question, font, font_color)
+                self.blit_text(additional_text, pos_add, font, font_color, back)
+            self.blit_text(question, pos_question, font, font_color, back)
             self.input_box.blit_txtbox(self.window)
             pygame.display.flip()
             var = self.get_ui()
@@ -209,7 +211,7 @@ class Game:
 
 
     def ask_user(self, question, back_surf, pos_question=(20, 150), font=cst.IMMORTAL_SMALL,
-                 font_color=cst.BLACK, ):
+                 font_color=cst.BLACK, back=None):
         """Asks a question to the user and retrieves the input without checking it.
 
         Default background is displayed + a question to the player + the input box.
@@ -218,7 +220,7 @@ class Game:
         self.input_box.clear()
         self.handle_events()
         self.window.blit(back_surf, (0, 0))
-        self.blit_text(question, pos_question, font, font_color)
+        self.blit_text(question, pos_question, font, font_color, back)
         self.input_box.blit_txtbox(self.window)
         pygame.display.flip()
         answer = self.get_ui()
@@ -226,7 +228,7 @@ class Game:
 
 
     def display_text(self, text, back_surf, pos=(20, 30), wait=0, font=cst.IMMORTAL_SMALL,
-                     font_color=cst.BLACK):
+                     font_color=cst.BLACK, back=None):
         """Displays scene.text at default position (10, 20) on the background with default font.
 
         Encountered 1 time  l. 102-107 = OK
@@ -234,14 +236,15 @@ class Game:
 
         self.handle_events()
         self.window.blit(back_surf, (0, 0))
-        self.blit_text(text, pos, font, font_color)
+        self.blit_text(text, pos, font, font_color, back)
         pygame.display.flip()
         if wait:
             time.sleep(wait)
         self.clock.tick(cst.FPS)
 
 
-    def display_text_yesno(self, text, back_surf, pos_txt=(20, 300), font=cst.IMMORTAL_SMALL, font_color=cst.BLACK):
+    def display_text_yesno(self, text, back_surf, pos_txt=(20, 300), font=cst.IMMORTAL_SMALL, font_color=cst.BLACK,
+                           back=None):
         """ Blits text on the background and the yes/no buttons, then returns the user's answer (True or False).
 
         Encountered 4 times : l.135-140, 152-156, 283-287, 311-315 = OK
@@ -249,7 +252,7 @@ class Game:
 
         self.handle_events()
         self.window.blit(back_surf, (0, 0))
-        self.blit_text(text, pos_txt, font, font_color)
+        self.blit_text(text, pos_txt, font, font_color, back)
         self.yes_button.blit_button(self.window)
         self.no_button.blit_button(self.window)
         pygame.display.flip()

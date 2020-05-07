@@ -6,7 +6,7 @@ This file contains the game text scenes displayed throughout the game.
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-06-2020"
+__last_update__ = "05-07-2020"
 
 import pygame
 import random
@@ -84,6 +84,4 @@ re_equip = "Done ! Do you want to continue changing your equipment ?\n"
 # FIGHT
 enter_arena = "You meet your opponent in the arena : \n"
 last_level = "You have reached the last level and defeated all your enemies !\n"
-attacks = "Those are the attacks you may use. Please write down the name of the attack you wish to launch against" \
-         " your enemy.\n"
-fight_again = "Do you want to fight another adversary \n?"
+fight_again = "Do you want to fight another adversary ?\n"
