@@ -6,7 +6,7 @@ This file contains the constants needed to initialize class instances.
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-02-2020"
+__last_update__ = "05-12-2020"
 
 
 import pygame
@@ -56,3 +56,15 @@ IMMORTAL_SMALL = pygame.font.Font('Fonts/immortal.ttf', 18)
 
 # Animation
 FPS = 30
+
+# Character pictures
+PICTURES = {'Githzerai':
+                {'Male': 'Images/githzeraiM.png', 'Female': 'Images/githzeraiF.png','Other': 'Images/githzeraiO.png'},
+            'Rakshasa':
+                {'Male': 'Images/RakshasaM.png', 'Female': 'Images/RakshasaF.png', 'Other': 'Images/RakshasaO.png'},
+            'Illithid':
+                {'Male': 'Images/IllithidM.png', 'Female': 'Images/IllithidF.png', 'Other': 'Images/IllithidO.png'},
+            'Tieflin':
+                {'Male': 'Images/tieflinM.png', 'Female': 'Images/tieflinF.png', 'Other': 'Images/tieflinO.png'},
+            'Banshee':
+                {'Male': 'Images/BansheeM.png', 'Female': 'Images/BansheeF.png', 'Other': 'Images/BansheeO.png'}}

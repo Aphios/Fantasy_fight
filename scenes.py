@@ -8,8 +8,10 @@ __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
 __last_update__ = "05-07-2020"
 
-import pygame
 import random
+
+import pygame
+
 import game_class as states
 
 pygame.init()
@@ -66,14 +68,14 @@ view_stats = "Do you want to view your stats and equipment ?\n"
 # SHOP
 go_shop = "Do you want to go to the Shop to buy or sell some equipment ?"
 bazaar = "--Welcome to 'Fighters Bazaar' !--"
-shop_menu = "Do you want to buy, sell, or exit shop ?\nPlease write your answer below (only 'Buy', 'Sell' or 'Exit' " \
-            "accepted)."
+shop_menu = "Do you want to buy, sell, or exit shop ?\nPlease write your answer below \n(only 'Buy', 'Sell' or " \
+            "'Exit' accepted)."
 no_sell = "You have nothing to sell.\n"
 inventory_choose = "Please write the name of one of your posessions below (or 'Nothing')."
 already_yours = "You already have this item in your posession.\n"
-which_stock = "Which stocks do you wish to look at ? (Please choose between 'Armours', 'Spells' or 'Weapons')\n"
-shop_stocks = "\nThose are the items available for sale. Please write below the name of the item you wish to purchase," \
-              " or 'Nothing'."
+which_stock = "Which stocks do you wish to look at ? (Please choose \nbetween 'Armours', 'Spells' or 'Weapons')\n"
+shop_stocks = "\nThose are the items available for sale. Please write below \nthe name of the item you wish to " \
+              "purchase, or 'Nothing'."
 
 # EQUIP
 go_equip = "Do you wish to equip yourself before going to fight ?\n"
