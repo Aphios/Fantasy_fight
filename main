@@ -110,35 +110,35 @@ while launched:
                 # Sell item
                 if p_choice == 'Sell' and game.player.available_items():
                     item_sell = game.ask_check_img(game.player.display_inventory() + scn.inventory_choose,
-                                                   game.img_shop, game.player.available_items(),
-                                                   subtext=game.large_pane)
+                                                   game.img_shop, game.player.available_items(), (90, 170),
+                                                   subtext=game.large_pane, subpos=(50, 125))
                     if item_sell == 'Nothing':
                         continue
                     else:
-                        game.text_img_continue(game.player.sell(item_sell), game.img_shop, (50, 250), subtext=game.pane)
+                        game.text_img_continue(game.player.sell(item_sell), game.img_shop, (150, 260), subtext=game.pane)
                 # If the player has no item to sell, they return to the beginning of the shop loop
                 elif p_choice == 'Sell' and not game.player.available_items():
-                    game.text_img_continue(scn.no_sell, game.img_shop, (50, 250), subtext=game.pane)
+                    game.text_img_continue(scn.no_sell, game.img_shop, (150, 260), subtext=game.pane)
                 # BUY ITEM
                 elif p_choice == 'Buy':
                     # We ask the player which stocks they want to see
                     look_stock = game.ask_check_img(scn.which_stock, game.img_shop, ['Armours', 'Spells', 'Weapons'],
-                                                    subtext=game.pane)
+                                                    (150, 260), subtext=game.pane)
                     # Display armours
                     if look_stock == 'Armours':
                         item_buy = game.ask_check_img(items.shop.display_armour() + scn.shop_stocks,
-                                                      game.img_shop, items.shop.list_armour_sales, (50, 120),
-                                                      subtext=game.large_pane)
+                                                      game.img_shop, items.shop.list_armour_sales, (90, 170),
+                                                      subtext=game.large_pane, subpos=(50, 125))
                     # Display weapons
                     elif look_stock == 'Weapons':
                         item_buy = game.ask_check_img(items.shop.display_weapon() + scn.shop_stocks, game.img_shop,
-                                                      items.shop.list_weapon_sales, (50, 120),
-                                                      subtext=game.large_pane)
+                                                      items.shop.list_weapon_sales, (90, 170),
+                                                      subtext=game.large_pane, subpos=(50, 125))
                     # Display spells
                     elif look_stock == 'Spells':
                         item_buy = game.ask_check_img(items.shop.display_spell() + scn.shop_stocks, game.img_shop,
-                                                      items.shop.list_spell_sales, (50, 120),
-                                                      subtext=game.large_pane)
+                                                      items.shop.list_spell_sales, (90, 170),
+                                                      subtext=game.large_pane, subpos=(50, 125))
 
                     # Make the transaction
                     # If player already have the item or don't want anything, go back to the beginning of shop loop
@@ -146,9 +146,9 @@ while launched:
                         continue
                     elif (item_buy in game.player.inventory or item_buy == game.player.weapon.name
                         or item_buy == game.player.spell.name or item_buy == game.player.armour.name):
-                        game.text_img_continue(scn.already_yours, game.img_shop, (50, 250), subtext=game.pane)
+                        game.text_img_continue(scn.already_yours, game.img_shop, (150, 260), subtext=game.pane)
                     else:
-                        game.text_img_continue(game.player.buy(item_buy, items.shop), game.img_shop, (50, 250),
+                        game.text_img_continue(game.player.buy(item_buy, items.shop), game.img_shop, (150, 260),
                                                subtext=game.pane)
 
                 # EXITING SHOP
@@ -171,7 +171,7 @@ while launched:
                 # If the player have something in their inventory, make them choose what to equip
                 if game.player.available_items():
                     eq_item = game.ask_check_img(game.player.display_inventory() + scn.inventory_choose, game.bg,
-                                                 game.player.available_items(), (30, 420))
+                                                 game.player.available_items())
                     if eq_item != 'Nothing':
                         game.player.equip(eq_item)
                         re_equiping = game.text_yesno(scn.re_equip, game.bg)
