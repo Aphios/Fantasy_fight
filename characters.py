@@ -213,15 +213,15 @@ class Player(Character):
         """Prompts the player to choose their weapon, ability or spell (if existing) to attack."""
         if self.spell.name != 'No spell':
             return f"Please write down the name of the attack you wish to launch against" \
-                   f" your enemy.\nYour weapon : {self.weapon.name}, min.damage : "\
-                   f"{self.weapon.damage_min}, max.damage : {self.weapon.damage_max}\nYour special ability : "\
+                   f" your enemy.\nYour weapon : {self.weapon.name}, min. damage : "\
+                   f"{self.weapon.damage_min}, max. damage : {self.weapon.damage_max}\nYour special ability : "\
                    f"{self.ability['name']}, min. damage : {self.ability['damage_min']}, max. damage : "\
-                   f"{self.ability['damage_max']}\nYour spell : {self.spell.name}, min.damage : "\
-                   f"{self.spell.damage_min}, max.damage : {self.spell.damage_max}\n"
+                   f"{self.ability['damage_max']}\nYour spell : {self.spell.name}, min. damage : "\
+                   f"{self.spell.damage_min}, max. damage : {self.spell.damage_max}\n"
         else:
             return f"Please write down the name of the attack you wish to launch against" \
-                   f" your enemy.\nYour weapon : {self.weapon.name}, min.damage : "\
-                   f"{self.weapon.damage_min}, max.damage : {self.weapon.damage_max}\nYour special ability : "\
+                   f" your enemy.\nYour weapon : {self.weapon.name}, min. damage : "\
+                   f"{self.weapon.damage_min}, max. damage : {self.weapon.damage_max}\nYour special ability : "\
                    f"{self.ability['name']}, min. damage : {self.ability['damage_min']}, max. damage : "\
                    f"{self.ability['damage_max']}\n"
 
