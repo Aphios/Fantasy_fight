@@ -1,0 +1,15 @@
+-- Version 0.1 User stories
+Kira wants to play an input and read game
+Kira wants to start the game easily : i.e. executable
+Kira wants to create a character : input a name, choose a race and gender
+Kira wants her character to have unique combat stats : intelligence, life, strength
+Kira wants to equip her character with weapons, spells, armours that enhance her stats
+Kira wants her character to fight one or more enemy 
+Kira wants to gain xp from defeating enemies
+Kira wants to loot gold on dead enemies
+Kira wants to quit fight whenever she wants
+Kira wants to know if her character has been defeated
+Kira wants to know if her character has been victorious
+Kira wants to be able to consult her character’s inventory and each object’s caracteristics between each fight
+Kira wants to be able to consult her character’s stats between each fight
+Kira wants the fights to be even ; i.e. the enemy isn’t too powerful compared to Kira’s character
