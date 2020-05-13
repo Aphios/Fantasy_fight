@@ -1,0 +1,37 @@
+LICENSE
+
+This game is under license Creative Commons CC BY-NC 3.0 :
+https://creativecommons.org/licenses/by-nc/3.0/fr/
+
+You are free to use my work for non-commercial purpose only, and as long as you credit me :
+Aphios >>> https://github.com/Aphios/Fantasy_fight
+
+--> Game code, texts, graphic elements and drawings are mine.
+
+--> Music and sounds are not mine, if you wish to use them, you must credit the authors as following :
+
+MUSICS :
+
+The Descent by Kevin MacLeod
+Link: https://incompetech.filmmusic.io/song/4490-the-descent
+License: http://creativecommons.org/licenses/by/4.0/
+
+Crossing the Chasm by Kevin MacLeod
+Link: https://incompetech.filmmusic.io/song/3562-crossing-the-chasm
+License: http://creativecommons.org/licenses/by/4.0/
+
+Killers by Kevin MacLeod
+Link: https://incompetech.filmmusic.io/song/3952-killers
+License: http://creativecommons.org/licenses/by/4.0/
+
+The Path of the Goblin King by Kevin MacLeod
+Link: https://incompetech.filmmusic.io/song/4503-the-path-of-the-goblin-king
+License: http://creativecommons.org/licenses/by/4.0/
+
+SOUNDS :
+
+Coin, spell, win, loose and inventory sounds :
+Little Robot Sound Factory : www.littlerobotsoundfactory.com
+ 
+Swish sound :
+artisticdude : https://opengameart.org/content/battle-sound-effects

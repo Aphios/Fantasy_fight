@@ -7,3 +7,8 @@ Version 0.2 :
 started 04-17, ended 05-06
 1513 code lines
 ~ 80 hours of work
+
+Version 0.3:
+Started 05-06, ended 05-14
+1519 code lines
+~ 18 hours of work
