@@ -3,10 +3,10 @@
 This file contains the game text scenes displayed throughout the game.
 """
 
-__version__ = 0.2
+__version__ = 0.3
 __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-07-2020"
+__last_update__ = "05-13-2020"
 
 import random
 
@@ -51,8 +51,9 @@ enter_race = "\nNow choose your race !\n~Githzerais are agile and stealthy, but 
              "write your answer below. (Only 'Githzerai', 'Banshee', 'Tieflin', 'Illithid' or 'Rakshasa' accepted)\n"
 
 # ENDING
-endgame = "~~~Game over~~~\nThank you for playing !\n~~~CREDITS~~~\nConception & programming : Aphios\n"
-credits = "Made with Python 3.7 and Pygame 1.9.6\n\nMusic:\n'The Descent' by Kevin MacLeod\nLink: "\
+endgame = "~~~Game over~~~\nThank you for playing !\n~~~CREDITS~~~\nConception, art" \
+          " & programming : \nAphios\n"
+credits = "Made with Python 3.7 and Pygame 1.9.6\n\nMusic :\n'The Descent' by Kevin MacLeod\nLink: "\
           "https://incompetech.filmmusic.io/song/4490-the-descent\nLicense: "\
           "http://creativecommons.org/licenses/by/4.0/\n\n'Crossing the Chasm' by Kevin MacLeod\n"\
           "Link: https://incompetech.filmmusic.io/song/3562-crossing-the-chasm\nLicense: "\
@@ -61,6 +62,8 @@ credits = "Made with Python 3.7 and Pygame 1.9.6\n\nMusic:\n'The Descent' by Kev
           "http://creativecommons.org/licenses/by/4.0/\n\n'The Path of the Goblin King' by Kevin MacLeod"\
           "\nLink: https://incompetech.filmmusic.io/song/4503-the-path-of-the-goblin-king\nLicense: "\
           "http://creativecommons.org/licenses/by/4.0/\n"
+credits2 = "Sounds :\n\nCoin, spell, win, loose and inventory sounds :\nLittle Robot Sound Factory : " \
+           "www.littlerobotsoundfactory.com\nSwish sound : artisticdude"
 
 # STATS
 view_stats = "Do you want to view your stats and equipment ?\n"

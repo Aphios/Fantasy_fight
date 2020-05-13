@@ -6,7 +6,7 @@ This file contains the class handling the game states, such as the main game fun
 __version__ = 0.3
 __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-12-2020"
+__last_update__ = "05-13-2020"
 
 import random
 import time

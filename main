@@ -3,10 +3,10 @@
 This file contains the main game loop.
 """
 
-__version__ = 0.2
+__version__ = 0.3
 __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-12-2020"
+__last_update__ = "05-13-2020"
 
 import time
 
@@ -198,14 +198,15 @@ while launched:
             # TURN BY TURN
             # Player chooses their attack and hits
             attack = game.ask_check_img(game.player.choose_attack(), game.img_arena, game.player.available_attacks(),
-                                        (20, 30))
-            game.text_img_continue(game.player.hit(game.enemy, attack), game.img_arena)
+                                        (20, 30), picture=game.player.pic, picture2=game.enemy.pic)
+            game.text_img_continue(game.player.hit(game.enemy, attack), game.img_arena, picture=game.player.pic,
+                                   picture2=game.enemy.pic)
             if game.enemy.life <= 0:
                 break
             # Enemy "chooses" their attack and hits
             counterattack = game.enemy.random_attack()
             game.text_img_continue(game.enemy.hit(game.player, counterattack), game.img_arena,
-                                   font_color=constants.BURGUNDY)
+                                   font_color=constants.BURGUNDY, picture=game.player.pic, picture2=game.enemy.pic)
             if game.player.life <= 0:
                 break
 
@@ -213,11 +214,12 @@ while launched:
         fight_result = game.player.win_or_loose(game.enemy)
         if fight_result == "You win the fight !\n":
             game.player.life = reset_life
-            game.text_img_continue(fight_result + game.player.gain_xp(game.enemy), game.img_arena)
+            game.text_img_continue(fight_result + game.player.gain_xp(game.enemy), game.img_arena,
+                                   picture=game.player.pic)
             while game.player.experience >= constants.XP_LEVELS[str(game.player.level)]:
-                game.text_img_continue(game.player.level_up(), game.img_arena)
+                game.text_img_continue(game.player.level_up(), game.img_arena, picture=game.player.pic)
             game.player.wins += 1
-            game.text_img_continue(game.player.loot(), game.img_arena)
+            game.text_img_continue(game.player.loot(), game.img_arena, picture=game.player.pic)
         # If player looses go to THE END
         else:
             game.text_img_continue(fight_result, game.img_arena)
@@ -239,9 +241,10 @@ while launched:
     time.sleep(1.50)
     game.text_music_sleep(scn.endgame, 5, game.bg, (70, 150), game.intro_music, -1, game.font_big)
     # Display credits
-    game.text_music_sleep(scn.credits, 6, game.bg, (70, 85))
-    game.stop_music(5000)
-    time.sleep(6)
+    game.text_music_sleep(scn.credits, 7, game.bg, (70, 85))
+    game.text_music_sleep(scn.credits2, 4, game.bg, (70, 150))
+    game.stop_music(4000)
+    time.sleep(4)
     # Automatically quit program
     pygame.quit()
     quit()

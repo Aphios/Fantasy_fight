@@ -8,9 +8,11 @@ __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
 __last_update__ = "05-04-2020"
 
-import pygame
 import random
 import time
+
+import pygame
+
 import constants
 
 pygame.init()

@@ -4,15 +4,16 @@ This file contains the classes :
 - Character and its subclass Player
 """
 
-__version__ = 0.2
+__version__ = 0.3
 __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-02-2020"
+__last_update__ = "05-13-2020"
 
 import functools
 import random
-import pyinputplus as pyip
+
 import pygame
+
 import constants as cst
 import items as it
 
@@ -44,6 +45,14 @@ class Character:
         self.strength = cst.STRENGTH_PTS[self._race]
         self.life = cst.LIFE_PTS[self._race]
         self.intelligence = cst.INTELLIGENCE_PTS[self._race]
+        # GUI attributes
+        self.pic = cst.PICTURES[self._race][self._gender]
+        self.hit_sound = pygame.mixer.Sound("Sound/hit.wav")
+        self.spell_sound = pygame.mixer.Sound("Sound/spell.wav")
+        self.gold_sound = pygame.mixer.Sound("Sound/coins.wav")
+        self.equip_sound = pygame.mixer.Sound("Sound/bag.wav")
+        self.win_sound = pygame.mixer.Sound("Sound/win.wav")
+        self.loose_sound = pygame.mixer.Sound("Sound/loose.wav")
         # Adjusting stats to character's level
         level_bonus_pts = functools.reduce(lambda a, b: a + (b // 2), range(self.level + 1))
         self.ability['damage_min'] += level_bonus_pts
@@ -64,7 +73,7 @@ class Character:
                f"Armour : {self.armour.name} (protection : {self.armour.protection})\nWeapon : " \
                f"{self.weapon.name} (min.damage : {self.weapon.damage_min}, max. damage : {self.weapon.damage_max})\n" \
                f"Spell : {self.spell.name} (min.damage : {self.spell.damage_min}, max. damage : " \
-               f"{self.spell.damage_max}\n"
+               f"{self.spell.damage_max})\n"
 
     def random_attack(self):
         """Randomly returns a character's weapon, ability or spell (if existing) in order to attack."""
@@ -74,18 +83,22 @@ class Character:
             return random.choice([self.weapon.name, self.ability['name']])
 
     def hit(self, enemy, attack):
-        """Dealts damage to enemy using attack, and prints a description of the attack.
+        """Dealts damage to enemy using attack, and retunrs a description of the attack.
 
         Args :
         attack : the name (string) of weapon, spell or special ability used to hit
         enemy : a Character object.
+        Plays a spell or hit sound with pygame.
         """
         if attack == self.weapon.name:
             dmg = random.randint(self.weapon.damage_min, self.weapon.damage_max) + self.strength // 4
+            self.hit_sound.play()
         elif attack == self.spell.name:
             dmg = random.randint(self.spell.damage_min, self.spell.damage_max) + self.intelligence // 5
+            self.spell_sound.play()
         else:
             dmg = random.randint(self.ability['damage_min'], self.ability['damage_max'])
+            self.spell_sound.play()
 
         final_dmg = dmg - enemy.armour.protection
 
@@ -149,6 +162,7 @@ class Player(Character):
         the player's inventory, new one is removed from inventory.
         Args : item : the equipment's name
         Vars : eq : the object corresponding to the name item
+        Plays equip sound in pygame.
         """
         eq = self.inventory[item]
         if isinstance(eq, it.Weapon):
@@ -163,11 +177,13 @@ class Player(Character):
         else:
             raise TypeError("Item's type must be Weapon, Spell or Armour")
         del self.inventory[item]
+        self.equip_sound.play()
 
     def loot(self):
         """Adds to player's gold a random amount of gold."""
-        g = random.randint(0, 100)
+        g = random.randint(2, 100)
         self.gold += g
+        self.gold_sound.play()
         return f"You loot {g} gold pieces."
 
     def gain_xp(self, enemy):
@@ -185,7 +201,7 @@ class Player(Character):
         self.intelligence += self.level // 2
         self.ability['damage_min'] += self.level // 2
         self.ability['damage_max'] += self.level // 2
-
+        self.win_sound.play()
         return f"New level reached ! Congratulations, you are now level {self.level}."
 
     def achievements(self):
@@ -229,11 +245,14 @@ class Player(Character):
     def win_or_loose(self, enemy):
         """Returns description of how hero survives the fight or fell."""
         if self.life > enemy.life:
+            self.win_sound.play()
             return "You win the fight !\n"
         elif self.life == enemy.life:
+            self.loose_sound.play()
             return "You and your enemy die at each other's hands ! You mutually curse yourselves with your "\
                   "last breath.\n"
         else:
+            self.loose_sound.play()
             return "You lost the fight ! You are dead and now roam the realms of forgotten memories.\n"
 
     def buy(self, item, shop):
@@ -252,10 +271,12 @@ class Player(Character):
         elif item in shop.stock_spell:
             eq = shop.stock_spell[item]
         if eq.price > self.gold:
-            return "You don't have enough gold to buy this piece of equipment."
+            self.gold_sound.play()
+            return "You don't have enough gold to buy \nthis piece of equipment."
         else:
             self.inventory[item] = eq
             self.gold -= eq.price
+            self.equip_sound.play()
             return f"{item} added to inventory."
 
     def sell(self, item):
@@ -268,4 +289,5 @@ class Player(Character):
         eq = self.inventory[item]
         self.gold += eq.price // 2
         del self.inventory[item]
+        self.gold_sound.play()
         return f"{item} sold for {eq.price // 2} gold pieces."

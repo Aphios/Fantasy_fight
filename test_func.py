@@ -9,6 +9,7 @@ __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
 __last_update__ = "05-06-2020"
 
+import pytest
 
 import items
 import func
