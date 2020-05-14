@@ -12,8 +12,6 @@ import random
 
 import pygame
 
-import game_class as states
-
 pygame.init()
 
 # Game scenes (ordered)

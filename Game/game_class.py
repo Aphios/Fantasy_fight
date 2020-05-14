@@ -13,8 +13,8 @@ import time
 
 import pygame
 
-import constants as cst
-import gui_elements as gui
+import Game.constants as cst
+import Game.gui_elements as gui
 
 pygame.init()
 

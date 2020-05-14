@@ -14,8 +14,8 @@ import random
 
 import pygame
 
-import constants as cst
-import items as it
+import Game.constants as cst
+import Game.items as it
 
 
 pygame.init()

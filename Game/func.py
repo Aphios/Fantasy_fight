@@ -13,7 +13,7 @@ import time
 
 import pygame
 
-import constants
+import Game.constants as constants
 
 pygame.init()
 

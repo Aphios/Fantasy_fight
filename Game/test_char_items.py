@@ -11,8 +11,8 @@ __last_update__ = "05-06-2020"
 
 import pytest
 
-import characters as char
-import items
+import Game.characters as char
+import Game.items as items
 import io
 
 

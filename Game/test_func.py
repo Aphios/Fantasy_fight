@@ -11,8 +11,8 @@ __last_update__ = "05-06-2020"
 
 import pytest
 
-import items
-import func
+import Game.items as items
+import Game.func as func
 
 # Test values
 males = ['Bob', 'Alex']

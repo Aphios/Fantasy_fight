@@ -11,7 +11,7 @@ __last_update__ = "04-30-2020"
 
 import pygame
 
-import constants as cst
+import Game.constants as cst
 
 pygame.init()
 

@@ -12,13 +12,13 @@ import time
 
 import pygame
 
-import constants
-import characters as char
-import game_class as game
-import items
-import scenes as scn
-import func
-import gui_elements as gui
+import Game.constants as constants
+import Game.characters as char
+import Game.game_class as game
+import Game.items as items
+import Game.scenes as scn
+import Game.func as func
+import Game.gui_elements as gui
 
 
 pygame.init()
@@ -242,8 +242,8 @@ while launched:
                            pos_picture=(550, 150))
     game.text_music_sleep(scn.endgame, 6, game.bg, (70, 150), game.intro_music, -1, game.font_big)
     # Display credits
-    game.text_music_sleep(scn.credits, 7, game.bg, (70, 85))
-    game.text_music_sleep(scn.credits2, 5, game.bg, (70, 150))
+    game.text_music_sleep(scn.credits, 8, game.bg, (70, 85))
+    game.text_music_sleep(scn.credits2, 2, game.bg, (70, 150))
     game.stop_music(4000)
     time.sleep(4)
     # Automatically quit program
