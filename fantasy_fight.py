@@ -6,7 +6,7 @@ This file contains the main game loop.
 __version__ = 0.3
 __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-13-2020"
+__last_update__ = "05-14-2020"
 
 import time
 
