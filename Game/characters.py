@@ -71,8 +71,8 @@ class Character:
                f"Strength : {self.strength}\nIntelligence : {self.intelligence}\nLife : {self.life}\n" \
                f"Special Ability : {self.ability['name']}\n>>>>Equipment<<<<\n" \
                f"Armour : {self.armour.name} (protection : {self.armour.protection})\nWeapon : " \
-               f"{self.weapon.name} (min.damage : {self.weapon.damage_min}, max. damage : {self.weapon.damage_max})\n" \
-               f"Spell : {self.spell.name} (min.damage : {self.spell.damage_min}, max. damage : " \
+               f"{self.weapon.name} (min. damage : {self.weapon.damage_min}, max. damage : {self.weapon.damage_max})\n" \
+               f"Spell : {self.spell.name} (min. damage : {self.spell.damage_min}, max. damage : " \
                f"{self.spell.damage_max})\n"
 
     def random_attack(self):

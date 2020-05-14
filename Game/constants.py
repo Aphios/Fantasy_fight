@@ -6,7 +6,7 @@ This file contains the constants needed to initialize class instances.
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-12-2020"
+__last_update__ = "05-14-2020"
 
 
 import pygame
@@ -34,8 +34,8 @@ STRENGTH_PTS = {'Githzerai': 12, 'Rakshasa': 20, 'Illithid': 10, 'Tieflin': 18, 
 # XP_LEVELS defines the max experience (value) before reaching a new level(key), i.e. you are level 1 until 500,
 # then level 2 from 501 to 1000, etc
 
-XP_GAINS = {'1': 125, '2': 175, '3': 200, '4': 275, '5': 375, '6': 400, '7': 475, '8': 500, '9': 750}
-XP_LEVELS = {'1': 500, '2': 1000, '3': 2000, '4': 3500, '5': 5000, '6': 7000, '7': 10000, '8': 15000, '9': 22000}
+XP_GAINS = {'1': 10, '2': 50, '3': 50, '4': 100, '5': 200, '6': 200, '7': 500, '8': 500, '9': 1000}
+XP_LEVELS = {'1': 20, '2': 100, '3': 200, '4': 350, '5': 500, '6': 700, '7': 1500, '8': 2500, '9': 4500, '10': 8000}
 
 # Pygame Constants
 RESOLUTION = (800, 600)

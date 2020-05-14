@@ -63,10 +63,10 @@ def hero(underwear, fists, no_spell):
 
 @pytest.fixture
 def monster(corset, dagger, no_spell):
-    """Returns a monster : Tieflin level 9.
+    """Returns a monster : Tieflin level 4.
     Stats : corset, dagger, no spell, life : 55, strength : 38, intelligence : 28, ability : Sting whip
     """
-    return char.Character('Boss', 'Other', 'Tieflin', corset, dagger, no_spell, 9)
+    return char.Character('Boss', 'Other', 'Tieflin', corset, dagger, no_spell, 4)
 
 
 @pytest.fixture
@@ -215,9 +215,8 @@ def test_loot(hero):
 
 def test_gain_xp_and_2_levels_up(hero, monster):
     hero.gain_xp(monster)
-    hero.gain_xp(monster)
     assert hero.level == 3
-    assert hero.experience == 1500
+    assert hero.experience == 100
     assert hero.life == 30
 
 
