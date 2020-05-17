@@ -35,18 +35,18 @@ class Character:
         From race and level depends life, strength and intelligence.
         """
         self.level = level
-        self._name = name
-        self._gender = gender
-        self._race = race
+        self.name = name
+        self.gender = gender
+        self.race = race
         self.armour = armour
         self.weapon = weapon
         self.spell = spell
-        self.ability = cst.ABILITIES[self._race]
-        self.strength = cst.STRENGTH_PTS[self._race]
-        self.life = cst.LIFE_PTS[self._race]
-        self.intelligence = cst.INTELLIGENCE_PTS[self._race]
+        self.ability = cst.ABILITIES[self.race]
+        self.strength = cst.STRENGTH_PTS[self.race]
+        self.life = cst.LIFE_PTS[self.race]
+        self.intelligence = cst.INTELLIGENCE_PTS[self.race]
         # GUI attributes
-        self.pic = cst.PICTURES[self._race][self._gender]
+        self.pic = cst.PICTURES[self.race][self.gender]
         self.hit_sound = pygame.mixer.Sound("Sound/hit.wav")
         self.spell_sound = pygame.mixer.Sound("Sound/spell.wav")
         self.gold_sound = pygame.mixer.Sound("Sound/coins.wav")
@@ -62,14 +62,14 @@ class Character:
         self.intelligence += level_bonus_pts
 
     def __repr__(self):
-        return f"{self._name}, {self._gender}, {self._race}, pouvoir : {self.ability['name']}, niveau : {self.level}" \
+        return f"{self.name}, {self.gender}, {self.race}, pouvoir : {self.ability['nom']}, niveau : {self.level}" \
                f", armure : {self.armour}, vie : {self.life}, force : {self.strength}, intelligence : " \
                    f"{self.intelligence}, arme : {self.weapon}, sort : {self.spell}"
 
     def __str__(self):
-        return f"Nom : {self._name}\nGenre : {self._gender}\nRace : {self._race}\nLevel : {self.level}\n" \
+        return f"Nom : {self.name}\nGenre : {self.gender}\nRace : {self.race}\nNiveau : {self.level}\n" \
                f"Force : {self.strength}\nIntelligence : {self.intelligence}\nVie : {self.life}\n" \
-               f"Pouvoir : {self.ability['name']}\n>>>>Equipement<<<<\n" \
+               f"Pouvoir : {self.ability['nom']}\n>>>>Equipement<<<<\n" \
                f"Armure : {self.armour.name} (protection : {self.armour.protection})\nArme : " \
                f"{self.weapon.name} (dommages mini : {self.weapon.damage_min}, dommages maxi : {self.weapon.damage_max})\n" \
                f"Sort : {self.spell.name} (dommages mini : {self.spell.damage_min}, dommages maxi : " \
@@ -78,9 +78,9 @@ class Character:
     def random_attack(self):
         """Randomly returns a character's weapon, ability or spell (if existing) in order to attack."""
         if self.spell.name != 'Aucun sort':
-            return random.choice([self.weapon.name, self.spell.name, self.ability['name']])
+            return random.choice([self.weapon.name, self.spell.name, self.ability['nom']])
         else:
-            return random.choice([self.weapon.name, self.ability['name']])
+            return random.choice([self.weapon.name, self.ability['nom']])
 
     def hit(self, enemy, attack):
         """Dealts damage to enemy using attack, and retunrs a description of the attack.
@@ -116,12 +116,12 @@ class Character:
         damage and final_damage : ints
         """
         if final_damage > 0:
-            return f"{self._name} utilise {attack.lower()} pour attaquer !\n{damage} dommages !\n"\
-                   f"L'armure de {enemy._name} absorbe {damage - final_damage} dommages. \n"\
-                   f"Les points de vie de {enemy._name} sont désormais à {enemy.life}.\n"
+            return f"{self.name} utilise {attack.lower()} pour attaquer !\n{damage} dommages !\n"\
+                   f"L'armure de {enemy.name} absorbe {damage - final_damage} dommages. \n"\
+                   f"Les points de vie de {enemy.name} sont désormais à {enemy.life}.\n"
         else:
-            return f"{self._name} utilise {attack.lower()} pour attaquer ! {enemy._name} esquive l'attaque !\n"\
-                   f"Les points de vie de {enemy._name} sont toujours à {enemy.life}.\n"
+            return f"{self.name} utilise {attack.lower()} pour attaquer ! {enemy.name} esquive l'attaque !\n"\
+                   f"Les points de vie de {enemy.name} sont toujours à {enemy.life}.\n"
 
 
 class Player(Character):
@@ -152,7 +152,7 @@ class Player(Character):
                 inv += f"{elt.name} : dommages mini : {elt.damage_min}, dommages maxi : {elt.damage_max}\n"
             elif isinstance(elt, it.Armour):
                 inv += f"{elt.name} : protection : {elt.protection}\n"
-        return f">>>>Inventaire de {self._name}<<<<\nPièces d'or : {self.gold}\n" + inv
+        return f">>>>Inventaire de {self.name}<<<<\nPièces d'or : {self.gold}\n" + inv
 
 
     def equip(self, item):
@@ -206,7 +206,7 @@ class Player(Character):
 
     def achievements(self):
         """Prints player's wins and level."""
-        return f">>>>> Succès de {self._name} <<<<<\n{self.wins} ennemis éliminés. Dernier niveau atteint : " \
+        return f">>>>> Succès de {self.name} <<<<<\n{self.wins} ennemi(s) éliminé(s). Dernier niveau atteint : " \
                f"{self.level}\n"
 
     def choose_attack(self):
@@ -215,19 +215,19 @@ class Player(Character):
             return f"Ecrivez ci-dessous le nom de l'attaque que vous souhaitez lancer contre votre ennemi." \
                    f" Votre arme : {self.weapon.name}, dommages mini : "\
                    f"{self.weapon.damage_min}, dommages maxi : {self.weapon.damage_max}\nVotre pouvoir : "\
-                   f"{self.ability['name']}, dommages mini : {self.ability['damage_min']}, dommages maxi : "\
-                   f"{self.ability['damage_max']}\nVotre sort : {self.spell.name}, dommages mini : "\
+                   f"{self.ability['nom']}, dommages mini : {self.ability['dommages_mini']}, dommages maxi : "\
+                   f"{self.ability['dommages_maxi']}\nVotre sort : {self.spell.name}, dommages mini : "\
                    f"{self.spell.damage_min}, dommages maxi : {self.spell.damage_max}\n"
         else:
             return f"Ecrivez ci-dessous le nom de l'attaque que vous souhaitez lancer contre votre ennemi." \
                    f" Votre arme : {self.weapon.name}, dommages mini : " \
                    f"{self.weapon.damage_min}, dommages maxi : {self.weapon.damage_max}\nVotre pouvoir : " \
-                   f"{self.ability['name']}, dommages mini : {self.ability['damage_min']}, dommages maxi : " \
-                   f"{self.ability['damage_max']}\n"
+                   f"{self.ability['nom']}, dommages mini : {self.ability['dommages_mini']}, dommages maxi : " \
+                   f"{self.ability['dommages_maxi']}\n"
 
     def available_attacks(self):
         """Returns a list of the names the player may use in combat."""
-        res = [self.weapon.name, self.ability['name']]
+        res = [self.weapon.name, self.ability['nom']]
         if self.spell.name != 'Aucun sort':
             res.append(self.spell.name)
         return res
@@ -253,7 +253,7 @@ class Player(Character):
                   "dernier souffle.\n"
         else:
             self.loose_sound.play()
-            return "Vous avez peru le combat ! Vous êtes mort et hantez le royaume des héros oubliés.\n"
+            return "Vous avez perdu le combat ! Vous êtes mort et hantez le royaume des héros oubliés.\n"
 
     def buy(self, item, shop):
         """Buys an item from the shop and puts it in player's inventory.
@@ -277,7 +277,7 @@ class Player(Character):
             self.inventory[item] = eq
             self.gold -= eq.price
             self.equip_sound.play()
-            return f"Transaction réussie ! Votre {item} est disponible dans votre inventaire."
+            return f"Transaction réussie !\n L'objet est disponible dans votre inventaire."
 
     def sell(self, item):
         """Removes an item from player's inventory and adds to player's gold half of the item's price.

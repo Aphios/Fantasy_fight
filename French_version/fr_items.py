@@ -120,13 +120,13 @@ platemail = Armour('Armure de plates', 700, 12)
 mithril_jacket = Armour('Veste en mithril', 1500, 22)
 blizzard = Spell('Blizzard', 200, 11, 20)
 scorch = Spell('Etincelle', 100, 6, 13)
-venom_gaze = Spell('Regard empoisonné', 150, 8, 18)
-wasp_stings = Spell('Dards de guêpe', 50, 0, 8)
+venom_gaze = Spell('Poison', 150, 8, 18)
+wasp_stings = Spell('Piqûre', 50, 0, 8)
 lightning = Spell('Eclair', 400, 24, 33)
 no_spell = Spell('Aucun sort', 0, 0, 0)
 scythe = Weapon('Faux', 400, 24, 33)
 scissors = Weapon('Ciseaux', 50, 0, 8)
-halbert = Weapon('Hallebarde', 200, 11, 20)
+katana = Weapon('Katana', 200, 11, 20)
 club = Weapon('Gourdin', 100, 6, 13)
 dagger = Weapon('Dague', 150, 8, 18)
 fists = Weapon('Poings', 0, -2, 6)
@@ -134,7 +134,7 @@ fists = Weapon('Poings', 0, -2, 6)
 # Inventories and shop creation
 stock_armour = {'Corset': corset, 'Combinaison en cuir': leathersuit, 'Haillons': rags, 'Armure de plates': platemail,
                 'Veste en mithril': mithril_jacket}
-stock_weapon = {'Faux': scythe, 'Ciseaux': scissors,'Hallebarde': halbert, 'Gourdin': club, 'Dague': dagger}
-stock_spell = {'Blizzard': blizzard, 'Etincelle': scorch, 'Regard empoisonné': venom_gaze, 'Dards de guêpe': wasp_stings,
+stock_weapon = {'Faux': scythe, 'Ciseaux': scissors,'Katana': katana, 'Gourdin': club, 'Dague': dagger}
+stock_spell = {'Blizzard': blizzard, 'Etincelle': scorch, 'Poison': venom_gaze, 'Piqûre': wasp_stings,
                'Eclair': lightning}
 shop = Shop(stock_armour, stock_spell, stock_weapon)

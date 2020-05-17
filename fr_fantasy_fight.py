@@ -52,7 +52,7 @@ while launched:
     # Register player as a game attribute
     game.player = char.Player(p_name, p_gender, p_race, items.underwear, items.fists, items.no_spell)
     # Welcome player
-    game.text_wait(f"Bienvenue {game.player._name} !\n", game.bg, (250, 280), 2, constants.IMMORTAL_BIG)
+    game.text_wait(f"Bienvenue {game.player.name} !\n", game.bg, (250, 280), 2, constants.IMMORTAL_BIG)
 
     # Initialize game loop
     continue_game = True

@@ -72,7 +72,7 @@ view_stats = "Voulez-vous consulter vos statistiques et votre équipement ?\n"
 
 # SHOP
 go_shop = "Voulez-vous vous rendre à la boutique pour acheter ou vendre de l'équipement ?"
-bazaar = "-- Bienvenue au Bazar du Combattant --"
+bazaar = "-- Bazar du Combattant --"
 shop_menu = "Souhaitez-vous acheter, vendre ou sortir de la boutique ?\nIndiquez votre réponse ci-dessous \n(seuls les " \
             "termes 'Acheter', 'Vendre' ou 'Sortir' sont acceptés)."
 no_sell = "Vous n'avez rien à vendre.\n"
