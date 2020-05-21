@@ -6,14 +6,12 @@ This file contains the main game functions.
 __version__ = 0.2
 __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-04-2020"
+__last_update__ = "05-21-2020"
 
 import random
 import time
 
 import pygame
-
-import Game.constants as constants
 
 pygame.init()
 
@@ -26,9 +24,9 @@ def autogen(genders, races, male_names, female_names, other_names, armours, weap
 
     gender = random.choice(genders)
     race = random.choice(races)
-    if gender == 'Male':
+    if gender == 'Homme':
         name = random.choice(male_names)
-    elif gender == 'Female':
+    elif gender == 'Femme':
         name = random.choice(female_names)
     else:
         name = random.choice(other_names)

@@ -6,7 +6,7 @@ This file contains the main game loop.
 __version__ = 0.3
 __author__ = "Sophie Blanchard"
 __start_date__ = "03-17-2020"
-__last_update__ = "05-17-2020"
+__last_update__ = "05-21-2020"
 
 import time
 
@@ -18,7 +18,7 @@ import French_version.fr_game_class as game
 import French_version.fr_items as items
 import French_version.fr_scenes as scn
 import French_version.fr_func as func
-import Game.gui_elements as gui
+import French_version.fr_gui_elements as gui
 
 
 pygame.init()
