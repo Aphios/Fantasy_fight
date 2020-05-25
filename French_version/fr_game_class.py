@@ -14,7 +14,7 @@ import time
 import pygame
 
 import French_version.fr_constants as cst
-import Game.gui_elements as gui
+import French_version.fr_gui_elements as gui
 
 pygame.init()
 

@@ -48,7 +48,7 @@ while launched:
     # Get player's gender
     p_gender = game.ask_check_img(scn.enter_gender, game.bg, constants.GENDERS)
     # Get player's race
-    p_race = game.ask_check_img(scn.enter_race, game.bg, constants.RACES)
+    p_race = game.ask_check_img(scn.enter_race, game.bg, constants.RACES, (40, 120))
     # Register player as a game attribute
     game.player = char.Player(p_name, p_gender, p_race, items.underwear, items.fists, items.no_spell)
     # Welcome player
@@ -98,7 +98,7 @@ while launched:
         if shoping:
             # We display the name of the shop while changing the musics with a light transition
             game.stop_music(2000)
-            game.text_music_sleep(scn.bazaar, 2, game.img_shop, (120, 260), font=game.font_big, subtext=game.large_pane,
+            game.text_music_sleep(scn.bazaar, 2, game.img_shop, (155, 260), font=game.font_big, subtext=game.large_pane,
                                   subpos=(50, 125))
             game.play_music(game.shop_music)
             # Initialize shop loop
