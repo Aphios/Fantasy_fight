@@ -272,12 +272,12 @@ class Player(Character):
             eq = shop.stock_spell[item]
         if eq.price > self.gold:
             self.gold_sound.play()
-            return "Vous n'avez pas assez d'or pour acheter \ncette pièce d'équipement."
+            return "Vous n'avez pas assez d'or pour acheter\ncette pièce d'équipement."
         else:
             self.inventory[item] = eq
             self.gold -= eq.price
             self.equip_sound.play()
-            return f"Transaction réussie !\n L'objet est disponible dans votre inventaire."
+            return f"Transaction réussie !\nL'objet est disponible dans votre inventaire."
 
     def sell(self, item):
         """Removes an item from player's inventory and adds to player's gold half of the item's price.
