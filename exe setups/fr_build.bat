@@ -1,0 +1,1 @@
+py fr_setup.py build
